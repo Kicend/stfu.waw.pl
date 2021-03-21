@@ -1,0 +1,57 @@
+.box {
+  background: #7399b3;
+  border-radius: 0px 4px 4px 0px;
+  left: -304px;
+  padding: 4px 4px 4px 0px;
+  position: fixed;
+  top: 100px;
+  transition: transform 0.4s;
+  width: 300px;
+  z-index: 1;
+}
+
+.box--right {
+  border-radius: 4px 0px 0px 4px;
+  left: auto;
+  right: -304px;
+  padding: 4px 0px 4px 4px;
+}
+
+.box:hover {
+  transform: translateX(304px);
+}
+
+.box--right:hover {
+  transform: translateX(-304px);
+}
+
+.box .box__content {
+  background: #fff;
+  min-height: 500px;
+  padding: 10px;
+  position: relative;
+}
+
+.box .box__title {
+  background: #fff;
+  border: solid #7399b3;
+  border-radius: 0px 0px 4px 4px;
+  border-width: 0px 4px 4px;
+  cursor: default;
+  font-size: 16px;
+  height: 30px;
+  line-height: 30px;
+  position: absolute;
+  right: -74px;
+  text-align: center;
+  top: 70px;
+  transform: rotate(-90deg);
+  width: 106px;
+}
+
+.box--right .box__title {
+  border-radius: 4px 4px 0px 0px;
+  border-width: 4px 4px 0px;
+  position: absolute;
+  left: -74px;
+}

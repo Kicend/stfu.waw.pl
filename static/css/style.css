@@ -1,0 +1,264 @@
+/*
+.nav {
+    width: 100%;
+    height: 30px;
+    background-color: ;
+    border-bottom: 2px solid black;
+}
+*/
+
+html, body {
+    overflow: hidden;
+}
+
+.nav {
+    overflow: hidden; 
+    background-color: #7399b3;
+}
+
+.nav a {
+    float: left; 
+    display: block; 
+    color: #f2f2f2; 
+    text-align: center; 
+    padding: 14px 16px; 
+    text-decoration: none; 
+    font-size: 17px;
+}
+
+.nav a:hover {
+    background-color: #ddd; 
+    color: black;
+}
+
+.nav a.active {
+    background-color: #a9a9a9;
+    color: white;
+}
+
+.nav .icon {
+    display: none;
+}
+
+.bottomnav {
+    overflow: hidden;
+     background-color: #303439;
+}
+
+.bottomnav a {
+    float: left;
+    display: block; 
+    color: #f2f2f2; 
+    text-align: center;
+    padding: 14px 16px; 
+    text-decoration: none; 
+    font-size: 17px;
+}
+
+.bottomnav a:hover {
+    background-color: #ddd; 
+    color: black;
+}
+
+.bottomnav a.active {
+    background-color: #4caf50; 
+    color: white;
+}
+
+.bottomnav .icon {
+    display: none;
+}
+
+.game {
+    width: 100%;
+    height: 100%;
+}
+
+/*
+.col-1 {
+    float: left;
+    width: 75%;
+    height 100%;
+    background-color: #f0f2f4;
+}
+
+.col-2 {
+    float: left;
+    width: 25%;
+    height: 100%;
+    background-color: #99ccee;
+}
+*/
+
+.player {
+    float: left;
+    width: 50%;
+}
+
+.square {
+    height: 7px;
+    width: 7px;
+    background-color: #555555;
+}
+
+.title {
+    float: left;
+    width: 95%;
+    font-size: 10px;
+    color: #f0f1f2;
+    background-color: #1e292f;
+}
+
+.slot {
+    float: left;
+    width: 95%;
+}
+
+.balance {
+    float: left;
+    width: 40%;
+    background-color: #e0eff9;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.timer {
+    float: left;
+    width: 20%;
+    margin-left: 30%;
+}
+
+.control_panel {
+    float: left;
+    width: 100%;
+    margin-top: 10%;
+    border: 2px solid grey;
+}
+
+/* CSS for netopol session */
+div#board {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f2f4;
+}
+
+div#ui {
+    width: 100%;
+    background-color: #99ccee;
+}
+
+div#session_info {
+    width: 100%;
+    border-bottom: 1px solid #7399b3;
+}
+
+div#players {
+    margin-left: 1%;
+    width: 100%;
+}
+
+div#red {
+    float: left;
+    background-color: #ff1111;
+}
+
+div#blue {
+    float: left;
+    background-color: #3333ff;
+}
+
+div#green {
+    float: left;
+    background-color: #22cc22;
+}
+
+div#yellow {
+    float: left;
+    background-color: #ffff00;
+}
+
+div#purple {
+    float: left;
+    background-color: #800080;
+}
+
+div#orange {
+    float: left;
+    background-color: #ffa500;
+}
+
+div#pink {
+    float: left;
+    background-color: #cc66dd;
+}
+
+div#brown {
+    float: left;
+    background-color: #8b4513;
+}
+
+div#grey {
+    float: left;
+    background-color: #808080;
+}
+
+div#white {
+    float: left;
+    background-color: #ffffff;
+}
+
+input#leave {
+    margin-left: 54%;
+}
+
+/* CSS for lobby */
+div#main {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+
+div#lobby {
+    flex-grow: 3;
+    width: 75%;
+    height: 100%;
+    border-right: 1px solid black;
+}
+
+div#players_list {
+    flex-grow: 1;
+    width: 25%;
+    height: 100%;
+}
+
+ul#sessions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* CSS for index */
+div#login_window {
+    margin-top: 30vh;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+    width: 20vw;
+    border: 2px solid black;
+    text-align: center;
+}
+
+.login {
+    margin-bottom: 10px;
+    width: 50%;
+    max-width: 230px;
+}
+
+.login_button {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

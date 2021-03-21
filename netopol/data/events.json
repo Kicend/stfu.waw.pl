@@ -1,0 +1,19 @@
+{
+  "#0": {
+    "name": "Test",
+    "type": "teleport",
+    "coordinates": "#0"
+  },
+
+  "#1": {
+    "name": "Test",
+    "type": "income",
+    "value": 100
+  },
+
+  "#2": {
+    "name": "Test",
+    "type": "pay",
+    "value": 100
+  }
+}
