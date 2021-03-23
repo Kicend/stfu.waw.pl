@@ -6,23 +6,29 @@
     <title>Giercownia</title>
 </head>
 <body>
-    <div id="nav_index" class="nav">
-        <a href="#nav_index" class="active">Strona główna</a>
-        <a href="netopol/netopol_lobby.html">Netopol</a>
-    </div>
-    <div id="login_window">
+    <div id="auth_window">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
         <form name="login_form" action="" method="post">
-            <label for="username">Nazwa użytkownika lub adres email:</label>
-            <input id="username" class="login" type="text" name="username" placeholder="Login" maxlength="16">
+            <label for="email">Adres email:</label>
+            <br>
+            <input id="email" class="login" type="text" name="email" placeholder="Login" maxlength="16">
             <br>
             <label for="password">Hasło:</label>
             <br>
             <input id="password" class="login" type="password" name="password" placeholder="hasło" maxlength="48">
             <br>
             <input id="sign_in" class="login_button" type="submit" name="sign_in" value="Zaloguj się">
-            <br>
-            <input id="sign_up" class="login_button" type="submit" name="sign_up" value="Zarejestruj się">
         </form>
+        <br>
+        <a href="{{ url_for('routes.register') }}" class="button">Zarejestruj się</a>
     </div>
 </body>
 </html>

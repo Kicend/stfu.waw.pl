@@ -1,30 +1,28 @@
-from flask import Flask, render_template, request
+import webbrowser
+from flask import Flask
+from json import load
+from ext.auth import db, login
+from ext.routes import routes
+from ext.email import mail
 
-from webbrowser import open
+with open("db/secret.json", "r") as f:
+    secrets = load(f)
 
 app = Flask(__name__)
+login.init_app(app)
+login.login_view = "routes.login"
 
-sessions_list = {}
+for key, secret in secrets.items():
+    app.config[key] = secret
 
-
-@app.route("/")
-@app.route("/index.html", methods=["GET", "POST"])
-def root():
-    return render_template("index.html")
-
-
-@app.route("/netopol_lobby.html", methods=["GET", "POST"])
-def netopol_lobby():
-    if request.method == "POST":
-        pass
-    return render_template("netopol/netopol_lobby.html", sessions=sessions_list)
-
-
-@app.route("/game.html/<board_id>")
-def game(board_id):
-    return render_template("netopol/netopol_session.html", board_id=board_id)
+app.register_blueprint(routes)
+mail.init_app(app)
+db.init_app(app)
+@app.before_first_request
+def create_table():
+    db.create_all()
 
 
 if __name__ == "__main__":
-    open("http://127.0.0.1:5000")
+    webbrowser.open("http://127.0.0.1:5000")
     app.run()
