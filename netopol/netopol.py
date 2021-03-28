@@ -24,7 +24,7 @@ class Netopol:
 
     @staticmethod
     def load_properties():
-        with open("data/properties.json", "r") as f:
+        with open("netopol/data/properties.json", "r") as f:
             return load(f)
 
     @staticmethod
