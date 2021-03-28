@@ -8,9 +8,6 @@ from ext.decorators import check_confirmed
 
 routes = Blueprint("routes", __name__, template_folder="templates")
 
-sessions_list = {}
-
-
 @routes.route("/", methods=["GET", "POST"])
 @routes.route("/index", methods=["GET", "POST"])
 def login():
@@ -126,9 +123,7 @@ def logout():
 
 @routes.route("/netopol_lobby", methods=["GET", "POST"])
 def netopol_lobby():
-    if request.method == "POST":
-        pass
-    return render_template("netopol/netopol_lobby.html", sessions=sessions_list)
+    return render_template("netopol/netopol_lobby.html")
 
 
 @routes.route("/game/<board_id>")
