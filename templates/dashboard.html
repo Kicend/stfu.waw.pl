@@ -8,8 +8,13 @@
 <body>
     <div id="nav_index" class="nav">
         <a href="#nav_index" class="active">Strona główna</a>
-        <a href="netopol/netopol_lobby.html">Netopol</a>
-        <a href="#nav_index">{{ current_user.username }}</a>
+        <a href="{{ url_for('routes.netopol_lobby') }}">Netopol</a>
+    </div>
+    <div id="user_panel" class="nav">
+        <div id="user_div_content">
+            <a class="right-side" href="">{{ current_user.username }}</a>
+            <a class="right-side" href="{{ url_for('routes.logout') }}">Wyloguj się</a>
+        </div>
     </div>
 </body>
 </html>
