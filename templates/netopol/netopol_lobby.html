@@ -3,28 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script type="text/javascript" src="../static/js/socket.js"></script>
+    <script type="text/javascript" src="../static/js/status.js"></script>
+    <script type="text/javascript" src="../static/js/room.js"></script>
     <title>Netopol</title>
 </head>
 <body>
     <div id="nav_netopol" class="nav">
-        <a href="../index.html">Strona główna</a>
+        <a href="{{ url_for('routes.dashboard') }}">Strona główna</a>
         <a href="#nav_netopol" class="active">Netopol</a>
     </div>
     <div id="main">
         <div id="lobby">
             <div id="lobby_controls">
-                <form name="create_session" action="" method="post">
-                    <input id="create_session_button" type="submit" value="nowa gra">
-                </form>
+                <div id="lobby_actions">
+                    <input id="create_session_button" type="button" value="nowa gra" onclick="createRoom();">
+                </div>
             </div>
             <ul id="sessions">
-            {% for session in sessions %}
-                <li><a href="/game.html/{{ session }}">#{{ session }}</a></li>
-            {% endfor %}
             </ul>
         </div>
         <div id="players_list">
-            Test
+            <ul id="players_online_list">
+            </ul>
         </div>
     </div>
 </body>
