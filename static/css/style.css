@@ -241,6 +241,12 @@ ul#sessions {
     margin: 0;
 }
 
+ul#players_online_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 /* CSS for index */
 div#auth_window {
     margin-top: 30vh;
@@ -273,4 +279,19 @@ div#auth_window {
   border-right: 1px solid #333333;
   border-bottom: 1px solid #333333;
   border-left: 1px solid #CCCCCC;
+}
+
+/* CSS for dashboard */
+div#nav_index {
+    float: left;
+    width: 70%;
+}
+
+div#user_panel {
+    float: left;
+    width: 30%;
+}
+
+div#user_div_content {
+    float: right;
 }
