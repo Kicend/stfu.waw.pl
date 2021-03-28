@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
     <link rel="stylesheet" type="text/css" href="../static/css/animated_side_panel.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js"></script>
+    <script type="text/javascript" src="../static/js/socket.js"></script>
+    <script type="text/javascript" src="../static/js/room.js"></script>
+    <script type="text/javascript" src="../static/js/slots.js"></script>
     <script type="text/javascript" src="../static/js/render.js"></script>
     <title>Netopol</title>
 </head>
@@ -26,7 +30,7 @@
                                 <div id="title_1" class="title">
                                     <div id="red" class="square"></div>#1
                                 </div>
-                                <input id="slot_1" class="slot" type="button" value="#1">
+                                <input id="slot_1" class="slot" type="button" value="#1" onclick="takeSlot(this.id)">
                                 <div id="balance_1" class="balance">$0</div>
                                 <div id="timer_1" class="timer">0:00</div>
                              </div>
@@ -34,7 +38,7 @@
                                 <div id="title_2" class="title">
                                     <div id="blue" class="square"></div>#2
                                 </div>
-                                <input id="slot_2" class="slot" type="button" value="#2">
+                                <input id="slot_2" class="slot" type="button" value="#2" onclick="takeSlot(this.id)">
                                 <div id="balance_2" class="balance">$0</div>
                                 <div id="timer_2" class="timer">0:00</div>
                              </div>
@@ -42,7 +46,7 @@
                                 <div id="title_3" class="title">
                                     <div id="green" class="square"></div>#3
                                 </div>
-                                <input id="slot_3" class="slot" type="button" value="#3">
+                                <input id="slot_3" class="slot" type="button" value="#3" onclick="takeSlot(this.id)">
                                 <div id="balance_3" class="balance">$0</div>
                                 <div id="timer_3" class="timer">0:00</div>
                              </div>
@@ -50,7 +54,7 @@
                                 <div id="title_4" class="title">
                                     <div id="yellow" class="square"></div>#4
                                 </div>
-                                <input id="slot_4" class="slot" type="button" value="#4">
+                                <input id="slot_4" class="slot" type="button" value="#4" onclick="takeSlot(this.id)">
                                 <div id="balance_4" class="balance">$0</div>
                                 <div id="timer_4" class="timer">0:00</div>
                              </div>
@@ -58,7 +62,7 @@
                                 <div id="title_5" class="title">
                                     <div id="purple" class="square"></div>#5
                                 </div>
-                                <input id="slot_5" class="slot" type="button" value="#5">
+                                <input id="slot_5" class="slot" type="button" value="#5" onclick="takeSlot(this.id)">
                                 <div id="balance_5" class="balance">$0</div>
                                 <div id="timer_5" class="timer">0:00</div>
                              </div>
@@ -66,7 +70,7 @@
                                 <div id="title_6" class="title">
                                     <div id="orange" class="square"></div>#6
                                 </div>
-                                <input id="slot_6" class="slot" type="button" value="#6">
+                                <input id="slot_6" class="slot" type="button" value="#6" onclick="takeSlot(this.id)">
                                 <div id="balance_6" class="balance">$0</div>
                                 <div id="timer_6" class="timer">0:00</div>
                              </div>
@@ -74,7 +78,7 @@
                                 <div id="title_7" class="title">
                                     <div id="pink" class="square"></div>#7
                                 </div>
-                                <input id="slot_7" class="slot" type="button" value="#7">
+                                <input id="slot_7" class="slot" type="button" value="#7" onclick="takeSlot(this.id)">
                                 <div id="balance_7" class="balance">$0</div>
                                 <div id="timer_7" class="timer">0:00</div>
                              </div>
@@ -82,7 +86,7 @@
                                 <div id="title_8" class="title">
                                     <div id="brown" class="square"></div>#8
                                 </div>
-                                <input id="slot_8" class="slot" type="button" value="#8">
+                                <input id="slot_8" class="slot" type="button" value="#8" onclick="takeSlot(this.id)">
                                 <div id="balance_8" class="balance">$0</div>
                                 <div id="timer_8" class="timer">0:00</div>
                              </div>
@@ -90,7 +94,7 @@
                                 <div id="title_9" class="title">
                                     <div id="grey" class="square"></div>#9
                                 </div>
-                                <input id="slot_9" class="slot" type="button" value="#9">
+                                <input id="slot_9" class="slot" type="button" value="#9" onclick="takeSlot(this.id)">
                                 <div id="balance_9" class="balance">$0</div>
                                 <div id="timer_9" class="timer">0:00</div>
                              </div>
@@ -98,7 +102,7 @@
                                 <div id="title_10" class="title">
                                     <div id="white" class="square"></div>#10
                                 </div>
-                                <input id="slot_10" class="slot" type="button" value="#10">
+                                <input id="slot_10" class="slot" type="button" value="#10" onclick="takeSlot(this.id)">
                                 <div id="balance_10" class="balance">$0</div>
                                 <div id="timer_10" class="timer">0:00</div>
                              </div>
