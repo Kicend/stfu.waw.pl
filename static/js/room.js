@@ -4,6 +4,14 @@ function createRoom() {
     socket.emit("create_room");
 };
 
+function joinRoom() {
+    socket.emit("join_room");
+};
+
+function leaveRoom() {
+    socket.emit("leave_room")
+};
+
 function checkPreviousRoomExist() {
     socket.emit("check_previous_room");
 };
