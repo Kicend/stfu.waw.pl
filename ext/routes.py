@@ -129,3 +129,8 @@ def netopol_lobby():
 @routes.route("/game/<board_id>")
 def game(board_id):
     return render_template("netopol/netopol_session.html", board_id=board_id)
+
+
+@routes.route("/game/error")
+def game_error():
+    return render_template("netopol/game_404.html")
