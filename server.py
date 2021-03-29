@@ -1,7 +1,7 @@
 import webbrowser
-from flask import Flask
+from flask import Flask, redirect
 from flask_login import current_user
-from flask_socketio import SocketIO, emit, join_room, leave_room, rooms
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from json import load
 from ext.auth import db, login
 from ext.routes import routes
@@ -36,8 +36,6 @@ players_rooms = {}
 def online_event():
     if current_user.username not in online_users_list:
         online_users_list.append(current_user.username)
-    if current_user.username in players_rooms:
-        del players_rooms[current_user.username]
     emit("online_users_list", {"online_users": online_users_list}, broadcast=True)
 
 
@@ -56,24 +54,46 @@ def create_room_event():
             room_id = sessions_id_pool.pop(0)
         join_room(room_id)
         sessions_list[room_id] = Netopol(room_id, current_user.username)
-        emit("get_room_id", {"room_id": room_id})
+        game_instance = sessions_list[room_id]
+        game_instance.players_list.append(current_user.username)
         players_rooms[current_user.username] = room_id
+        emit("get_room_id", {"room_id": room_id})
 
 
 @socketio.on("join_room")
-def join_room_event():
-    room_id = None
-    if current_user.username not in players_rooms:
-        # TODO: Przydzielanie room_id z id pokoju do, którego dołącza gracz
-        if sessions_id_pool:
-            room_id = sessions_id_pool.pop(0)
-        join_room(room_id)
-        emit("get_room_id", {"room_id": room_id})
-        players_rooms[current_user.username] = room_id
-    else:
-        join_room(players_rooms[current_user.username])
-        emit("get_room_id", {"room_id": players_rooms[current_user.username]})
+def join_room_event(data):
+    if int(data["room_id"]) in sessions_list:
+        if current_user.username not in players_rooms:
+            room_id = int(data["room_id"])
+            join_room(room_id)
+            players_rooms[current_user.username] = room_id
+            emit("get_room_id", {"room_id": room_id})
+        else:
+            if data["room_id"] != players_rooms[current_user.username]:
+                players_rooms[current_user.username] = int(data["room_id"])
+            join_room(players_rooms[current_user.username])
+            emit("get_room_id", {"room_id": players_rooms[current_user.username]})
 
+        if sessions_list[int(data["room_id"])] is not None:
+            game_instance = sessions_list[int(data["room_id"])]
+            if current_user.username not in game_instance.players_list:
+                game_instance.players_list.append(current_user.username)
+            emit("join_room_success")
+    else:
+        emit("join_room_error")
+
+
+@socketio.on("leave_room")
+def leave_room_event():
+    if current_user.username in players_rooms:
+        room_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[room_id]
+        leave_room(room_id)
+        del players_rooms[current_user.username]
+        del game_instance.players_list[game_instance.players_list.index(current_user.username)]
+        if not game_instance.players_list:
+            del sessions_list[int(room_id)]
+            sessions_id_pool.append(room_id)
 
 @socketio.on("check_previous_room")
 def check_previous_room_event():
@@ -81,15 +101,33 @@ def check_previous_room_event():
         emit("get_room_id", {"room_id": players_rooms[current_user.username]})
 
 
-@socketio.on("request_username")
-def get_username_event():
-    emit("get_username", {"username": current_user.username})
+@socketio.on("request_slots")
+def request_slots_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        slots = game_instance.players_seats
+        emit("get_slots", {"slots": slots})
 
 
 @socketio.on("take_slot")
-def take_slot_event():
-    pass
-
+def take_slot_event(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        slots = game_instance.players_seats
+        slot = int(data["slot_id"][5:])
+        players_list = game_instance.players_list
+        if slot in slots.keys() and slots[slot] == "--" and current_user.username in players_list and \
+                current_user.username not in slots.values():
+            slots[slot] = current_user.username
+            emit("get_slots", {"slots": slots}, broadcast=True)
+        elif slot in slots.keys() and slots[slot] == "--" and current_user.username in players_list and \
+                current_user.username in slots.values():
+            players = list(slots.values())
+            slots[players.index(current_user.username)+1] = "--"
+            slots[slot] = current_user.username
+            emit("get_slots", {"slots": slots}, broadcast=True)
 
 if __name__ == "__main__":
     webbrowser.open("http://127.0.0.1:5000")
