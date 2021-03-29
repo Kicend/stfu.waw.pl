@@ -8,7 +8,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js"></script>
     <script type="text/javascript" src="../static/js/socket.js"></script>
     <script type="text/javascript" src="../static/js/room.js"></script>
-    <script type="text/javascript" src="../static/js/slots.js"></script>
+    <script type="text/javascript" src="../static/js/game_session.js"></script>
     <script type="text/javascript" src="../static/js/render.js"></script>
     <title>Netopol</title>
 </head>
@@ -23,7 +23,7 @@
                 <div class="box__description">
                     <div class="col-2" id="ui">
                         <div id="session_info">
-                            Sesja #{{ board_id }}, czas <input id="leave" type="button" value="X">
+                            Sesja #{{ board_id }}, czas <input id="leave" type="button" value="X" onclick="leaveRoom();">
                         </div>
                         <div id="players">
                              <div id="player_1" class="player">
