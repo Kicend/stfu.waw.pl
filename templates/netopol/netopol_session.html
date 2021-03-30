@@ -110,12 +110,17 @@
                         <div id="control_panel" class="control_panel">
                             Ustawienia sesji:
                             <br>
+                            <div id="operator_username"></div>
+                            <br>
                             <div id="control_panel_content">
                                 <form id="settings" action="">
-                                    <input id="is_private" type="checkbox">
+                                    <input id="is_private" type="checkbox" onclick="changeSettings();">
                                     <label for="is_private">prywatny</label>
                                     <br>
-                                    <select id="time" name="time">
+                                    <input id="is_visible" type="checkbox" onclick="changeSettings();">
+                                    <label for="is_visible">widoczność w lobby</label>
+                                    <br>
+                                    <select id="time" name="time" onchange="changeSettings();">
                                         <option value="1">1</option>
                                         <option value="5">5</option>
                                         <option value="10">10</option>
@@ -129,7 +134,7 @@
                                     <input id="is_sound" type="checkbox">
                                     <label for="is_sound">dźwięki</label>
                                     <br>
-                                    <select id="players_number" name="players_number">
+                                    <select id="players_number" name="players_number" onchange="changeSettings();">
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                         <option value="4">4</option>
@@ -137,8 +142,8 @@
                                         <option value="6" selected>6</option>
                                         <option value="7">7</option>
                                         <option value="8">8</option>
-                                        <option value="8">9</option>
-                                        <option value="8">10</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
                                     </select>
                                     <label for="players_number">ilość graczy</label>
                                 </form>
