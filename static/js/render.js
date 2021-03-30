@@ -1,3 +1,4 @@
+"use strict";
 window.onload = function () {
     var board = new fabric.Canvas("board_content", {width: window.innerWidth, height: window.innerHeight});
     board.selection = false;
@@ -9,25 +10,25 @@ window.onload = function () {
         board.renderAll();
     };
 
-    objects_list = {};
-    pawns_list = {};
-    pawns_colors = {"#1": "#ff1111",
-                  "#2": "#3333ff",
-                  "#3": "#22cc22",
-                  "#4": "#ffff00",
-                  "#5": "#800080",
-                  "#6": "#ffa500",
-                  "#7": "#cc66dd",
-                  "#8": "#8b4513",
-                  "#9": "#808080",
-                  "#10": "#ffffff"
-                 };
-    logs_buffer = [];
+    var objects_list = {};
+    var pawns_list = {};
+    var pawns_colors = {"#1": "#ff1111",
+                        "#2": "#3333ff",
+                        "#3": "#22cc22",
+                        "#4": "#ffff00",
+                        "#5": "#800080",
+                        "#6": "#ffa500",
+                        "#7": "#cc66dd",
+                        "#8": "#8b4513",
+                        "#9": "#808080",
+                        "#10": "#ffffff"
+                        };
+    var logs_buffer = [];
 
-    id = 0;
-    x = 10;
-    y = 10;
-    angle = 0;
+    var id = 0;
+    var x = 10;
+    var y = 10;
+    var angle = 0;
     const width_corner = 100;
     const width_card = 50;
 
@@ -51,7 +52,7 @@ window.onload = function () {
     })
     */
 
-   i = 1;
+   var i = 1;
 
     while(i != 11) {
         var pawn = new fabric.Rect(
@@ -67,16 +68,16 @@ window.onload = function () {
 
     function logs_frame(message) {
 
-    }
+    };
 
     function drawBoard(pawns_coordinates) {
         i = 0;
 
         while(i != 4) {
-            j = 0;
+            var j = 0;
             while(j != 10) {
                 if(j == 0) {
-                    field_width = width_corner;
+                    var field_width = width_corner;
                 } else {
                     field_width = width_card;
                 };
