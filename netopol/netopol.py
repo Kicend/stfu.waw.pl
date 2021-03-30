@@ -1,5 +1,19 @@
 from json import load
 from random import randrange
+from time import time
+
+class Session:
+    def __init__(self, board_id, op):
+        self.board_id = board_id
+        self.op = op
+        self.created_at = time()
+        self.private = False
+        self.visible = False
+        self.max_slots = 2
+        self.players_seats = dict.fromkeys([i for i in range(1, 11)], "--")
+        self.players_list = []
+        self.active_players = []
+
 
 class Player:
     def __init__(self, nickname):
@@ -8,17 +22,11 @@ class Player:
         self.is_op = False
 
 
-class Netopol:
+class Netopol(Session):
     def __init__(self, board_id, op):
-        self.board_id = board_id
-        self.op = op
-        self.private = False
+        super().__init__(board_id, op)
         self.max_slots = 6
         self.properties_data = self.load_properties()
-        self.players_seats = {1: "--", 2: "--", 3: "--", 4: "--", 5: "--",
-                              6: "--", 7: "--", 8: "--", 9: "--", 10: "--"}
-        self.players_list = []
-        self.active_players = []
         self.start_balance = 1500
         self.accounts = dict.fromkeys([i for i in range(1, 11)], self.start_balance)
 
@@ -26,6 +34,10 @@ class Netopol:
     def load_properties():
         with open("netopol/data/properties.json", "r") as f:
             return load(f)
+
+    def start_game(self):
+        for player in self.players_seats:
+            self.active_players.append(Player(player))
 
     @staticmethod
     def roll():
