@@ -1,3 +1,4 @@
+"use strict";
 var socket = getSocketInstance();
 
 socket.on("online_users_list", function(msg) {
