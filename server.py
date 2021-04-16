@@ -1,5 +1,4 @@
-import webbrowser
-from flask import Flask
+from flask import Flask, request
 from flask_login import current_user
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from json import load
@@ -31,6 +30,7 @@ sessions_id_pool = list(range(1, 100))
 online_users_list = []
 sessions_list = {}
 players_rooms = {}
+users_socket_id = {}
 
 @socketio.on("online")
 def online_event():
@@ -39,10 +39,18 @@ def online_event():
     emit("online_users_list", {"online_users": online_users_list}, broadcast=True)
 
 
+@socketio.on("connect")
+def connect_event():
+    if current_user.username not in users_socket_id:
+        users_socket_id[current_user.username] = request.sid
+
+
 @socketio.on("disconnect")
 def disconnect_event():
     if current_user.username in online_users_list:
         del online_users_list[online_users_list.index(current_user.username)]
+    if current_user.username in users_socket_id:
+        del users_socket_id[current_user.username]
     emit("online_users_list", {"online_users": online_users_list}, broadcast=True)
 
 
@@ -89,7 +97,13 @@ def join_room_event(data):
                 game_instance = sessions_list[int(data["room_id"])]
                 if current_user.username not in game_instance.players_list:
                     game_instance.players_list.append(current_user.username)
+                if current_user.username == game_instance.op:
+                    operator_status = True
+                else:
+                    operator_status = False
                 emit("join_room_success")
+                emit("get_players_list", {"online_players": game_instance.players_list,
+                                          "operator_status": operator_status})
         else:
             emit("join_room_error")
     except KeyError:
@@ -151,13 +165,29 @@ def take_slot_event(data):
             emit("get_slots", {"slots": slots}, broadcast=True)
 
 
+@socketio.on("kick_from_slot")
+def kick_from_slot_event(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if current_user.username == game_instance.op:
+            slots = game_instance.players_seats
+            slot = int(data["slot_id"][10:])
+            slots[slot] = "--"
+            emit("get_slots", {"slots": slots}, broadcast=True)
+
+
 @socketio.on("request_operator_username")
 def request_operator_username_event():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
         op = game_instance.op
-        emit("get_operator_username", {"operator_username": op})
+        if current_user.username == op:
+            operator_status = True
+        else:
+            operator_status = False
+        emit("get_operator_username", {"operator_username": op, "operator_status": operator_status})
 
 
 @socketio.on("is_operator")
@@ -186,6 +216,18 @@ def request_settings_event():
         emit("get_settings", {"settings": settings})
 
 
+@socketio.on("request_players_list")
+def request_players_list_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if current_user.username == game_instance.op:
+            operator_status = True
+        else:
+            operator_status = False
+        emit("get_players_list", {"online_players": game_instance.players_list, "operator_status": operator_status})
+
+
 @socketio.on("change_settings")
 def change_settings_event(data):
     if current_user.username in players_rooms:
@@ -210,6 +252,32 @@ def change_settings_event(data):
             emit("get_sessions_list", {"sessions_list": visible_sessions_list}, broadcast=True)
 
 
+@socketio.on("kick_player")
+def kick_player_event(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if current_user.username == game_instance.op:
+            del game_instance.players_list[game_instance.players_list.index(data["username"])]
+            seats = list(game_instance.players_seats.values())
+            if data["username"] in seats:
+                game_instance.players_seats[seats.index(data["username"])+1] = "--"
+            del players_rooms[data["username"]]
+            leave_room(board_id, sid=users_socket_id[data["username"]])
+            emit("get_kicked", room=users_socket_id[data["username"]])
+            emit("get_players_list", {"online_players": game_instance.players_list, "operator_status": False},
+                 broadcast=True)
+            emit("get_players_list", {"online_players": game_instance.players_list, "operator_status": True})
+            emit("get_slots", {"slots": game_instance.players_seats}, broadcast=True)
+
+
+@socketio.on("request_properties_info")
+def request_properties_info():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        emit("get_properties_info", {"properties_info": game_instance.properties_data})
+
+
 if __name__ == "__main__":
-    webbrowser.open("http://127.0.0.1:5000")
     socketio.run(app, log_output=True)
