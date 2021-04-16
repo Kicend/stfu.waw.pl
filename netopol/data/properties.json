@@ -1,1121 +1,562 @@
 {
-  "#0": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
+    "#0": {
+      "name": "Start",
+      "owner": null,
+      "district": "start",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#1": {
+      "name": "Ulica Konopacka",
+      "owner": null,
+      "district": "grey",
+      "price": 60,
+      "rent_basic": 2,
+      "rent_level_1": 10,
+      "rent_level_2": 30,
+      "rent_level_3": 90,
+      "rent_level_4": 160,
+      "rent_level_5": 250,
+      "upgrade_price": 50
+    },
+  
+    "#2": {
+      "name": "Los",
+      "owner": null,
+      "district": "fate",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#3": {
+      "name": "Ulica Stalowa",
+      "owner": null,
+      "district": "grey",
+      "price": 60,
+      "rent_basic": 4,
+      "rent_level_1": 20,
+      "rent_level_2": 60,
+      "rent_level_3": 180,
+      "rent_level_4": 320,
+      "rent_level_5": 450,
+      "upgrade_price": 50
+    },
+  
+    "#4": {
+      "name": "Podatek Dochodowy",
+      "owner": null,
+      "district": "tax",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#5": {
+      "name": "Dworzec Zachodni",
+      "owner": null,
+      "district": "train",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#6": {
+      "name": "Ulica Radzymińska",
+      "owner": null,
+      "district": "lightblue",
+      "price": 100,
+      "rent_basic": 6,
+      "rent_level_1": 30,
+      "rent_level_2": 90,
+      "rent_level_3": 270,
+      "rent_level_4": 400,
+      "rent_level_5": 550,
+      "upgrade_price": 50
+    },
+  
+    "#7": {
+      "name": "Los",
+      "owner": null,
+      "district": "fate",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#8": {
+      "name": "Ulica Jagiellońska",
+      "owner": null,
+      "district": "lightblue",
+      "price": 100,
+      "rent_basic": 6,
+      "rent_level_1": 30,
+      "rent_level_2": 90,
+      "rent_level_3": 270,
+      "rent_level_4": 400,
+      "rent_level_5": 550,
+      "upgrade_price": 50
+    },
+  
+    "#9": {
+      "name": "Ulica Targowa",
+      "owner": null,
+      "district": "lightblue",
+      "price": 120,
+      "rent_basic": 8,
+      "rent_level_1": 40,
+      "rent_level_2": 100,
+      "rent_level_3": 300,
+      "rent_level_4": 450,
+      "rent_level_5": 600,
+      "upgrade_price": 50
+    },
+  
+    "#10": {
+      "name": "Więzienie",
+      "owner": null,
+      "district": "jail",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#11": {
+      "name": "Ulica Płowiecka",
+      "owner": null,
+      "district": "pink",
+      "price": 140,
+      "rent_basic": 10,
+      "rent_level_1": 50,
+      "rent_level_2": 150,
+      "rent_level_3": 450,
+      "rent_level_4": 625,
+      "rent_level_5": 750,
+      "upgrade_price": 100
+    },
+  
+    "#12": {
+      "name": "Elektrownia",
+      "owner": null,
+      "district": "infra",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#13": {
+      "name": "Ulica Marsa",
+      "owner": null,
+      "district": "pink",
+      "price": 140,
+      "rent_basic": 10,
+      "rent_level_1": 50,
+      "rent_level_2": 150,
+      "rent_level_3": 450,
+      "rent_level_4": 625,
+      "rent_level_5": 750,
+      "upgrade_price": 100
+    },
+  
+    "#14": {
+      "name": "Ulica Grochowska",
+      "owner": null,
+      "district": "pink",
+      "price": 160,
+      "rent_basic": 12,
+      "rent_level_1": 60,
+      "rent_level_2": 180,
+      "rent_level_3": 500,
+      "rent_level_4": 700,
+      "rent_level_5": 900,
+      "upgrade_price": 100
+    },
+  
+    "#15": {
+      "name": "Dworzec Gdański",
+      "owner": null,
+      "district": "train",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#16": {
+      "name": "Ulica Obozowa",
+      "owner": null,
+      "district": "orange",
+      "price": 180,
+      "rent_basic": 14,
+      "rent_level_1": 70,
+      "rent_level_2": 200,
+      "rent_level_3": 550,
+      "rent_level_4": 750,
+      "rent_level_5": 950,
+      "upgrade_price": 100
+    },
+  
+    "#17": {
+      "name": "Los",
+      "owner": null,
+      "district": "fate",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#18": {
+      "name": "Ulica Górczewska",
+      "owner": null,
+      "district": "orange",
+      "price": 180,
+      "rent_basic": 14,
+      "rent_level_1": 70,
+      "rent_level_2": 200,
+      "rent_level_3": 550,
+      "rent_level_4": 750,
+      "rent_level_5": 950,
+      "upgrade_price": 100
+    },
+  
+    "#19": {
+      "name": "Ulica Wolska",
+      "owner": null,
+      "district": "orange",
+      "price": 200,
+      "rent_basic": 16,
+      "rent_level_1": 80,
+      "rent_level_2": 220,
+      "rent_level_3": 600,
+      "rent_level_4": 800,
+      "rent_level_5": 1000,
+      "upgrade_price": 100
+    },
+  
+    "#20": {
+      "name": "Parking",
+      "owner": null,
+      "district": "parking",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#21": {
+      "name": "Ulica Mickiewicza",
+      "owner": null,
+      "district": "red",
+      "price": 220,
+      "rent_basic": 18,
+      "rent_level_1": 90,
+      "rent_level_2": 250,
+      "rent_level_3": 700,
+      "rent_level_4": 875,
+      "rent_level_5": 1050,
+      "upgrade_price": 150
+    },
+  
+    "#22": {
+      "name": "Los",
+      "owner": null,
+      "district": "fate",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#23": {
+      "name": "Ulica Słowackiego",
+      "owner": null,
+      "district": "red",
+      "price": 220,
+      "rent_basic": 18,
+      "rent_level_1": 90,
+      "rent_level_2": 250,
+      "rent_level_3": 700,
+      "rent_level_4": 875,
+      "rent_level_5": 1050,
+      "upgrade_price": 150
+    },
+  
+    "#24": {
+      "name": "Plac Wilsona",
+      "owner": null,
+      "district": "red",
+      "price": 240,
+      "rent_basic": 20,
+      "rent_level_1": 100,
+      "rent_level_2": 300,
+      "rent_level_3": 750,
+      "rent_level_4": 925,
+      "rent_level_5": 1100,
+      "upgrade_price": 150
+    },
+  
+    "#25": {
+      "name": "Dworzec Wschodni",
+      "owner": null,
+      "district": "train",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#26": {
+      "name": "Ulica Świętokrzyska",
+      "owner": null,
+      "district": "yellow",
+      "price": 260,
+      "rent_basic": 22,
+      "rent_level_1": 110,
+      "rent_level_2": 330,
+      "rent_level_3": 800,
+      "rent_level_4": 975,
+      "rent_level_5": 1150,
+      "upgrade_price": 150
+    },
+  
+    "#27": {
+      "name": "Krakowskie Przedmieście",
+      "owner": null,
+      "district": "yellow",
+      "price": 260,
+      "rent_basic": 22,
+      "rent_level_1": 110,
+      "rent_level_2": 330,
+      "rent_level_3": 800,
+      "rent_level_4": 975,
+      "rent_level_5": 1150,
+      "upgrade_price": 150
+    },
+  
+    "#28": {
+      "name": "Wodociągi",
+      "owner": null,
+      "district": "infra",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#29": {
+      "name": "Nowy Świat",
+      "owner": null,
+      "district": "yellow",
+      "price": 280,
+      "rent_basic": 24,
+      "rent_level_1": 120,
+      "rent_level_2": 360,
+      "rent_level_3": 850,
+      "rent_level_4": 1025,
+      "rent_level_5": 1200,
+      "upgrade_price": 150
+    },
+  
+    "#30": {
+      "name": "Policja",
+      "owner": null,
+      "district": "police",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#31": {
+      "name": "Plac Trzech Krzyży",
+      "owner": null,
+      "district": "green",
+      "price": 300,
+      "rent_basic": 26,
+      "rent_level_1": 130,
+      "rent_level_2": 390,
+      "rent_level_3": 900,
+      "rent_level_4": 1100,
+      "rent_level_5": 1275,
+      "upgrade_price": 200
+    },
+  
+    "#32": {
+      "name": "Ulica Marszałkowska",
+      "owner": null,
+      "district": "green",
+      "price": 300,
+      "rent_basic": 26,
+      "rent_level_1": 130,
+      "rent_level_2": 390,
+      "rent_level_3": 900,
+      "rent_level_4": 1100,
+      "rent_level_5": 1275,
+      "upgrade_price": 200
+    },
+  
+    "#33": {
+      "name": "Los",
+      "owner": null,
+      "district": "fate",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#34": {
+      "name": "Aleje Jerozolimskie",
+      "owner": null,
+      "district": "green",
+      "price": 320,
+      "rent_basic": 28,
+      "rent_level_1": 150,
+      "rent_level_2": 450,
+      "rent_level_3": 1000,
+      "rent_level_4": 1200,
+      "rent_level_5": 1400,
+      "upgrade_price": 200
+    },
+  
+    "#35": {
+      "name": "Dworzec Centralny",
+      "owner": null,
+      "district": "train",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#36": {
+      "name": "Los",
+      "owner": null,
+      "district": "fate",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#37": {
+      "name": "Ulica Belwederska",
+      "owner": null,
+      "district": "darkblue",
+      "price": 350,
+      "rent_basic": 35,
+      "rent_level_1": 175,
+      "rent_level_2": 500,
+      "rent_level_3": 1100,
+      "rent_level_4": 1300,
+      "rent_level_5": 1500,
+      "upgrade_price": 200
+    },
+  
+    "#38": {
+      "name": "Podatek Śmieciowy",
+      "owner": null,
+      "district": "tax",
+      "price": 0,
+      "rent_basic": 0,
+      "rent_level_1": 0,
+      "rent_level_2": 0,
+      "rent_level_3": 0,
+      "rent_level_4": 0,
+      "rent_level_5": 0,
+      "upgrade_price": 0
+    },
+  
+    "#39": {
+      "name": "Aleje Ujazdowskie",
+      "owner": null,
+      "district": "darkblue",
+      "price": 400,
+      "rent_basic": 50,
+      "rent_level_1": 200,
+      "rent_level_2": 600,
+      "rent_level_3": 1400,
+      "rent_level_4": 1700,
+      "rent_level_5": 2000,
+      "upgrade_price": 200
+    }
 
-  "#1": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#2": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#3": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#4": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#5": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#6": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#7": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#8": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#9": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#10": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#11": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#12": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#13": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#14": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#15": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#16": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#17": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#18": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#19": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#20": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#21": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#22": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#23": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#24": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#25": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#26": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#27": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#28": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#29": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#30": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#31": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#32": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#33": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#34": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#35": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#36": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#37": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#38": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#39": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#40": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#41": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#42": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#43": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#44": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#45": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#46": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#47": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#48": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#49": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#50": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#51": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#52": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#53": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#54": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#55": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#56": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#57": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#58": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#59": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#60": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#61": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#62": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#63": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#64": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#65": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#66": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#67": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#68": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#69": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#70": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#71": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#72": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#73": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#74": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#75": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#76": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#77": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#78": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  },
-
-  "#79": {
-    "name": "Test",
-    "owner": null,
-    "district": "",
-    "price": 0,
-    "rent_basic": 0,
-    "rent_level_1": 0,
-    "rent_level_2": 0,
-    "rent_level_3": 0,
-    "rent_level_4": 0,
-    "rent_level_5": 0,
-    "upgrade_price": 0
-  }
 }
