@@ -49,4 +49,6 @@ socket.on("get_sessions_list", function(msg) {
 });
 
 checkPreviousRoomExist();
-socket.emit("request_sessions_list");
+if(window.location.href.includes("lobby")) {
+    socket.emit("request_sessions_list");
+};
