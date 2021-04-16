@@ -19,7 +19,6 @@ class Player:
     def __init__(self, nickname):
         self.nickname = nickname
         self.coordinates = "#0"
-        self.is_op = False
 
 
 class Netopol(Session):
@@ -34,10 +33,6 @@ class Netopol(Session):
     def load_properties():
         with open("netopol/data/properties.json", "r") as f:
             return load(f)
-
-    def start_game(self):
-        for player in self.players_seats:
-            self.active_players.append(Player(player))
 
     @staticmethod
     def roll():
@@ -64,7 +59,6 @@ class Netopol(Session):
             player.coordinates = "#" + str((int(player.coordinates[1:]) + dices))
         else:
             player.coordinates = "#" + str((int(player.coordinates[1:]) + number))
-        self.prepare_for_render()
 
     def pay(self, sender: int, recipient: int, amount: int):
         if self.accounts[sender] >= amount:
@@ -79,7 +73,6 @@ class Netopol(Session):
     def trade(self, player_1: int, player_2: int, player_1_items: dict, player_2_items: dict, result: bool):
         pass
 
-    def prepare_for_render(self):
-        pass
-
-netopol = Netopol(1, "test")
+    def start_game(self):
+        for player in self.players_seats:
+            self.active_players.append(Player(player))
