@@ -1,35 +1,8 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-    <script type="text/javascript" src="../static/js/socket.js"></script>
-    <script type="text/javascript" src="../static/js/status.js"></script>
-    <script type="text/javascript" src="../static/js/room.js"></script>
-    <title>Netopol</title>
-</head>
-<body>
-    <div id="nav_netopol" class="nav">
-        <a href="{{ url_for('routes.dashboard') }}">Strona główna</a>
-        <a href="#nav_netopol" class="active">Netopol</a>
-    </div>
-    <div id="main">
-        <div id="lobby">
-            <div id="lobby_controls">
-                <div id="lobby_actions">
-                    <input id="create_session_button" type="button" value="nowa gra" onclick="createRoom();">
-                </div>
-            </div>
-            <div id="sessions_list">
-                <ul id="sessions">
-                </ul>
-            </div>
-        </div>
-        <div id="players_list">
-            <ul id="players_online_list">
-            </ul>
-        </div>
-    </div>
-</body>
-</html>
+{% extends "base/lobby.html" %}
+{% block title %}Netopol{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block nav %}
+    <a href="#nav" class="active">Netopol</a>
+{% endblock %}

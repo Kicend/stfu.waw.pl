@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} - Giercownia</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/animated_side_panel.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js"></script>
+    <script type="text/javascript" src="../static/js/socket.js"></script>
+    <script type="text/javascript" src="../static/js/room.js"></script>
+    <script type="text/javascript" src="../static/js/game_session.js"></script>
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    <div id="game" class="game">
+        <div id="board" class="col-1">
+            <canvas id="board_content" width="1000px" height="800px"></canvas>
+        </div>
+        <div class="box box--right">
+            <div class="box__content">
+                <div class="box__title">Panel</div>
+                <div class="box__description">
+                    <div class="col-2" id="ui">
+                        <div id="session_info">
+                            Sesja #{{ board_id }}, czas <input id="leave" type="button" value="X" onclick="leaveRoom();">
+                        </div>
+                    </div>
+                    <div id="players">
+                        {% for slot in slots %}
+                            <div id="player_{{ loop.index }}" class="player">
+                                <div id="title_{{ loop.index }}" class="title">
+                                    <div id="{{ slot }}" class="square"></div>#{{ loop.index }}
+                                </div>
+                                <input id="slot_{{ loop.index }}" class="slot" type="button" value="#{{ loop.index }}" onclick="takeSlot(this.id)">
+                                <div id="balance_{{ loop.index }}" class="balance">$0</div>
+                                <div id="timer_{{ loop.index }}" class="timer">0:00</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% block control_panel %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>

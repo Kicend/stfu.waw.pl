@@ -1,158 +1,70 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/animated_side_panel.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js"></script>
-    <script type="text/javascript" src="../static/js/socket.js"></script>
-    <script type="text/javascript" src="../static/js/room.js"></script>
-    <script type="text/javascript" src="../static/js/game_session.js"></script>
-    <script type="text/javascript" src="../static/js/render.js"></script>
-    <title>Netopol</title>
-</head>
-<body>
-    <div id="game" class="game">
-        <div id="board" class="col-1">
-            <canvas id="board_content" width="1000px" height="800px"></canvas>
+{% extends "base/session.html" %}
+{% block title %}Netopol{% endblock %}
+{% block head %}
+    {{ super() }}
+    <script type="text/javascript" src="../static/js/netopol/render_netopol.js"></script>
+{% endblock %}
+
+{% block body %}
+    {{ super() }}
+    {% block control_panel %}
+    <div id="control_panel" class="control_panel">
+        <div id="header">
+            <div id="header_name"></div>
+            <br>
+            <div id="operator_username"></div>
+            <br>
+            <div id="control_panel_pages">
+                <input id="cp_page_settings" type="radio" name="cp_pages" onclick="changePage();">
+                <label for="cp_page_settings">Ustawienia</label>
+                <script>
+                    document.getElementById("cp_page_settings").checked = true;
+                </script>
+                <input id="cp_page_players_list" type="radio" name="cp_pages" onclick="changePage();">
+                <label for="cp_page_players_list">Lista graczy</label>
+            </div>
         </div>
-        <div class="box box--right">
-            <div class="box__content">
-                <div class="box__title">Panel</div>
-                <div class="box__description">
-                    <div class="col-2" id="ui">
-                        <div id="session_info">
-                            Sesja #{{ board_id }}, czas <input id="leave" type="button" value="X" onclick="leaveRoom();">
-                        </div>
-                        <div id="players">
-                             <div id="player_1" class="player">
-                                <div id="title_1" class="title">
-                                    <div id="red" class="square"></div>#1
-                                </div>
-                                <input id="slot_1" class="slot" type="button" value="#1" onclick="takeSlot(this.id)">
-                                <div id="balance_1" class="balance">$0</div>
-                                <div id="timer_1" class="timer">0:00</div>
-                             </div>
-                             <div id="player_2" class="player">
-                                <div id="title_2" class="title">
-                                    <div id="blue" class="square"></div>#2
-                                </div>
-                                <input id="slot_2" class="slot" type="button" value="#2" onclick="takeSlot(this.id)">
-                                <div id="balance_2" class="balance">$0</div>
-                                <div id="timer_2" class="timer">0:00</div>
-                             </div>
-                             <div id="player_3" class="player">
-                                <div id="title_3" class="title">
-                                    <div id="green" class="square"></div>#3
-                                </div>
-                                <input id="slot_3" class="slot" type="button" value="#3" onclick="takeSlot(this.id)">
-                                <div id="balance_3" class="balance">$0</div>
-                                <div id="timer_3" class="timer">0:00</div>
-                             </div>
-                             <div id="player_4" class="player">
-                                <div id="title_4" class="title">
-                                    <div id="yellow" class="square"></div>#4
-                                </div>
-                                <input id="slot_4" class="slot" type="button" value="#4" onclick="takeSlot(this.id)">
-                                <div id="balance_4" class="balance">$0</div>
-                                <div id="timer_4" class="timer">0:00</div>
-                             </div>
-                             <div id="player_5" class="player">
-                                <div id="title_5" class="title">
-                                    <div id="purple" class="square"></div>#5
-                                </div>
-                                <input id="slot_5" class="slot" type="button" value="#5" onclick="takeSlot(this.id)">
-                                <div id="balance_5" class="balance">$0</div>
-                                <div id="timer_5" class="timer">0:00</div>
-                             </div>
-                             <div id="player_6" class="player">
-                                <div id="title_6" class="title">
-                                    <div id="orange" class="square"></div>#6
-                                </div>
-                                <input id="slot_6" class="slot" type="button" value="#6" onclick="takeSlot(this.id)">
-                                <div id="balance_6" class="balance">$0</div>
-                                <div id="timer_6" class="timer">0:00</div>
-                             </div>
-                             <div id="player_7" class="player">
-                                <div id="title_7" class="title">
-                                    <div id="pink" class="square"></div>#7
-                                </div>
-                                <input id="slot_7" class="slot" type="button" value="#7" onclick="takeSlot(this.id)">
-                                <div id="balance_7" class="balance">$0</div>
-                                <div id="timer_7" class="timer">0:00</div>
-                             </div>
-                             <div id="player_8" class="player">
-                                <div id="title_8" class="title">
-                                    <div id="brown" class="square"></div>#8
-                                </div>
-                                <input id="slot_8" class="slot" type="button" value="#8" onclick="takeSlot(this.id)">
-                                <div id="balance_8" class="balance">$0</div>
-                                <div id="timer_8" class="timer">0:00</div>
-                             </div>
-                             <div id="player_9" class="player">
-                                <div id="title_9" class="title">
-                                    <div id="grey" class="square"></div>#9
-                                </div>
-                                <input id="slot_9" class="slot" type="button" value="#9" onclick="takeSlot(this.id)">
-                                <div id="balance_9" class="balance">$0</div>
-                                <div id="timer_9" class="timer">0:00</div>
-                             </div>
-                             <div id="player_10" class="player">
-                                <div id="title_10" class="title">
-                                    <div id="white" class="square"></div>#10
-                                </div>
-                                <input id="slot_10" class="slot" type="button" value="#10" onclick="takeSlot(this.id)">
-                                <div id="balance_10" class="balance">$0</div>
-                                <div id="timer_10" class="timer">0:00</div>
-                             </div>
-                        </div>
-                        <div id="control_panel" class="control_panel">
-                            Ustawienia sesji:
-                            <br>
-                            <div id="operator_username"></div>
-                            <br>
-                            <div id="control_panel_content">
-                                <form id="settings" action="">
-                                    <input id="is_private" type="checkbox" onclick="changeSettings();">
-                                    <label for="is_private">prywatny</label>
-                                    <br>
-                                    <input id="is_visible" type="checkbox" onclick="changeSettings();">
-                                    <label for="is_visible">widoczność w lobby</label>
-                                    <br>
-                                    <select id="time" name="time" onchange="changeSettings();">
-                                        <option value="1">1</option>
-                                        <option value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="15" selected>15</option>
-                                        <option value="30">30</option>
-                                        <option value="60">60</option>
-                                        <option value="∞">∞</option>
-                                    </select>
-                                    <label for="time">czas na grę (min)</label>
-                                    <br>
-                                    <input id="is_sound" type="checkbox">
-                                    <label for="is_sound">dźwięki</label>
-                                    <br>
-                                    <select id="players_number" name="players_number" onchange="changeSettings();">
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6" selected>6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                    </select>
-                                    <label for="players_number">ilość graczy</label>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div id="control_panel_content">
+            <form id="settings" action="">
+                <input id="is_private" type="checkbox" onclick="changeSettings();">
+                <label for="is_private">prywatny</label>
+                <br>
+                <input id="is_visible" type="checkbox" onclick="changeSettings();">
+                <label for="is_visible">widoczność w lobby</label>
+                <br>
+                <select id="time" name="time" onchange="changeSettings();">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15" selected>15</option>
+                    <option value="30">30</option>
+                    <option value="60">60</option>
+                    <option value="∞">∞</option>
+                </select>
+                <label for="time">czas na grę (min)</label>
+                <br>
+                <input id="is_sound" type="checkbox">
+                <label for="is_sound">dźwięki</label>
+                <br>
+                <select id="players_number" name="players_number" onchange="changeSettings();">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6" selected>6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+                <label for="players_number">ilość graczy</label>
+            </form>
+
+            <div id="players_list" hidden>
+                <ul id="players_list_content">
+                </ul>
             </div>
         </div>
     </div>
-</body>
-</html>
+    {% endblock %}
+{% endblock %}
