@@ -127,10 +127,16 @@ def netopol_lobby():
 
 
 @routes.route("/game/<board_id>")
-def game(board_id):
-    return render_template("netopol/netopol_session.html", board_id=board_id)
+def netopol_game(board_id):
+    colors = ["red", "blue", "green", "yellow", "purple", "orange", "pink", "brown", "grey", "white"]
+    return render_template("netopol/netopol_session.html", board_id=board_id, slots=colors)
 
 
 @routes.route("/game/error")
 def game_error():
-    return render_template("netopol/game_404.html")
+    return render_template("game_404.html")
+
+
+@routes.route("/game/kicked")
+def game_kicked():
+    return render_template("game_kicked.html")
