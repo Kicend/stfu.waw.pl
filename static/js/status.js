@@ -9,6 +9,6 @@ socket.on("online_users_list", function(msg) {
         li.innerText = username;
         online_users.appendChild(li);
     };
-})
+});
 
 socket.emit("online");
