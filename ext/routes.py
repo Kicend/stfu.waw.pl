@@ -120,7 +120,7 @@ def logout():
     logout_user()
     return redirect("/")
 
-
+# Netopol routes
 @routes.route("/netopol_lobby", methods=["GET", "POST"])
 def netopol_lobby():
     return render_template("netopol/netopol_lobby.html")
@@ -140,3 +140,13 @@ def game_error():
 @routes.route("/game/kicked")
 def game_kicked():
     return render_template("game_kicked.html")
+
+# Central registry routes
+@routes.route("/cr")
+def central_registry():
+    return render_template("cr/cr_index.html")
+
+
+@routes.route("/cr/<registry_id>")
+def registry_view(registry_id):
+    return render_template("registry_view.html", registry_id=registry_id)
