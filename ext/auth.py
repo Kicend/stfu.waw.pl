@@ -1,10 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager
 from datetime import datetime
+from ext.models import db
 
 login = LoginManager()
-db = SQLAlchemy()
 
 class UserModel(UserMixin, db.Model):
     __tablename__ = "users"
@@ -17,6 +16,7 @@ class UserModel(UserMixin, db.Model):
     admin = db.Column(db.Boolean, nullable=False, default=False)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True, default=None)
+    user_roles_relationship = db.relationship("UserRolesModel", lazy=True)
 
     def __init__(self, email, username, confirmed=False, admin=False, confirmed_on=None):
         self.email = email
