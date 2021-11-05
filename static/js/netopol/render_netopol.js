@@ -14,7 +14,14 @@ window.onload = function () {
 
     var objects_list = {};
     var properties_info = {};
-    var properties_types = ["start", "fate", "tax", "train", "jail", "infra", "parking", "police"]
+    var properties_types = ["start", "fate", "tax", "train", "jail", "infra", "parking", "police"];
+    var buttons_names = {
+                            "startGame": "Rozpocznij grę",
+                            "endTurn": "Zakończ turę",
+                            "rollDice": "Rzuć kostką",
+                            "buyProperty": "Kup",
+                            "auction": "Aukcja"
+                        };
     var pawns_list = {};
     var pawns_colors = {"#1": "#ff1111",
                         "#2": "#3333ff",
@@ -27,6 +34,7 @@ window.onload = function () {
                         "#9": "#808080",
                         "#10": "#ffffff"
                         };
+    var pawn_stack = {};
     var names_to_display = {
                 "name": "Nazwa",
                 "owner": "Właściciel",
@@ -86,6 +94,74 @@ window.onload = function () {
 
     function logs_frame(message) {
 
+    };
+
+    function modifyStack(pawns_coordinates) {
+        for(const [pawn, coordinates] of Object.entries(pawns_coordinates)) {
+            if(coordinates[1] !== null) {
+                pawn_stack[coordinates[1]].splice(pawn_stack[coordinates[1]].indexOf(pawn.substring(1)), 1);
+                if(!pawn_stack[coordinates[0]].includes(pawn.substring(1))) {
+                    pawn_stack[coordinates[0]].push(pawn.substring(1));
+                };
+            };
+        };
+    };
+
+    function place_pawns(pawns_coordinates) {
+        modifyStack(pawns_coordinates);
+        var j = 0;
+        for(const field in pawn_stack) {
+            var stack = pawn_stack[field];
+            if(["#0", "#10", "20", "#30"].includes(field)) {
+                i = 1;
+                j = 1;
+                for(const pawn in stack) {
+                    id = stack[pawn];
+                    objects_list["pawn_" + id].left = objects_list[field].left - 100 + 10 * i;
+                    objects_list["pawn_" + id].top = objects_list[field].top + 10 * j;
+                    if(pawn > 0) {
+                        objects_list["pawn_" + id].left += 10;
+                    };
+                    i++;
+                    if(i == 6) {
+                        i = 1;
+                    };
+                };
+            } else {
+                i = 1;
+                j = 1;
+                for(const pawn in stack) {
+                    id = stack[pawn];
+
+                    if(field.substring(1) >= 11 && field.substring(1) <= 19) {
+                        objects_list["pawn_" + id].left = objects_list[field].left + 10 * i;
+                        objects_list["pawn_" + id].top = objects_list[field].top - 50 + 15 + 10 * j;
+                    } else if(field.substring(1) >= 21 && field.substring(1) <= 29) {
+                        objects_list["pawn_" + id].left = objects_list[field].left + 10 * i;
+                        objects_list["pawn_" + id].top = objects_list[field].top + 10 + 10 * j;
+                    } else if(field.substring(1) >= 31 && field.substring(1) <= 39) {
+                        objects_list["pawn_" + id].left = objects_list[field].left - 50 + 10 * i;
+                        objects_list["pawn_" + id].top = objects_list[field].top + 10 * j;
+                    } else {
+                        objects_list["pawn_" + id].left = objects_list[field].left - 50 + 10 * i;
+                        objects_list["pawn_" + id].top = objects_list[field].top - 100 + 15 + 10 * j;
+                    };
+
+                    if(pawn > 0 && i > 1) {
+                        objects_list["pawn_" + id].left += 10;
+                    };
+
+                    if(j > 1) {
+                        objects_list["pawn_" + id].top += 5;
+                    };
+                    i++;
+                    if(i == 3) {
+                        i = 1;
+                        j++;
+                    };
+                };
+            };
+        };
     };
 
     function createBoard(pawns_coordinates) {
@@ -291,7 +367,7 @@ window.onload = function () {
                         left: objects_list["property_card"].left,
                         top: objects_list["property_card"].top,
                         fill: "#FFFFFF",
-                        width: 100,
+                        width: 101,
                         height: 20,
                         stroke: "black",
                         strokeWidth: 0,
@@ -309,33 +385,248 @@ window.onload = function () {
 
         board.add(property_district);
         objects_list[property_district.id] = property_district;
+
+        i = 0;
+        for(const color in pawns_colors) {
+            i++;
+            var pawn = new fabric.Rect(
+                {
+                    id: "pawn_" + i,
+                    left: objects_list["#0"].left + 10,
+                    top: objects_list["#0"].top + 10 * i,
+                    fill: pawns_colors[color],
+                    width: 10,
+                    height: 10,
+                    stroke: "black",
+                    strokeWidth: 1,
+                    angle: 0,
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            );
+
+            board.add(pawn);
+            objects_list[pawn.id] = pawn;
+        };
+
+        var controlPanelBackground = new fabric.Rect(
+            {
+                id: "turn_cp_background",
+                left: objects_list["#8"].left - 10,
+                top: objects_list["#8"].top - 150,
+                fill: "#000000",
+                width: 200,
+                height: 30,
+                stroke: "white",
+                strokeWidth: 1,
+                angle: 0,
+                opacity: 0,
+                selectable: false,
+                evented: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                hasControls: false,
+                hasRotatingPoint: false,
+                hoverCursor: "....."
+            }
+        );
+
+        board.add(controlPanelBackground);
+        objects_list[controlPanelBackground.id] = controlPanelBackground;
+
+        for(const [key, value] of Object.entries(buttons_names)) {
+            text = new fabric.Text(value,
+                {
+                    id: "text_" + key,
+                    left: -300,
+                    top: -300,
+                    backgroundColor: "#000000",
+                    fill: "#FFFFFF",
+                    fontSize: 7,
+                    fontWeight: "bold",
+                    opacity: 0,
+                    selectable: false,
+                    evented: true,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            );
+
+            board.add(text);
+            objects_list[text.id] = text;
+        };
     };
 
-    function renderBoard(pawns_coordinates) {
-        if(pawns_coordinates.length > 0) {
-            i = 0;
-            while(i != pawns_coordinates.length) {
+    function renderBoard(pawns_coordinates, turn=false, operator_status=false) {
+        place_pawns(pawns_coordinates);
 
-            };
+        if(operator_status === true) {
+            objects_list["turn_cp_background"].opacity = 1;
+            objects_list["text_startGame"].opacity = 1;
+            objects_list["text_startGame"].left = objects_list["turn_cp_background"].left + 10;
+            objects_list["text_startGame"].top = objects_list["turn_cp_background"].top + 10;
         };
 
         board.renderAll();
     };
 
+    function resizeBoard() {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
+        board.setZoom(1.35);
+        board.setWidth(window.innerWidth * board.getZoom());
+        board.setHeight(window.innerHeight * board.getZoom());
+    };
+
+    function rollDice() {
+        socket.emit("request_move_pawn");
+    };
+
+    function updateBalance(accounts, players_number) {
+        var i = 1;
+        while(i != players_number+1) {
+            var balance = document.getElementById("balance_" + i);
+            balance.innerHTML = "$" + accounts[i];
+            i++;
+        };
+    };
+
+    function enableButtons(buttons_list) {
+        if(buttons_list === "all") {
+            for(const button in buttons_names) {
+                objects_list["text_" + button].opacity = 1;
+                objects_list["text_" + button].evented = true;
+                objects_list["text_" + button].left = objects_list["turn_cp_background"].left + 10;
+                objects_list["text_" + button].top = objects_list["turn_cp_background"].top + 10;
+            };
+        } else {
+            buttons_list.forEach(function(button) {
+                objects_list[button].opacity = 1;
+                objects_list[button].evented = true;
+                objects_list[button].left = objects_list["turn_cp_background"].left + 10;
+                objects_list[button].top = objects_list["turn_cp_background"].top + 10;
+            });
+        };
+    };
+
+    function disableButtons(buttons_list) {
+         if(buttons_list === "all") {
+                for(const button in buttons_names) {
+                    objects_list["text_" + button].opacity = 0;
+                    objects_list["text_" + button].evented = false;
+                    objects_list["text_" + button].left = -300;
+                    objects_list["text_" + button].top = -300;
+                };
+         } else {
+            buttons_list.forEach(function(button) {
+                objects_list[button].opacity = 0;
+                objects_list[button].evented = false;
+                objects_list[button].left = -300;
+                objects_list[button].top = -300;
+            });
+        };
+    };
+
+    window.addEventListener("resize", resizeBoard);
+
+    socket.on("get_operator_options", function(msg) {
+        if(msg["operator_status"] == true) {
+            renderBoard({}, false, true);
+        };
+    });
+
     socket.on("board_update", function(msg) {
         var pawns_coordinates = msg["pawns_coordinates"];
-        drawBoard(pawns_coordinates);
+        renderBoard(pawns_coordinates);
     });
 
     socket.on("get_properties_info", function(msg) {
         properties_info = msg["properties_info"];
+
+        if(Object.keys(pawn_stack).length === 0) {
+            for(const property_id in properties_info) {
+                pawn_stack[property_id] = [];
+            };
+        };
+
         createBoard({});
         window.onresize = resizeCanvas;
         resizeCanvas()
     });
 
+    socket.on("update_properties_info", function(msg) {
+        properties_info = msg["properties_info"];
+    });
+
+    socket.on("get_game_state", function(msg) {
+        if(msg["game_state"] == "preparing") {
+            socket.emit("request_operator_options");
+        };
+    });
+
+    socket.on("get_accounts", function(msg) {
+        updateBalance(msg["accounts"], msg["players_number"]);
+    });
+
+    socket.on("start_game_success", function(msg) {
+        disableButtons(["text_startGame"]);
+        objects_list["turn_cp_background"].opacity = 0;
+        updateBalance(msg["accounts"], msg["players_number"]);
+        i = 1;
+
+        while(i <= msg["players_number"]) {
+            pawn_stack["#0"].push(i);
+            i++;
+        };
+
+        renderBoard({}, false, false);
+    });
+
+    socket.on("start_game_fail", function(msg) {
+        alert(msg["error"]);
+    });
+
+    socket.on("get_turn", function() {
+        enableButtons(["text_rollDice"]);
+        objects_list["turn_cp_background"].opacity = 1;
+    });
+
+    socket.on("get_after_roll_dice", function() {
+        disableButtons("all");
+        enableButtons(["text_endTurn"]);
+    });
+
+    socket.on("ask_buy_property", function(msg) {
+        disableButtons(["text_rollDice"]);
+        if(msg["property_buyable"] === true) {
+            enableButtons(["text_buyProperty", "text_auction"]);
+            objects_list["text_auction"].left = objects_list["turn_cp_background"].left + 30;
+            objects_list["text_auction"].top = objects_list["turn_cp_background"].top + 10;
+        } else {
+            enableButtons(["text_auction"]);
+        };
+    });
+
+    socket.on("get_end_turn", function() {
+        objects_list["text_endTurn"].opacity = 0;
+        objects_list["text_endTurn"].evented = false;
+        objects_list["text_endTurn"].left = -300;
+        objects_list["text_endTurn"].top = -300;
+        objects_list["turn_cp_background"].opacity = 0;
+    });
+
     board.on("mouse:over", function(e) {
-        if(e.target !== null) {
+        if(e.target !== null && e.target.id.includes("#") == true) {
             var info = {};
 
             info["name"] = properties_info[e.target.id]["name"];
@@ -380,5 +671,25 @@ window.onload = function () {
         board.renderAll();
     });
 
+    board.on("mouse:down", function(e) {
+        if(e.target != null) {
+            if(e.target.id == "text_startGame") {
+                socket.emit("request_start_game");
+            } else if(e.target.id == "text_rollDice") {
+                socket.emit("request_roll_dice");
+            } else if(e.target.id == "text_endTurn") {
+                socket.emit("request_end_turn");
+            } else if(e.target.id == "text_buyProperty") {
+                socket.emit("request_buy_property");
+            } else if(e.target.id == "text_auction") {
+                socket.emit("request_auction");
+            };
+        };
+    });
+
+    socket.emit("request_game_state");
+    socket.emit("request_accounts");
     socket.emit("request_properties_info");
+    socket.emit("request_board_status");
+    resizeBoard;
 }
