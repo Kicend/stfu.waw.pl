@@ -272,12 +272,131 @@ def kick_player_event(data):
 
 
 @socketio.on("request_properties_info")
-def request_properties_info():
+def request_properties_info_event():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
         emit("get_properties_info", {"properties_info": game_instance.properties_data})
 
+
+@socketio.on("request_game_state")
+def request_game_state_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        emit("get_game_state", {"game_state": game_instance.state})
+
+
+@socketio.on("request_operator_options")
+def request_operator_options_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if current_user.username == game_instance.op:
+            emit("get_operator_options", {"operator_status": True})
+
+
+@socketio.on("request_start_game")
+def request_start_game_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        players = list(game_instance.players_seats.values())
+        players_number = 10 - players.count("--")
+        if current_user.username == game_instance.op and players_number == game_instance.max_slots:
+            game_instance.state = "running"
+            game_instance.start_game()
+            sid = users_socket_id[game_instance.player_turn.nickname]
+            emit("start_game_success", {"accounts": game_instance.accounts, "players_number": players_number},
+                 broadcast=True)
+            emit("get_turn", to=sid)
+        elif players_number != game_instance.players_seats:
+            emit("start_game_fail", {"error": "Nie wystarczająca liczba graczy!"})
+        else:
+            emit("start_game_fail", {"error": "Nie masz uprawnień, aby wykonać tę akcję!"})
+
+
+@socketio.on("request_accounts")
+def request_accounts_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running":
+            emit("get_accounts", {"accounts": game_instance.accounts, "players_number": game_instance.max_slots})
+
+
+@socketio.on("request_board_status")
+def request_board_status_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running":
+            emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()})
+
+
+@socketio.on("request_roll_dice")
+def request_roll_dice_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+            game_instance.move(game_instance.player_turn)
+            is_buyable = game_instance.is_buyable(game_instance.player_turn)
+            if is_buyable:
+                emit("ask_buy_property", {"property_buyable": True})
+            elif is_buyable == "auction":
+                emit("ask_buy_property", {"property_buyable": False})
+            else:
+                current_property = game_instance.properties_data[game_instance.player_turn.coordinates]
+                if current_property["owner"] is not None and current_property["owner"] != "#1290":
+                    game_instance.pay(game_instance.player_turn.seat, current_property["owner"][1:],
+                                      current_property["rent_basic"])
+
+                players = list(game_instance.players_seats.values())
+                players_number = 10 - players.count("--")
+                emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                     broadcast=True)
+                emit("get_after_roll_dice")
+            emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()}, broadcast=True)
+
+
+@socketio.on("request_buy_property")
+def request_buy_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+            if game_instance.buy(game_instance.player_turn):
+                players = list(game_instance.players_seats.values())
+                players_number = 10 - players.count("--")
+                emit("get_after_roll_dice")
+                emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                     broadcast=True)
+                emit("update_properties_info", {"properties_info": game_instance.properties_data}, broadcast=True)
+
+
+@socketio.on("request_auction")
+def request_auction_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+            pass
+
+
+@socketio.on("request_end_turn")
+def request_end_turn_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+            game_instance.end_turn()
+            sid = users_socket_id[game_instance.player_turn.nickname]
+            emit("get_end_turn")
+            emit("get_turn", to=sid)
+
+
+# TODO: Mechanizm gotowości graczy
 
 if __name__ == "__main__":
     socketio.run(app, log_output=True)
