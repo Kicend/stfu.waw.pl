@@ -1,7 +1,7 @@
 {
     "#0": {
       "name": "Start",
-      "owner": null,
+      "owner": "#1290",
       "district": "start",
       "price": 0,
       "rent_basic": 0,
@@ -29,7 +29,7 @@
   
     "#2": {
       "name": "Los",
-      "owner": null,
+      "owner": "#1290",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -57,7 +57,7 @@
   
     "#4": {
       "name": "Podatek Dochodowy",
-      "owner": null,
+      "owner": "#1290",
       "district": "tax",
       "price": 0,
       "rent_basic": 0,
@@ -73,7 +73,7 @@
       "name": "Dworzec Zachodni",
       "owner": null,
       "district": "train",
-      "price": 0,
+      "price": 200,
       "rent_basic": 0,
       "rent_level_1": 0,
       "rent_level_2": 0,
@@ -99,7 +99,7 @@
   
     "#7": {
       "name": "Los",
-      "owner": null,
+      "owner": "#1290",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -141,7 +141,7 @@
   
     "#10": {
       "name": "Więzienie",
-      "owner": null,
+      "owner": "#1290",
       "district": "jail",
       "price": 0,
       "rent_basic": 0,
@@ -171,7 +171,7 @@
       "name": "Elektrownia",
       "owner": null,
       "district": "infra",
-      "price": 0,
+      "price": 150,
       "rent_basic": 0,
       "rent_level_1": 0,
       "rent_level_2": 0,
@@ -213,7 +213,7 @@
       "name": "Dworzec Gdański",
       "owner": null,
       "district": "train",
-      "price": 0,
+      "price": 200,
       "rent_basic": 0,
       "rent_level_1": 0,
       "rent_level_2": 0,
@@ -239,7 +239,7 @@
   
     "#17": {
       "name": "Los",
-      "owner": null,
+      "owner": "#1290",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -281,7 +281,7 @@
   
     "#20": {
       "name": "Parking",
-      "owner": null,
+      "owner": "#1290",
       "district": "parking",
       "price": 0,
       "rent_basic": 0,
@@ -309,7 +309,7 @@
   
     "#22": {
       "name": "Los",
-      "owner": null,
+      "owner": "#1290",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -353,7 +353,7 @@
       "name": "Dworzec Wschodni",
       "owner": null,
       "district": "train",
-      "price": 0,
+      "price": 200,
       "rent_basic": 0,
       "rent_level_1": 0,
       "rent_level_2": 0,
@@ -395,7 +395,7 @@
       "name": "Wodociągi",
       "owner": null,
       "district": "infra",
-      "price": 0,
+      "price": 150,
       "rent_basic": 0,
       "rent_level_1": 0,
       "rent_level_2": 0,
@@ -421,7 +421,7 @@
   
     "#30": {
       "name": "Policja",
-      "owner": null,
+      "owner": "#1290",
       "district": "police",
       "price": 0,
       "rent_basic": 0,
@@ -463,7 +463,7 @@
   
     "#33": {
       "name": "Los",
-      "owner": null,
+      "owner": "#1290",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -493,7 +493,7 @@
       "name": "Dworzec Centralny",
       "owner": null,
       "district": "train",
-      "price": 0,
+      "price": 200,
       "rent_basic": 0,
       "rent_level_1": 0,
       "rent_level_2": 0,
@@ -505,7 +505,7 @@
   
     "#36": {
       "name": "Los",
-      "owner": null,
+      "owner": "#1290",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -533,7 +533,7 @@
   
     "#38": {
       "name": "Podatek Śmieciowy",
-      "owner": null,
+      "owner": "#1290",
       "district": "tax",
       "price": 0,
       "rent_basic": 0,
