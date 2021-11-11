@@ -11,6 +11,11 @@ with open("db/secret.json", "r") as f:
     secrets = load(f)
 
 app = Flask(__name__)
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax"
+)
 login.init_app(app)
 login.login_view = "routes.login"
 
@@ -25,6 +30,14 @@ socketio = SocketIO(app, logger=True, engineio_logger=True, manage_session=False
 @app.before_first_request
 def create_table():
     db.create_all()
+
+@app.after_request
+def add_header(response):
+    response.headers["X-XSS-Protection"] = "0"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
 
 sessions_id_pool = list(range(1, 100))
 online_users_list = []
