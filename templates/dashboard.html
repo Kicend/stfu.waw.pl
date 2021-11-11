@@ -6,11 +6,12 @@
     <title>stfu.waw.pl | Panel główny</title>
 </head>
 <body>
-    <div id="nav_index" class="nav">
+    <div id="nav_index" class="nav nav_left">
         <a href="#nav_index" class="active">Strona główna</a>
         <a href="{{ url_for('routes.netopol_lobby') }}">Netopol</a>
+        <a href="{{ url_for('routes.central_registry') }}">CR</a>
     </div>
-    <div id="user_panel" class="nav">
+    <div id="user_panel" class="nav nav_right">
         <div id="user_div_content">
             <a class="right-side" href="">{{ current_user.username }}</a>
             <a class="right-side" href="{{ url_for('routes.logout') }}">Wyloguj się</a>
