@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>stfu.waw.pl | Dodawanie rejestru</title>
+    <script src="../../static/js/request.js"></script>
+</head>
+<body>
+    <form id="add_registry_form" action="" method="post">
+        <label for="registry_name">Nazwa rejestru:</label>
+        <input id="registry_name" name="registry_name" type="text" placeholder="nazwa rejestru">
+        <label for="registry_private">Prywatny:</label>
+        <input id="registry_private" name="registry_private" type="checkbox" onclick="valueToBoolean(this.id);">
+        <input id="add_registry_submit" type="submit" value="Dodaj rejestr" onclick="window.location.pathname = /cr">
+    </form>
+</body>
+</html>

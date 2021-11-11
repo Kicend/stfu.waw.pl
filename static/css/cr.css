@@ -1,0 +1,21 @@
+table, tr, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+td {
+    text-align: center;
+}
+
+.one_line_one_section {
+    float: left;
+    clear: both;
+}
+
+.cr_edit_input {
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    margin: 0;
+}
