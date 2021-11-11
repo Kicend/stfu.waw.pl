@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>stfu.waw.pl | CR - {{ registry.registry_name }}</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/cr.css">
+    <script type="text/javascript" src="../../static/js/registry.js"></script>
 </head>
 <body>
-
+    <h1 id="registry_name">{{ registry.registry_name }}</h1>
+    <form id="table_form" class="" action="" method="post">
+        <table id="registry_records_table" class="one_line_one_section">
+            <tr id="columns_row" class="columns">
+                <td id="name">Imię gracza</td>
+                <td id="first_place_counter">Pierwsze miejsce</td>
+                <td id="second_place_counter">Drugie miejsce</td>
+                <td id="third_place_counter">Trzecie miejsce</td>
+                <td id="number_of_games">Liczba rozegranych partii</td>
+            </tr>
+            {% for record in registry.records %}
+                <tr id="record_{{ record.record_id }}" class="record">
+                    <td id="record_{{ record.record_id }}_name">{{ record.name }}</td>
+                    <td id="record_{{ record.record_id }}_first_place_counter">{{ record.first_place_counter }}</td>
+                    <td id="record_{{ record.record_id }}_second_place_counter">{{ record.second_place_counter }}</td>
+                    <td id="record_{{ record.record_id }}_third_place_counter">{{ record.third_place_counter }}</td>
+                    <td id="record_{{ record.record_id }}_number_of_games">{{ record.number_of_games }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div id="buttons" class="one_line_one_section">
+            <input id="add_record" type="button" value="Dodaj nowy rekord" onclick="addRecord();">
+            <input id="edit_record" type="button" value="Edytuj rekord" onclick="editRecord();">
+            <input id="delete_record" type="button" value="Usuń rekord" onclick="deleteRecord('delete');">
+        </div>
+    </form>
+    <a id="back_to_cr" class="one_line_one_section" href="/cr">Powrót do wykazu rejestrów</a>
 </body>
 </html>
