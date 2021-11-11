@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, flash, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 from datetime import datetime
+from ext import models
 from ext.auth import UserModel, db
 from ext.token import generate_confirmation_token, confirm_token
 from ext.email import send_email
@@ -144,9 +145,31 @@ def game_kicked():
 # Central registry routes
 @routes.route("/cr")
 def central_registry():
-    return render_template("cr/cr_index.html")
+    registries = models.RegistryModel.query.order_by(models.RegistryModel.registry_name).all()
+    return render_template("cr/cr_index.html", registries=registries)
 
 
-@routes.route("/cr/<registry_id>")
+@routes.route("/cr/add_registry", methods=["GET", "POST"])
+def registry_add():
+    if request.method == "POST":
+        registry_name = request.form["registry_name"]
+        try:
+            registry_private = request.form["registry_private"]
+        except KeyError:
+            registry_private = False
+
+        if models.RegistryModel.query.filter_by(registry_name=registry_name).first():
+            return "Rejestr o tej nazwie istnieje!"
+
+        registry = models.RegistryModel(current_user.user_id, registry_name, bool(registry_private))
+        db.session.add(registry)
+        db.session.commit()
+        return redirect("/cr")
+
+    return render_template("cr/add_registry.html")
+
+
+@routes.route("/cr/registry/<registry_id>")
 def registry_view(registry_id):
-    return render_template("registry_view.html", registry_id=registry_id)
+    registry = models.RegistryModel.query.filter_by(registry_id=registry_id).first()
+    return render_template("cr/registry_view.html", registry=registry)
