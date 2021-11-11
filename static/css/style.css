@@ -16,6 +16,16 @@ html, body {
     background-color: #7399b3;
 }
 
+.nav_left {
+    float: left;
+    width: 70%;
+}
+
+.nav_right {
+    float: left;
+    width: 30%;
+}
+
 .nav a {
     float: left; 
     display: block; 
@@ -316,16 +326,6 @@ div#auth_window {
 }
 
 /* CSS for dashboard */
-div#nav_index {
-    float: left;
-    width: 70%;
-}
-
-div#user_panel {
-    float: left;
-    width: 30%;
-}
-
 div#user_div_content {
     float: right;
 }
