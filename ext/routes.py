@@ -189,7 +189,7 @@ def edit_registry(registry_id):
         index = 0
         cycle = 0
         while cycle < length/n:
-            result.append(array[index*cycle:index+n*(cycle+1)])
+            result.append(array[index:index+n])
             index += n
             cycle += 1
 
@@ -199,31 +199,37 @@ def edit_registry(registry_id):
     i = 0
     for data in request.form:
         if data != "_method":
+            if i % 5 == 0:
+                values.append(data.split("_")[0])
+                values.append(registry_id)
             values.append(request.form[data])
-            if i == 0:
-                values.insert(0, data.split("_")[0])
-                values.insert(1, registry_id)
-                i += 1
+            i += 1
 
     if request.method == "POST" and request.form["_method"] == "post":
         del values[0]
         del values[0]
         form_data = split_array(list(values), 5)
         for dataset in form_data:
-            registry_records = models.RegistryLeaderBoardRecordModel(registry_id, dataset[0], dataset[1], dataset[2],
-                                                                     dataset[3], dataset[4])
-            db.session.add(registry_records)
+            record = models.RegistryLeaderBoardRecordModel(registry_id, dataset[0], dataset[1], dataset[2],
+                                                           dataset[3], dataset[4])
+            db.session.add(record)
             db.session.commit()
     elif request.method == "POST" and request.form["_method"] == "put":
         form_data = split_array(list(values), 7)
         updated_values = {}
         for dataset in form_data:
-            record = models.RegistryLeaderBoardRecordModel.query.filter_by(record_id=dataset[0]).first()
-            for i, column in enumerate(record.__table__.columns.keys()):
-                updated_values[column] = dataset[i]
+            try:
+                record = models.RegistryLeaderBoardRecordModel.query.filter_by(record_id=dataset[0]).first()
+                for i, column in enumerate(record.__table__.columns.keys()):
+                    updated_values[column] = dataset[i]
 
-            models.RegistryLeaderBoardRecordModel.query.filter_by(record_id=dataset[0]).update(updated_values)
-            db.session.commit()
+                models.RegistryLeaderBoardRecordModel.query.filter_by(record_id=dataset[0]).update(updated_values)
+                db.session.commit()
+            except AttributeError:
+                record = models.RegistryLeaderBoardRecordModel(dataset[1], dataset[2], dataset[3], dataset[4],
+                                                               dataset[5], dataset[6])
+                db.session.add(record)
+                db.session.commit()
     elif request.method == "POST" and request.form["_method"] == "delete":
         for element in request.form:
             if element != "_method":
