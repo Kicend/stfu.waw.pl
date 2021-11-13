@@ -173,3 +173,55 @@ def registry_add():
 def registry_view(registry_id):
     registry = models.RegistryModel.query.filter_by(registry_id=registry_id).first()
     return render_template("cr/registry_view.html", registry=registry)
+
+
+@routes.route("/cr/edit/registry/<registry_id>", methods=["POST"])
+def edit_registry(registry_id):
+    def split_array(array, n):
+        result = []
+        length = len(array)
+        index = 0
+        cycle = 0
+        while cycle < length/n:
+            result.append(array[index*cycle:index+n*(cycle+1)])
+            index += n
+            cycle += 1
+
+        return result
+
+    values = []
+    i = 0
+    for data in request.form:
+        if data != "_method":
+            values.append(request.form[data])
+            if i == 0:
+                values.insert(0, data.split("_")[0])
+                values.insert(1, registry_id)
+                i += 1
+
+    if request.method == "POST" and request.form["_method"] == "post":
+        del values[0]
+        del values[0]
+        form_data = split_array(list(values), 5)
+        for dataset in form_data:
+            registry_records = models.RegistryLeaderBoardRecordModel(registry_id, dataset[0], dataset[1], dataset[2],
+                                                                     dataset[3], dataset[4])
+            db.session.add(registry_records)
+            db.session.commit()
+    elif request.method == "POST" and request.form["_method"] == "put":
+        form_data = split_array(list(values), 7)
+        updated_values = {}
+        for dataset in form_data:
+            record = models.RegistryLeaderBoardRecordModel.query.filter_by(record_id=dataset[0]).first()
+            for i, column in enumerate(record.__table__.columns.keys()):
+                updated_values[column] = dataset[i]
+
+            models.RegistryLeaderBoardRecordModel.query.filter_by(record_id=dataset[0]).update(updated_values)
+            db.session.commit()
+    elif request.method == "POST" and request.form["_method"] == "delete":
+        for element in request.form:
+            if element != "_method":
+                models.RegistryLeaderBoardRecordModel.query.filter_by(record_id=element).delete()
+        db.session.commit()
+
+    return redirect(f"/cr/registry/{registry_id}")
