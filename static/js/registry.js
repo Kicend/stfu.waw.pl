@@ -22,7 +22,7 @@ var delete_mode = false;
 var edit_row = 0;
 
 function addRecordMode() {
-      var form = document.getElementById("table_form");
+      var method = document.getElementById("method_tunnel");
       var editRecordBtn = document.getElementById("edit_record");
       var deleteRecordBtn = document.getElementById("delete_record");
       var confirmationBtn = document.getElementById("confirm_changes");
@@ -32,7 +32,7 @@ function addRecordMode() {
             deleteRecordBtn.hidden = true;
             confirmationBtn.hidden = false;
             cancelBtn.hidden = false;
-            form.className = "add";
+            method.value = "post";
             cancelBtn.setAttribute("onclick", "addRecordCancelProcedure();");
       } else {
             editRecordBtn.hidden = false;
@@ -44,8 +44,8 @@ function addRecordMode() {
 }
 
 function addRecordCancelProcedure() {
-      var form = document.getElementById("table_form");
-      form.className = "";
+      var method = document.getElementById("method_tunnel");
+      method.value = "";
       
       const tr_tmp = document.getElementsByClassName("tr_tmp");
       while(tr_tmp.length > 0) {
@@ -68,6 +68,7 @@ function addRecord() {
             td.className = "td_tmp";
             var input = document.createElement("input");
             input.id = "edit_input_" + edit_row + "_" + (i+1);
+            input.name = "new_" + edit_row + "_" + (i+1);
             input.className = "cr_edit_input";
             input.required = true;
             if(i == 0) {
@@ -105,7 +106,7 @@ function addRecord() {
 }
 
 function editRecordMode() {
-      var form = document.getElementById("table_form");
+      var method = document.getElementById("method_tunnel");
       var addRecordBtn = document.getElementById("add_record");
       var editRecordBtn = document.getElementById("edit_record");
       var deleteRecordBtn = document.getElementById("delete_record");
@@ -117,7 +118,7 @@ function editRecordMode() {
             deleteRecordBtn.hidden = true;
             confirmationBtn.hidden = false;
             cancelBtn.hidden = false;
-            form.className = "edit";
+            method.value = "put";
             cancelBtn.setAttribute("onclick", "editRecordCancelProcedure();");
       } else {
             addRecordBtn.hidden = false;
@@ -130,8 +131,8 @@ function editRecordMode() {
 }
 
 function editRecordCancelProcedure() {
-      var form = document.getElementById("table_form");
-      form.className = "";
+      var method = document.getElementById("method_tunnel");
+      method.value = "";
 
       var tr = Array.from(document.getElementsByClassName("record"));
       tr.forEach(element => {
@@ -154,9 +155,12 @@ function editRecord() {
             let i = 0;
             element = Array.from(element.children);
             element.forEach(td => {
+                  var record_id = td.id.split("_");
+                  record_id = record_id[1];
                   var input = document.createElement("input");
                   input.id = "edit_input_" + edit_row + "_" + (i+1);
                   input.className = "cr_edit_input";
+                  input.name = "" + record_id + "_" + (i+1);
                   input.value = td.innerHTML;
                   input.required = true;
                   if(i == 0) {
@@ -185,7 +189,7 @@ function editRecord() {
 }
 
 function deleteRecordMode() {
-      var form = document.getElementById("table_form");
+      var method = document.getElementById("method_tunnel");
       var addRecordBtn = document.getElementById("add_record");
       var editRecordBtn = document.getElementById("edit_record");
       var deleteRecordBtn = document.getElementById("delete_record");
@@ -197,7 +201,7 @@ function deleteRecordMode() {
             deleteRecordBtn.hidden = true;
             confirmationBtn.hidden = false;
             cancelBtn.hidden = false;
-            form.className = "delete";
+            method.value = "delete";
             cancelBtn.setAttribute("onclick", "deleteRecordCancelProcedure();");
             var deletedRecordsTable = document.createElement("table");
             deletedRecordsTable.id = "deleted_records";
@@ -216,13 +220,25 @@ function deleteRecordMode() {
 }
 
 function deleteRecordCancelProcedure() {
+      var method = document.getElementById("method_tunnel");
       var table = document.getElementById("registry_records_table");
       var deletedRecordsTable = Array.from(document.getElementById("deleted_records").children);
-
+      var deleteBtn = document.getElementsByClassName("deleteBtn");
+      var deletedRecord = document.getElementsByClassName("deleted_record");
+      
       deletedRecordsTable.forEach(element => {
             table.appendChild(element);
       })
 
+      while(deleteBtn.length > 0) {
+            deleteBtn[0].parentNode.removeChild(deleteBtn[0]);
+      }
+
+      while(deletedRecord.length > 0) {
+            deletedRecord[0].parentNode.removeChild(deletedRecord[0]);
+      }
+
+      method.value = "";
       delete_mode = false;
       edit_row = 0;
       deleteRecordMode();
@@ -244,6 +260,7 @@ function deleteRecord(mode, btnId=null) {
             tr.forEach(row => {
                   var deleteRecordBtn = document.createElement("input");
                   deleteRecordBtn.id = "delete_new_record_" + (edit_row+1);
+                  deleteRecordBtn.className = "deleteBtn";
                   deleteRecordBtn.type = "button";
                   deleteRecordBtn.value = "🗑";
                   deleteRecordBtn.setAttribute("onclick", "deleteHideRecord(this.id);");
@@ -261,6 +278,7 @@ function deleteRecord(mode, btnId=null) {
 }
 
 function deleteHideRecord(btnId) {
+      var table = document.getElementById("registry_records_table");
       var deletedRecordsTable = document.getElementById("deleted_records");
       var deleteBtn = document.getElementById(btnId);
       var tr_id = btnId.split("_");
@@ -268,4 +286,10 @@ function deleteHideRecord(btnId) {
       var record = document.getElementById("record_" + tr_id);
       record.removeChild(deleteBtn);
       deletedRecordsTable.appendChild(record);
+      var input = document.createElement("input");
+      input.id = "delete_input_" + tr_id;
+      input.className = "deleted_record";
+      input.name = tr_id;
+      input.hidden = true;
+      table.appendChild(input);
 }
