@@ -258,8 +258,10 @@ function deleteRecord(mode, btnId=null) {
       } else {
             var tr = Array.from(document.getElementsByClassName("record"));
             tr.forEach(row => {
+                  var record_id = row.id.split("_");
+                  record_id = record_id[1];
                   var deleteRecordBtn = document.createElement("input");
-                  deleteRecordBtn.id = "delete_new_record_" + (edit_row+1);
+                  deleteRecordBtn.id = "delete_record_" + record_id;
                   deleteRecordBtn.className = "deleteBtn";
                   deleteRecordBtn.type = "button";
                   deleteRecordBtn.value = "🗑";
