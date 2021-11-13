@@ -123,11 +123,13 @@ def logout():
 
 # Netopol routes
 @routes.route("/netopol_lobby", methods=["GET", "POST"])
+@login_required
 def netopol_lobby():
     return render_template("netopol/netopol_lobby.html")
 
 
 @routes.route("/game/<board_id>")
+@login_required
 def netopol_game(board_id):
     colors = ["red", "blue", "green", "yellow", "purple", "orange", "pink", "brown", "grey", "white"]
     return render_template("netopol/netopol_session.html", board_id=board_id, slots=colors)
@@ -144,12 +146,14 @@ def game_kicked():
 
 # Central registry routes
 @routes.route("/cr")
+@login_required
 def central_registry():
     registries = models.RegistryModel.query.order_by(models.RegistryModel.registry_name).all()
     return render_template("cr/cr_index.html", registries=registries)
 
 
 @routes.route("/cr/add_registry", methods=["GET", "POST"])
+@login_required
 def registry_add():
     if request.method == "POST":
         registry_name = request.form["registry_name"]
@@ -170,12 +174,14 @@ def registry_add():
 
 
 @routes.route("/cr/registry/<registry_id>")
+@login_required
 def registry_view(registry_id):
     registry = models.RegistryModel.query.filter_by(registry_id=registry_id).first()
     return render_template("cr/registry_view.html", registry=registry)
 
 
 @routes.route("/cr/edit/registry/<registry_id>", methods=["POST"])
+@login_required
 def edit_registry(registry_id):
     def split_array(array, n):
         result = []
