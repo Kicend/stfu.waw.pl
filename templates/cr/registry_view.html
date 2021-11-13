@@ -8,7 +8,8 @@
 </head>
 <body>
     <h1 id="registry_name">{{ registry.registry_name }}</h1>
-    <form id="table_form" class="" action="" method="post">
+    <form id="table_form" class="" action="/cr/edit/registry/{{ registry.registry_id }}" method="post">
+        <input id="method_tunnel" name="_method" value="" hidden>
         <table id="registry_records_table" class="one_line_one_section">
             <tr id="columns_row" class="columns">
                 <td id="name">Imię gracza</td>
