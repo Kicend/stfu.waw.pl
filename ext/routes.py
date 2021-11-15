@@ -209,8 +209,12 @@ def edit_registry(registry_id):
                 else:
                     values.append(999)
             except ValueError:
-                if i == 0:
-                    values.append(request.form[data])
+                if i % 5 == 0:
+                    name = request.form[data]
+                    if len(name) <= 20:
+                        values.append(name)
+                    else:
+                        values.append(name[:20])
                 else:
                     values.append(0)
             i += 1
