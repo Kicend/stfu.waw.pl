@@ -202,13 +202,17 @@ def edit_registry(registry_id):
             if i % 5 == 0 and request.form["_method"] != "post":
                 values.append(data.split("_")[0])
                 values.append(registry_id)
-            if type(request.form[data]) == int:
-                if int(request.form[data]) <= 999:
-                    values.append(request.form[data])
+            try:
+                number = int(request.form[data])
+                if number <= 999:
+                    values.append(number)
                 else:
                     values.append(999)
-            else:
-                values.append(request.form[data])
+            except ValueError:
+                if i == 0:
+                    values.append(request.form[data])
+                else:
+                    values.append(0)
             i += 1
 
     if request.method == "POST" and request.form["_method"] == "post":
