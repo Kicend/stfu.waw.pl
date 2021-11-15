@@ -1,7 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from json import load
 
 db = SQLAlchemy()
+
+with open("db/database_map.json", "r") as f:
+    db_properties = load(f)
 
 class RegistryModel(db.Model):
     __tablename__ = "registries"
