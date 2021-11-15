@@ -155,22 +155,25 @@ def central_registry():
 @routes.route("/cr/add_registry", methods=["GET", "POST"])
 @login_required
 def registry_add():
-    if request.method == "POST":
-        registry_name = request.form["registry_name"]
-        try:
-            registry_private = request.form["registry_private"]
-        except KeyError:
-            registry_private = False
+    if current_user.username == "Kicend":
+        if request.method == "POST":
+            registry_name = request.form["registry_name"]
+            try:
+                registry_private = request.form["registry_private"]
+            except KeyError:
+                registry_private = False
 
-        if models.RegistryModel.query.filter_by(registry_name=registry_name).first():
-            return "Rejestr o tej nazwie istnieje!"
+            if models.RegistryModel.query.filter_by(registry_name=registry_name).first():
+                return "Rejestr o tej nazwie istnieje!"
 
-        registry = models.RegistryModel(current_user.user_id, registry_name, bool(registry_private))
-        db.session.add(registry)
-        db.session.commit()
-        return redirect("/cr")
+            registry = models.RegistryModel(current_user.user_id, registry_name, bool(registry_private))
+            db.session.add(registry)
+            db.session.commit()
+            return redirect("/cr")
 
-    return render_template("cr/add_registry.html")
+        return render_template("cr/add_registry.html")
+    else:
+        return render_template("admin_privileges.html")
 
 
 @routes.route("/cr/registry/<registry_id>")
