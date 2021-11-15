@@ -199,15 +199,19 @@ def edit_registry(registry_id):
     i = 0
     for data in request.form:
         if data != "_method":
-            if i % 5 == 0:
+            if i % 5 == 0 and request.form["_method"] != "post":
                 values.append(data.split("_")[0])
                 values.append(registry_id)
-            values.append(request.form[data])
+            if type(request.form[data]) == int:
+                if int(request.form[data]) <= 999:
+                    values.append(request.form[data])
+                else:
+                    values.append(999)
+            else:
+                values.append(request.form[data])
             i += 1
 
     if request.method == "POST" and request.form["_method"] == "post":
-        del values[0]
-        del values[0]
         form_data = split_array(list(values), 5)
         for dataset in form_data:
             record = models.RegistryLeaderBoardRecordModel(registry_id, dataset[0], dataset[1], dataset[2],
