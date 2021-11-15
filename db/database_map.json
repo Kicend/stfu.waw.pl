@@ -13,7 +13,7 @@
   "registries": {
     "registry_id": ["int", -1],
     "owner_id": ["int", -1],
-    "registry_name": ["str", 32],
+    "registry_name": ["str", 64],
     "private": ["bool", -1],
     "created_on": ["dateTime", -1],
     "permissions": ["foreign", -1],
