@@ -1,0 +1,37 @@
+{
+  "registries": {
+    "registry_id": ["int", -1],
+    "owner_id": ["int", -1],
+    "registry_name": ["str", 32],
+    "private": ["bool", -1],
+    "created_on": ["dateTime", -1],
+    "permissions": ["foreign", -1],
+    "records": ["foreign", -1]
+  },
+  "registries_permissions": {
+    "permission_id": ["int", -1],
+    "registry_id": ["int", -1],
+    "user_id": ["int", -1],
+    "permission_name": ["str", 64],
+    "permission_state": ["bool", -1]
+  },
+  "registries_records": {
+    "record_id": ["int", -1],
+    "registry_id": ["int", -1],
+    "name": ["str", "20"],
+    "first_place_counter": ["int", 999],
+    "second_place_counter": ["int", 999],
+    "third_place_counter": ["int", 999],
+    "number_of_games": ["int", 9999]
+  },
+  "roles": {
+    "role_id": ["int", -1],
+    "role_name": ["str", 32],
+    "role_userRoles_relationship": ["foreign", -1]
+  },
+  "users_roles": {
+    "id": ["int", -1],
+    "user_id": ["int", -1],
+    "role_id": ["int", -1]
+  }
+}
