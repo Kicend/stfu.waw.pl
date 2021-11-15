@@ -12,7 +12,7 @@ class RegistryModel(db.Model):
 
     registry_id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, nullable=False)
-    registry_name = db.Column(db.String, nullable=False)
+    registry_name = db.Column(db.String(64), nullable=False)
     private = db.Column(db.Boolean, nullable=False, default=False)
     created_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     permissions = db.relationship("RegistryPermissionModel", lazy=True)
@@ -41,7 +41,7 @@ class RegistryPermissionModel(db.Model):
     permission_id = db.Column(db.Integer, primary_key=True)
     registry_id = db.Column(db.Integer, db.ForeignKey("registries.registry_id"), nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
-    permission_name = db.Column(db.String, nullable=False)
+    permission_name = db.Column(db.String(64), nullable=False)
     permission_state = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(self, registry_id, permission_name, permission_state):
@@ -103,7 +103,7 @@ class RoleModel(db.Model):
     __tablename__ = "roles"
 
     role_id = db.Column(db.Integer, primary_key=True)
-    role_name = db.Column(db.String, nullable=False)
+    role_name = db.Column(db.String(32), nullable=False)
     role_userRoles_relationship = db.relationship("UserRolesModel", lazy=True)
 
     def __init__(self, role_name):
