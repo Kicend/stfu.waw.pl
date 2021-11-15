@@ -1,4 +1,15 @@
 {
+  "users": {
+    "user_id": ["int", -1],
+    "email": ["str", 48],
+    "username": ["str", 16],
+    "password_hash": ["str", -1],
+    "registered_on": ["dateTime", -1],
+    "admin": ["bool", -1],
+    "confirmed": ["bool", -1],
+    "confirmed_on": ["dateTime", -1],
+    "user_roles_relationship": ["foreign", -1]
+  },
   "registries": {
     "registry_id": ["int", -1],
     "owner_id": ["int", -1],
