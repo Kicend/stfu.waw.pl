@@ -5,7 +5,7 @@ from ext import models
 from ext.auth import UserModel, db
 from ext.token import generate_confirmation_token, confirm_token
 from ext.email import send_email
-from ext.decorators import check_confirmed
+from ext.decorators import check_confirmed, admin_privileges
 from controllers.cr.edit_registry import edit_registry_controller
 
 routes = Blueprint("routes", __name__, template_folder="templates")
@@ -155,26 +155,24 @@ def central_registry():
 
 @routes.route("/cr/add_registry", methods=["GET", "POST"])
 @login_required
+@admin_privileges
 def registry_add():
-    if current_user.username == "Kicend":
-        if request.method == "POST":
-            registry_name = request.form["registry_name"]
-            try:
-                registry_private = request.form["registry_private"]
-            except KeyError:
-                registry_private = False
+    if request.method == "POST":
+        registry_name = request.form["registry_name"]
+        try:
+            registry_private = request.form["registry_private"]
+        except KeyError:
+            registry_private = False
 
-            if models.RegistryModel.query.filter_by(registry_name=registry_name).first():
-                return "Rejestr o tej nazwie istnieje!"
+        if models.RegistryModel.query.filter_by(registry_name=registry_name).first():
+            return "Rejestr o tej nazwie istnieje!"
 
-            registry = models.RegistryModel(current_user.user_id, registry_name, bool(registry_private))
-            db.session.add(registry)
-            db.session.commit()
-            return redirect("/cr")
+        registry = models.RegistryModel(current_user.user_id, registry_name, bool(registry_private))
+        db.session.add(registry)
+        db.session.commit()
+        return redirect("/cr")
 
-        return render_template("cr/add_registry.html")
-    else:
-        return render_template("admin_privileges.html")
+    return render_template("cr/add_registry.html")
 
 
 @routes.route("/cr/registry/<registry_id>")
