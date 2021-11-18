@@ -466,6 +466,15 @@ window.onload = function () {
         };
     };
 
+    function resizeBoard() {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
+        board.setZoom(1.35);
+        board.setWidth(window.innerWidth * board.getZoom());
+        board.setHeight(window.innerHeight * board.getZoom());
+    };
+
     function renderBoard(pawns_coordinates, turn=false, operator_status=false) {
         place_pawns(pawns_coordinates);
 
@@ -476,16 +485,8 @@ window.onload = function () {
             objects_list["text_startGame"].top = objects_list["turn_cp_background"].top + 10;
         };
 
+        resizeBoard();
         board.renderAll();
-    };
-
-    function resizeBoard() {
-        var w = window.innerWidth;
-        var h = window.innerHeight;
-
-        board.setZoom(1.35);
-        board.setWidth(window.innerWidth * board.getZoom());
-        board.setHeight(window.innerHeight * board.getZoom());
     };
 
     function rollDice() {
@@ -561,7 +562,7 @@ window.onload = function () {
 
         createBoard({});
         window.onresize = resizeCanvas;
-        resizeCanvas()
+        resizeCanvas();
     });
 
     socket.on("update_properties_info", function(msg) {
@@ -599,11 +600,13 @@ window.onload = function () {
     socket.on("get_turn", function() {
         enableButtons(["text_rollDice"]);
         objects_list["turn_cp_background"].opacity = 1;
+        resizeBoard();
     });
 
     socket.on("get_after_roll_dice", function() {
         disableButtons("all");
         enableButtons(["text_endTurn"]);
+        resizeBoard();
     });
 
     socket.on("ask_buy_property", function(msg) {
@@ -615,6 +618,8 @@ window.onload = function () {
         } else {
             enableButtons(["text_auction"]);
         };
+
+        resizeBoard();
     });
 
     socket.on("get_end_turn", function() {
@@ -623,6 +628,7 @@ window.onload = function () {
         objects_list["text_endTurn"].left = -300;
         objects_list["text_endTurn"].top = -300;
         objects_list["turn_cp_background"].opacity = 0;
+        resizeBoard();
     });
 
     board.on("mouse:over", function(e) {
@@ -691,5 +697,5 @@ window.onload = function () {
     socket.emit("request_accounts");
     socket.emit("request_properties_info");
     socket.emit("request_board_status");
-    resizeBoard;
+    resizeBoard();
 }
