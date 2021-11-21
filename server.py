@@ -417,7 +417,10 @@ def request_auction_event(data):
             emit("get_auction_turn", {"price": str(game_instance.auction_price)}, to=sid)
         elif game_instance.state == "running" and game_instance.auction_player_turn.nickname == current_user.username \
                 and game_instance.auction_state is True:
-            game_instance.auction(int(data["price"]))
+            try:
+                game_instance.auction(int(data["price"]))
+            except ValueError:
+                pass
             if game_instance.auction_state:
                 sid = users_socket_id[game_instance.auction_player_turn.nickname]
                 emit("get_auction_turn", {"price": str(game_instance.auction_price)}, to=sid)
