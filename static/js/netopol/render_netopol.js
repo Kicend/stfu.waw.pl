@@ -20,8 +20,11 @@ window.onload = function () {
                             "endTurn": "Zakończ turę",
                             "rollDice": "Rzuć kostką",
                             "buyProperty": "Kup",
-                            "auction": "Aukcja"
+                            "auction": "Aukcja",
+                            "auction_send_offer": "Podbij",
+                            "auction_pass": "Pas"
                         };
+    var textboxes_names = ["auction_price"];
     var pawns_list = {};
     var pawns_colors = {"#1": "#ff1111",
                         "#2": "#3333ff",
@@ -464,6 +467,33 @@ window.onload = function () {
             board.add(text);
             objects_list[text.id] = text;
         };
+
+        textboxes_names.forEach(name => {
+            var textbox = new fabric.Textbox("0",
+                {
+                    id: "textbox_" + name,
+                    width: 40,
+                    left: -300,
+                    top: -300,
+                    backgroundColor: "#ffffff",
+                    fontSize: 9,
+                    fixedWitdh: 40,
+                    maxLines: 1,
+                    opacity: 0,
+                    selectable: true,
+                    evented: true,
+                    editable: true,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            );
+            
+            board.add(textbox);
+            objects_list[textbox.id] = textbox;
+        });
     };
 
     function resizeBoard() {
@@ -538,6 +568,42 @@ window.onload = function () {
         };
     };
 
+    function enableTextboxes(textboxes_list) {
+        if(textboxes_list === "all") {
+            textboxes_names.forEach(name => {
+                objects_list["textbox_" + name].opacity = 1;
+                objects_list["textbox_" + name].editable = true;
+                objects_list["textbox_" + name].left = objects_list["turn_cp_background"].left + 10;
+                objects_list["textbox_" + name].top = objects_list["turn_cp_background"].top + 10;
+            });
+        } else {
+            textboxes_list.forEach(function(textbox) {
+                objects_list[textbox].opacity = 1;
+                objects_list[textbox].editable = true;
+                objects_list[textbox].left = objects_list["turn_cp_background"].left + 10;
+                objects_list[textbox].top = objects_list["turn_cp_background"].top + 10;
+            });
+        };
+    }
+
+    function disableTextboxes(textboxes_list) {
+        if(textboxes_list === "all") {
+            textboxes_names.forEach(name => {
+                objects_list["textbox_" + name].opacity = 0;
+                objects_list["textbox_" + name].editable = false;
+                objects_list["textbox_" + name].left = -300;
+                objects_list["textbox_" + name].top = -300;
+            });
+        } else {
+            textboxes_list.forEach(function(textbox) {
+                objects_list[textbox].opacity = 0;
+                objects_list[textbox].editable = false;
+                objects_list[textbox].left = -300;
+                objects_list[textbox].top = -300;
+            });
+        };
+    }
+
     window.addEventListener("resize", resizeBoard);
 
     socket.on("get_operator_options", function(msg) {
@@ -561,7 +627,7 @@ window.onload = function () {
         };
 
         createBoard({});
-        window.onresize = resizeCanvas;
+        window.onresize = resizeCanvas();
         resizeCanvas();
     });
 
@@ -605,7 +671,9 @@ window.onload = function () {
 
     socket.on("get_after_roll_dice", function() {
         disableButtons("all");
+        disableTextboxes("all");
         enableButtons(["text_endTurn"]);
+        objects_list["turn_cp_background"].opacity = 1;
         resizeBoard();
     });
 
@@ -621,6 +689,19 @@ window.onload = function () {
 
         resizeBoard();
     });
+
+    socket.on("get_auction_turn", function(msg) {
+        disableButtons("all");
+        enableButtons(["text_auction_send_offer", "text_auction_pass"]);
+        enableTextboxes(["textbox_auction_price"]);
+        objects_list["turn_cp_background"].opacity = 1;
+        objects_list["textbox_auction_price"].left = objects_list["turn_cp_background"].left + 40;
+        objects_list["textbox_auction_price"].top = objects_list["turn_cp_background"].top + 10;
+        objects_list["textbox_auction_price"].text = msg["price"];
+        objects_list["text_auction_pass"].left = objects_list["turn_cp_background"].left + 90;
+        objects_list["text_auction_pass"].top = objects_list["turn_cp_background"].top + 10;
+        resizeBoard();
+    })
 
     socket.on("get_end_turn", function() {
         objects_list["text_endTurn"].opacity = 0;
@@ -688,10 +769,33 @@ window.onload = function () {
             } else if(e.target.id == "text_buyProperty") {
                 socket.emit("request_buy_property");
             } else if(e.target.id == "text_auction") {
-                socket.emit("request_auction");
-            };
+                socket.emit("request_auction", {"foobar": -1});
+            } else if(e.target.id == "text_auction_send_offer") {
+                disableButtons("all");
+                disableTextboxes("all");
+                objects_list["turn_cp_background"].opacity = 0;
+                var textbox = objects_list["textbox_auction_price"];
+                socket.emit("request_auction", {"price": textbox.text});
+            } else if(e.target.id == "text_auction_pass") {
+                disableButtons("all");
+                disableTextboxes("all");
+                objects_list["turn_cp_background"].opacity = 0;
+                socket.emit("request_auction", {"price": 0});
+            }
         };
     });
+
+    /*
+    board.on("text:edited", function(e) {
+        var textbox = objects_list[e.target.id];
+        if(target.text.length >= 5) {
+            textbox.editable = false;
+        };
+
+        board.renderAll()
+        resizeBoard();
+    })
+    */
 
     socket.emit("request_game_state");
     socket.emit("request_accounts");

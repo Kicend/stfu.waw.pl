@@ -37,10 +37,16 @@ class Netopol(Session):
         self.start_balance = 1500
         self.accounts = dict.fromkeys([i for i in range(1, 11)], self.start_balance)
         self.player_turn = None
+        self.auction_state = False
+        self.auction_player_turn = None
+        self.auction_participants = []
+        self.auction_field = None
+        self.auction_price = 0
+        self.auction_winner = None
 
     @staticmethod
     def load_properties():
-        with open("netopol/data/properties.json", "r") as f:
+        with open("netopol/data/properties.json", "r", encoding="utf-8") as f:
             return load(f)
 
     def get_coordinates(self):
@@ -100,6 +106,41 @@ class Netopol(Session):
             return True
         else:
             return False
+
+    def auction_start(self):
+        player = self.player_turn
+        self.auction_field = player.coordinates
+        self.auction_participants = self.active_players.copy()
+        del self.auction_participants[self.auction_participants.index(player)]
+        self.auction_participants.insert(0, player)
+        self.auction_player_turn = player
+        self.auction_state = True
+
+    def auction(self, price: int):
+        current_player = self.auction_participants.pop(0)
+        if price > 0 and price > self.auction_price:
+            self.auction_winner = current_player
+            self.auction_price = price
+            self.auction_participants.append(current_player)
+            self.auction_player_turn = self.auction_participants[0]
+        else:
+            if len(self.auction_participants) == 1:
+                property_card = self.properties_data[self.auction_field]
+                if self.auction_winner is None:
+                    self.auction_winner = self.auction_participants[0]
+
+                self.accounts[self.auction_winner.seat] -= self.auction_price
+                property_card["owner"] = "#" + str(self.auction_winner.seat)
+                self.auction_end()
+            else:
+                self.auction_player_turn = self.auction_participants[0]
+
+    def auction_end(self):
+        self.auction_field = None
+        self.auction_participants = []
+        self.auction_price = 0
+        self.auction_player_turn = None
+        self.auction_state = False
 
     def pay(self, sender: int, recipient: int, amount: int):
         if self.accounts[sender] >= amount:
