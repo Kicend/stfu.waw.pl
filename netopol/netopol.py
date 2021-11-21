@@ -37,6 +37,7 @@ class Netopol(Session):
         self.start_balance = 1500
         self.accounts = dict.fromkeys([i for i in range(1, 11)], self.start_balance)
         self.player_turn = None
+        self.player_turn_state = None
         self.auction_state = False
         self.auction_player_turn = None
         self.auction_participants = []
@@ -162,6 +163,7 @@ class Netopol(Session):
         if next_player_index >= len(self.active_players):
             next_player_index = 0
         self.player_turn = self.active_players[next_player_index]
+        self.player_turn_state = "roll"
 
     def start_game(self):
         for seat, player in self.players_seats.items():

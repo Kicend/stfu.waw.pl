@@ -347,6 +347,20 @@ def request_board_status_event():
             emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()})
 
 
+@socketio.on("request_turn_state")
+def request_turn_state():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running":
+            if current_user.username == game_instance.player_turn.nickname and game_instance.auction_state is False:
+                sid = users_socket_id[game_instance.player_turn.nickname]
+                emit("get_turn_state", {"state": game_instance.player_turn_state}, to=sid)
+            elif current_user.username == game_instance.auction_player_turn.nickname and game_instance.auction_state:
+                sid = users_socket_id[game_instance.auction_player_turn.nickname]
+                emit("get_auction_turn", {"price": str(game_instance.auction_price)}, to=sid)
+
+
 @socketio.on("request_roll_dice")
 def request_roll_dice_event():
     if current_user.username in players_rooms:
@@ -355,6 +369,7 @@ def request_roll_dice_event():
         if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
             game_instance.move(game_instance.player_turn)
             is_buyable = game_instance.is_buyable(game_instance.player_turn)
+            game_instance.player_turn_state = "buy"
             if is_buyable:
                 emit("ask_buy_property", {"property_buyable": True})
             elif is_buyable == "auction":
@@ -370,6 +385,7 @@ def request_roll_dice_event():
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                      broadcast=True)
                 emit("get_after_roll_dice")
+                game_instance.player_turn_state = "after_roll"
             emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()}, broadcast=True)
 
 
@@ -382,6 +398,7 @@ def request_buy_event():
             if game_instance.buy(game_instance.player_turn):
                 players = list(game_instance.players_seats.values())
                 players_number = 10 - players.count("--")
+                game_instance.player_turn_state = "after_roll"
                 emit("get_after_roll_dice")
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                      broadcast=True)
@@ -408,6 +425,7 @@ def request_auction_event(data):
                 players = list(game_instance.players_seats.values())
                 players_number = 10 - players.count("--")
                 sid = users_socket_id[game_instance.player_turn.nickname]
+                game_instance.player_turn_state = "after_roll"
                 emit("get_after_roll_dice", to=sid)
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                      broadcast=True)

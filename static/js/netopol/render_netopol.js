@@ -604,6 +604,21 @@ window.onload = function () {
         };
     }
 
+    function gameStates(state) {
+        objects_list["turn_cp_background"].opacity = 1;
+        if(state == "roll") {
+            enableButtons(["text_rollDice"]);
+        } else if(state == "buy") {
+            enableButtons(["text_buyProperty", "text_auction"]);
+            objects_list["text_auction"].left = objects_list["turn_cp_background"].left + 30;
+            objects_list["text_auction"].top = objects_list["turn_cp_background"].top + 10;
+        } else if(state == "after_roll") {
+            enableButtons(["text_endTurn"]);
+        };
+
+        resizeBoard();
+    }
+
     window.addEventListener("resize", resizeBoard);
 
     socket.on("get_operator_options", function(msg) {
@@ -643,6 +658,10 @@ window.onload = function () {
 
     socket.on("get_accounts", function(msg) {
         updateBalance(msg["accounts"], msg["players_number"]);
+    });
+
+    socket.on("get_turn_state", function(msg) {
+        gameStates(msg["state"]);
     });
 
     socket.on("start_game_success", function(msg) {
@@ -801,5 +820,6 @@ window.onload = function () {
     socket.emit("request_accounts");
     socket.emit("request_properties_info");
     socket.emit("request_board_status");
+    socket.emit("request_turn_state");
     resizeBoard();
 }
