@@ -85,7 +85,8 @@ class Netopol(Session):
             player.last_coordinates = player.coordinates
             player.coordinates = "#" + str(int(player.coordinates[1:]) + dices[0])
             player.doublet = dices[1]
-            player.doublet_counter += 1
+            if player.doublet:
+                player.doublet_counter += 1
         else:
             player.last_coordinates = player.coordinates
             player.coordinates = "#" + str(int(player.coordinates[1:]) + number)
