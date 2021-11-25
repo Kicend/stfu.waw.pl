@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link type="text/css" href="../../static/css/memory/styles.css" rel="stylesheet">
+  <script type="text/javascript" src="../../static/js/memory/script.js" async></script>
+  <link rel="shortcut icon" href="../../static/img/memory/Images/wisienka.png" type="image/png">
+  <title>stfu.waw.pl | Memory</title>
+</head>
+<body onselectstart="return false;">
+  <h1 class="page-title">Wiśniowa Memo</h1>
+  <div class="overlay-text visible">
+    Naciśnij aby rozpocząć
+  </div>
+  <div id="game-over-text" class="overlay-text">
+    Koniec gry
+    <span class="overlay-text-small">Naciśnij aby ponownie rozpocząć gre</span>
+  </div>
+  <div id="victory-text" class="overlay-text">
+    Zwycięstwo
+    <span class="overlay-text-small">Naciśnij aby ponownie rozpocząć gre</span>
+  </div>
+
+  <div class="game-container">
+    <div class="game-info-container">
+      <div class="game-info">
+        Czas <span id="time-remaining">100</span>
+      </div>
+      <div class="game-info">
+        Odwrócenia <span id="flips">0</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/klawiatura.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/klawiatura.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/kamera.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/kamera.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/router.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/router.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/drukarka.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/drukarka.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/napedoptyczny.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/napedoptyczny.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/monitor.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/monitor.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/myszka.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/myszka.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/projektor.png">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-back card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="w" src="../../static/img/memory/Images/w.png">
+      </div>
+      <div class="card-front card-face">
+        <img class="cob-web cob-web-top-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-top-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-left" src="../../static/img/memory/Images/wisienka.png">
+        <img class="cob-web cob-web-bottom-right" src="../../static/img/memory/Images/wisienka.png">
+        <img class="card-value" src="../../static/img/memory/Images/projektor.png">
+      </div>
+    </div>
+  </div>
+<footer>Made by Patryk Jankowski, Eryk Lang, Karol Lachowski</footer>
+</body>
+</html>
