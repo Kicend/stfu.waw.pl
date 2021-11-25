@@ -2,18 +2,21 @@
   "#0": {
     "name": "Test",
     "type": "teleport",
+    "desc": "",
     "coordinates": "#0"
   },
 
   "#1": {
     "name": "Test",
     "type": "income",
+    "desc": "",
     "value": 100
   },
 
   "#2": {
     "name": "Test",
     "type": "pay",
+    "desc": "",
     "value": 100
   }
 }
