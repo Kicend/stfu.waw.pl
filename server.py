@@ -367,28 +367,32 @@ def request_roll_dice_event():
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
         if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
-            game_instance.move(game_instance.player_turn)
-            is_buyable = game_instance.is_buyable(game_instance.player_turn)
-            game_instance.player_turn_state = "buy"
-            if is_buyable:
-                emit("ask_buy_property", {"property_buyable": True})
-            elif is_buyable == "auction":
-                emit("ask_buy_property", {"property_buyable": False})
-            else:
-                current_property = game_instance.properties_data[game_instance.player_turn.coordinates]
-                if current_property["owner"] is not None and current_property["owner"] != "#1290":
-                    game_instance.pay(game_instance.player_turn.seat, int(current_property["owner"][1:]),
-                                      current_property["rent_basic"])
-
-                players = list(game_instance.players_seats.values())
-                players_number = 10 - players.count("--")
-                emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
-                     broadcast=True)
-                if game_instance.player_turn.doublet:
-                    emit("get_turn")
+            if not game_instance.player_turn.in_jail:
+                game_instance.move(game_instance.player_turn)
+                is_buyable = game_instance.is_buyable(game_instance.player_turn)
+                game_instance.player_turn_state = "buy"
+                if is_buyable:
+                    emit("ask_buy_property", {"property_buyable": True})
+                elif is_buyable == "auction":
+                    emit("ask_buy_property", {"property_buyable": False})
                 else:
-                    emit("get_after_roll_dice")
-                game_instance.player_turn_state = "after_roll"
+                    current_property = game_instance.properties_data[game_instance.player_turn.coordinates]
+                    if current_property["owner"] is not None and current_property["owner"] != "#1290":
+                        game_instance.pay(game_instance.player_turn.seat, int(current_property["owner"][1:]),
+                                          current_property["rent_basic"])
+
+                    players = list(game_instance.players_seats.values())
+                    players_number = 10 - players.count("--")
+                    emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                         broadcast=True)
+                    if game_instance.player_turn.doublet:
+                        emit("get_turn")
+                    else:
+                        emit("get_after_roll_dice")
+            else:
+                game_instance.jail(game_instance.player_turn, mode=1)
+
+            game_instance.player_turn_state = "after_roll"
             emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()}, broadcast=True)
 
 
