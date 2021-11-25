@@ -187,3 +187,9 @@ def registry_view(registry_id):
 def edit_registry(registry_id):
     edit_registry_controller(registry_id)
     return redirect(f"/cr/registry/{registry_id}")
+
+
+@routes.route("/game/memory")
+@login_required
+def memory_game():
+    return render_template("memory/memory.html")
