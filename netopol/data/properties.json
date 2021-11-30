@@ -1,7 +1,7 @@
 {
     "#0": {
       "name": "Start",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "start",
       "price": 0,
       "rent_basic": 0,
@@ -29,7 +29,7 @@
   
     "#2": {
       "name": "Los",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -57,7 +57,7 @@
   
     "#4": {
       "name": "Podatek Dochodowy",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "tax",
       "price": 0,
       "rent_basic": 0,
@@ -99,7 +99,7 @@
   
     "#7": {
       "name": "Los",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -141,7 +141,7 @@
   
     "#10": {
       "name": "Więzienie",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "jail",
       "price": 0,
       "rent_basic": 0,
@@ -239,7 +239,7 @@
   
     "#17": {
       "name": "Los",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -281,7 +281,7 @@
   
     "#20": {
       "name": "Parking",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "parking",
       "price": 0,
       "rent_basic": 0,
@@ -309,7 +309,7 @@
   
     "#22": {
       "name": "Los",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -421,7 +421,7 @@
   
     "#30": {
       "name": "Policja",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "police",
       "price": 0,
       "rent_basic": 0,
@@ -463,7 +463,7 @@
   
     "#33": {
       "name": "Los",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -505,7 +505,7 @@
   
     "#36": {
       "name": "Los",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "fate",
       "price": 0,
       "rent_basic": 0,
@@ -533,7 +533,7 @@
   
     "#38": {
       "name": "Podatek Śmieciowy",
-      "owner": "#1290",
+      "owner": "BANK",
       "district": "tax",
       "price": 0,
       "rent_basic": 0,
