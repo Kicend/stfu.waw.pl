@@ -22,7 +22,8 @@ window.onload = function () {
                             "buyProperty": "Kup",
                             "auction": "Aukcja",
                             "auction_send_offer": "Podbij",
-                            "auction_pass": "Pas"
+                            "auction_pass": "Pas",
+                            "payBail": "Zapłać kaucję"
                         };
     var textboxes_names = ["auction_price"];
     var pawns_list = {};
@@ -606,14 +607,19 @@ window.onload = function () {
 
     function gameStates(state) {
         objects_list["turn_cp_background"].opacity = 1;
-        if(state == "roll") {
-            enableButtons(["text_rollDice"]);
-        } else if(state == "buy") {
-            enableButtons(["text_buyProperty", "text_auction"]);
-            objects_list["text_auction"].left = objects_list["turn_cp_background"].left + 30;
-            objects_list["text_auction"].top = objects_list["turn_cp_background"].top + 10;
-        } else if(state == "after_roll") {
-            enableButtons(["text_endTurn"]);
+        switch(state) {
+            case "roll":
+                enableButtons(["text_rollDice"]);
+            case "buy":
+                enableButtons(["text_buyProperty", "text_auction"]);
+                objects_list["text_auction"].left = objects_list["turn_cp_background"].left + 30;
+                objects_list["text_auction"].top = objects_list["turn_cp_background"].top + 10;
+            case "jail":
+                enableButtons["text_rollDice", "text_payBail"];
+                objects_list["text_payBill"].left = objects_list["turn_cp_background"].left + 30;
+                objects_list["text_payBill"].top = objects_list["turn_cp_background"].top + 10;
+            case "after_roll":
+                enableButtons(["text_endTurn"]);
         };
 
         resizeBoard();
