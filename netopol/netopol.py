@@ -271,7 +271,10 @@ class Netopol(Session):
         if next_player_index >= len(self.active_players):
             next_player_index = 0
         self.player_turn = self.active_players[next_player_index]
-        self.player_turn_state = "roll"
+        if not self.player_turn.in_jail:
+            self.player_turn_state = "roll"
+        else:
+            self.player_turn_state = "jail"
 
     def start_game(self):
         shuffle(self.events_cards_stack)
