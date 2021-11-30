@@ -252,10 +252,7 @@ class Netopol(Session):
             prisoner.in_jail = False
             prisoner.sentence_turn = 0
 
-    def trade_request(self, sender: int, recipient: int, player_1_items: dict, player_2_items: dict):
-        pass
-
-    def trade(self, player_1: int, player_2: int, player_1_items: dict, player_2_items: dict, result: bool):
+    def trade(self, player_1: Player, player_2: Player, player_1_items: dict, player_2_items: dict):
         pass
 
     def fate(self, player: Player):
