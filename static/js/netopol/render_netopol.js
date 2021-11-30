@@ -610,16 +610,20 @@ window.onload = function () {
         switch(state) {
             case "roll":
                 enableButtons(["text_rollDice"]);
+                break;
             case "buy":
                 enableButtons(["text_buyProperty", "text_auction"]);
                 objects_list["text_auction"].left = objects_list["turn_cp_background"].left + 30;
                 objects_list["text_auction"].top = objects_list["turn_cp_background"].top + 10;
+                break;
             case "jail":
                 enableButtons["text_rollDice", "text_payBail"];
                 objects_list["text_payBill"].left = objects_list["turn_cp_background"].left + 30;
                 objects_list["text_payBill"].top = objects_list["turn_cp_background"].top + 10;
+                break;
             case "after_roll":
                 enableButtons(["text_endTurn"]);
+                break;
         };
 
         resizeBoard();
@@ -785,27 +789,35 @@ window.onload = function () {
 
     board.on("mouse:down", function(e) {
         if(e.target != null) {
-            if(e.target.id == "text_startGame") {
-                socket.emit("request_start_game");
-            } else if(e.target.id == "text_rollDice") {
-                socket.emit("request_roll_dice");
-            } else if(e.target.id == "text_endTurn") {
-                socket.emit("request_end_turn");
-            } else if(e.target.id == "text_buyProperty") {
-                socket.emit("request_buy_property");
-            } else if(e.target.id == "text_auction") {
-                socket.emit("request_auction", {"foobar": -1});
-            } else if(e.target.id == "text_auction_send_offer") {
-                disableButtons("all");
-                disableTextboxes("all");
-                objects_list["turn_cp_background"].opacity = 0;
-                var textbox = objects_list["textbox_auction_price"];
-                socket.emit("request_auction", {"price": textbox.text});
-            } else if(e.target.id == "text_auction_pass") {
-                disableButtons("all");
-                disableTextboxes("all");
-                objects_list["turn_cp_background"].opacity = 0;
-                socket.emit("request_auction", {"price": 0});
+            switch(e.target.id) {
+                case "text_startGame":
+                    socket.emit("request_start_game");
+                    break;
+                case "text_rollDice":
+                    socket.emit("request_roll_dice");
+                    break;
+                case "text_endTurn":
+                    socket.emit("request_end_turn");
+                    break;
+                case "text_buyProperty":
+                    socket.emit("request_buy_property");
+                    break;
+                case "text_auction":
+                    socket.emit("request_auction", {"foobar": -1});
+                    break;
+                case "text_auction_send_offer":
+                    disableButtons("all");
+                    disableTextboxes("all");
+                    objects_list["turn_cp_background"].opacity = 0;
+                    var textbox = objects_list["textbox_auction_price"];
+                    socket.emit("request_auction", {"price": textbox.text});
+                    break;
+                case "text_auction_pass":
+                    disableButtons("all");
+                    disableTextboxes("all");
+                    objects_list["turn_cp_background"].opacity = 0;
+                    socket.emit("request_auction", {"price": 0});
+                    break;
             }
         };
     });
