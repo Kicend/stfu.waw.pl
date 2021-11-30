@@ -251,6 +251,7 @@ class Netopol(Session):
             prisoner.account -= self.bail_amount
             prisoner.in_jail = False
             prisoner.sentence_turn = 0
+            self.update_accounts([prisoner])
 
     def trade(self, player_1: Player, player_2: Player, player_1_items: dict, player_2_items: dict):
         pass
