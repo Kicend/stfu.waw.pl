@@ -377,7 +377,7 @@ def request_roll_dice_event():
                     emit("ask_buy_property", {"property_buyable": False})
                 else:
                     current_property = game_instance.properties_data[game_instance.player_turn.coordinates]
-                    if current_property["owner"] is not None and current_property["owner"] != "#1290":
+                    if current_property["owner"] is not None and current_property["owner"] != "BANK":
                         game_instance.pay(game_instance.player_turn.seat, int(current_property["owner"][1:]),
                                           current_property["rent_basic"])
 

@@ -92,7 +92,7 @@ class Netopol(Session):
 
     def is_buyable(self, player: Player):
         if self.properties_data[player.coordinates]["owner"] is None and \
-                self.properties_data[player.coordinates]["owner"] != "#1290":
+                self.properties_data[player.coordinates]["owner"] != "BANK":
             property_price = self.properties_data[player.coordinates]["price"]
             if player.account >= property_price > 0:
                 return True
