@@ -56,6 +56,7 @@ class Netopol(Session):
         self.auction_field = None
         self.auction_price = 0
         self.auction_winner = None
+        self.bail_amount = 50
 
     @staticmethod
     def load_properties():
@@ -244,6 +245,12 @@ class Netopol(Session):
             pass  # Przekazanie do funkcji logs_frame w pliku render.js
 
         self.update_accounts([sender, recipient])
+
+    def pay_bail(self, prisoner: Player):
+        if prisoner.account >= self.bail_amount:
+            prisoner.account -= self.bail_amount
+            prisoner.in_jail = False
+            prisoner.sentence_turn = 0
 
     def trade_request(self, sender: int, recipient: int, player_1_items: dict, player_2_items: dict):
         pass

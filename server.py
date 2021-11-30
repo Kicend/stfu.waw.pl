@@ -442,6 +442,22 @@ def request_auction_event(data):
                 emit("update_properties_info", {"properties_info": game_instance.properties_data}, broadcast=True)
 
 
+@socketio.on("request_pay_bail")
+def request_pay_bail_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username \
+                and game_instance.player_turn.in_jail is True:
+            game_instance.pay_bail(game_instance.player_turn)
+            players = list(game_instance.players_seats.values())
+            players_number = 10 - players.count("--")
+            game_instance.player_turn_state = "roll"
+            emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                 broadcast=True)
+            emit("get_turn")
+
+
 @socketio.on("request_end_turn")
 def request_end_turn_event():
     if current_user.username in players_rooms:

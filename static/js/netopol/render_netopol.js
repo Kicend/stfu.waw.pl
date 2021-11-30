@@ -818,6 +818,11 @@ window.onload = function () {
                     objects_list["turn_cp_background"].opacity = 0;
                     socket.emit("request_auction", {"price": 0});
                     break;
+                case "text_payBail":
+                    disableButtons("all");
+                    disableTextboxes("all");
+                    objects_list["turn_cp_background"].opacity = 0;
+                    socket.emit("request_pay_bail");
             }
         };
     });
