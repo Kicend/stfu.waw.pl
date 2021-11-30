@@ -17,7 +17,7 @@ class Session:
 
 
 class Player:
-    def __init__(self, nickname, seat):
+    def __init__(self, nickname, seat, account_start_balance):
         self.nickname = nickname
         self.seat = seat
         self.coordinates = "#0"
@@ -27,6 +27,15 @@ class Player:
         self.in_jail = False
         self.sentence_turn = 0
         self.free_jail_card = False
+        self.account = account_start_balance
+        self.inventory = Inventory()
+
+
+class Inventory:
+    def __init__(self):
+        self.fields = []
+        self.cards = []
+        self.fields_num_by_district = {}
 
 
 class Netopol(Session):
@@ -34,6 +43,7 @@ class Netopol(Session):
         super().__init__(board_id, op)
         self.max_slots = 6
         self.properties_data = self.load_properties()
+        self.fields_list = self.count_fields_by_district()
         self.start_balance = 1500
         self.accounts = dict.fromkeys([i for i in range(1, 11)], self.start_balance)
         self.events = self.load_events()
@@ -52,10 +62,24 @@ class Netopol(Session):
         with open("netopol/data/properties.json", "r", encoding="utf-8") as f:
             return load(f)
 
+    def count_fields_by_district(self):
+        tmp = {}
+        for value in self.properties_data.values():
+            if value["district"] not in tmp.keys():
+                tmp[value["district"]] = 1
+            else:
+                tmp[value["district"]] += 1
+
+        return tmp
+
     @staticmethod
     def load_events():
         with open("netopol/data/events.json", "r", encoding="utf-8") as f:
             return load(f)
+
+    def update_accounts(self, players: list):
+        for player in players:
+            self.accounts[player.seat] = player.account
 
     def get_coordinates(self):
         players_coordinates = {}
@@ -69,20 +93,33 @@ class Netopol(Session):
         if self.properties_data[player.coordinates]["owner"] is None and \
                 self.properties_data[player.coordinates]["owner"] != "#1290":
             property_price = self.properties_data[player.coordinates]["price"]
-            player_account = self.accounts[player.seat]
-            if player_account >= property_price > 0:
+            if player.account >= property_price > 0:
                 return True
             else:
                 return "auction"
         else:
             return False
 
-    # TODO: Dokończyć
-    def is_player_pass_start(self, player: Player):
+    @staticmethod
+    def is_player_pass_start(player: Player):
         if player.coordinates == "#0":
             return True
-        elif player.last_coordinates:
-            pass
+        else:
+            actual_coordinates = int(player.coordinates[1:])
+            last_coordinates = int(player.last_coordinates[1:])
+            if actual_coordinates <= last_coordinates:
+                return True
+            else:
+                return False
+
+    def is_full_district(self, owner: Player, field: dict):
+        district_name = field["district"]
+        district_fields_num = self.fields_list[district_name]
+        player_district_fields_num = owner.inventory.fields_num_by_district[district_name]
+        if player_district_fields_num == district_fields_num:
+            return True
+        else:
+            return False
 
     @staticmethod
     def roll():
@@ -93,7 +130,7 @@ class Netopol(Session):
         else:
             return [dice_1+dice_2, False]
 
-    def move(self, player: Player, mode=0, number=0):
+    def move(self, player: Player, mode=0, field="#--", number=0):
         if mode == 0:
             dices = self.roll()
             player.last_coordinates = player.coordinates
@@ -113,7 +150,10 @@ class Netopol(Session):
                 self.fate(player)
         else:
             player.last_coordinates = player.coordinates
-            player.coordinates = "#" + str(int(player.coordinates[1:]) + number)
+            if field != "#--":
+                player.coordinates = field
+            else:
+                player.coordinates = "#" + str(int(player.coordinates[1:]) + number)
 
             if player.last_coordinates == player.coordinates:
                 player.last_coordinates = None
@@ -121,7 +161,7 @@ class Netopol(Session):
         if int(player.coordinates[1:]) > 39:
             coordinates = str(int(player.coordinates[1:]) - 40)
             player.coordinates = "#" + coordinates
-            self.accounts[player.seat] += 200
+            player.account += 200
 
     def jail(self, player: Player, mode: int = 0, sentence_length: int = 3):
         if mode == 0:
@@ -142,10 +182,16 @@ class Netopol(Session):
 
     def buy(self, player: Player):
         property_card = self.properties_data[player.coordinates]
-        player_account = self.accounts[player.seat]
-        if player_account >= property_card["price"]:
-            self.accounts[player.seat] -= property_card["price"]
+        if player.account >= property_card["price"]:
+            player.account -= property_card["price"]
+            self.update_accounts([player])
             property_card["owner"] = "#" + str(player.seat)
+            player.inventory.fields.append(player.coordinates)
+            if property_card["district"] not in player.inventory.fields_num_by_district.keys():
+                player.inventory.fields_num_by_district[property_card["district"]] = 1
+            else:
+                player.inventory.fields_num_by_district[property_card["district"]] += 1
+
             return True
         else:
             return False
@@ -172,11 +218,13 @@ class Netopol(Session):
                 if self.auction_winner is None:
                     self.auction_winner = self.auction_participants[0]
 
-                self.accounts[self.auction_winner.seat] -= self.auction_price
+                self.auction_winner.account -= self.auction_price
                 property_card["owner"] = "#" + str(self.auction_winner.seat)
                 self.auction_end()
             else:
                 self.auction_player_turn = self.auction_participants[0]
+
+        self.update_accounts([self.auction_winner])
 
     def auction_end(self):
         self.auction_field = None
@@ -185,12 +233,17 @@ class Netopol(Session):
         self.auction_player_turn = None
         self.auction_state = False
 
-    def pay(self, sender: int, recipient: int, amount: int):
-        if self.accounts[sender] >= amount:
-            self.accounts[sender] -= amount
-            self.accounts[recipient] += amount
+    def pay(self, sender: Player, recipient: Player, amount: int):
+        field = self.properties_data[sender.coordinates]
+        if self.is_full_district(recipient, field):
+            amount *= 2
+        if sender.account >= amount:
+            sender.account -= amount
+            recipient.account += amount
         else:
             pass  # Przekazanie do funkcji logs_frame w pliku render.js
+
+        self.update_accounts([sender, recipient])
 
     def trade_request(self, sender: int, recipient: int, player_1_items: dict, player_2_items: dict):
         pass
@@ -205,11 +258,11 @@ class Netopol(Session):
         if event_card["type"] == "teleport":
             player.coordinates = event_card["coordinates"]
         elif event_card["type"] == "income":
-            player_account = self.accounts[player.seat]
-            player_account += event_card["value"]
+            player.account += event_card["value"]
         elif event_card["type"] == "pay":
-            player_account = self.accounts[player.seat]
-            player_account -= event_card["value"]
+            player.account -= event_card["value"]
+
+        self.update_accounts([player])
 
     def end_turn(self):
         current_player = self.player_turn
@@ -224,7 +277,7 @@ class Netopol(Session):
         shuffle(self.events_cards_stack)
         for seat, player in self.players_seats.items():
             if player != "--":
-                self.active_players.append(Player(player, seat))
+                self.active_players.append(Player(player, seat, self.start_balance))
 
         if self.active_players:
             self.player_turn = choice(self.active_players)
