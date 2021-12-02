@@ -5,7 +5,7 @@ from json import load
 from ext.auth import db, login
 from ext.routes import routes
 from ext.email import mail
-from netopol.netopol import Netopol
+from games.netopol.netopol import Netopol
 
 with open("db/secret.json", "r") as f:
     secrets = load(f)
