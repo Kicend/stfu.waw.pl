@@ -60,7 +60,7 @@ class Netopol(Session):
 
     @staticmethod
     def load_properties():
-        with open("netopol/data/properties.json", "r", encoding="utf-8") as f:
+        with open("games/netopol/data/properties.json", "r", encoding="utf-8") as f:
             return load(f)
 
     def count_fields_by_district(self):
@@ -75,7 +75,7 @@ class Netopol(Session):
 
     @staticmethod
     def load_events():
-        with open("netopol/data/events.json", "r", encoding="utf-8") as f:
+        with open("games/netopol/data/events.json", "r", encoding="utf-8") as f:
             return load(f)
 
     def update_accounts(self, players: list):
