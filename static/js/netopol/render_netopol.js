@@ -363,6 +363,7 @@ window.onload = function () {
 
             board.add(text);
             objects_list[text.id] = text;
+            board.bringToFront(text);
         };
 
         var property_district = new fabric.Rect(
@@ -396,8 +397,8 @@ window.onload = function () {
             var pawn = new fabric.Rect(
                 {
                     id: "pawn_" + i,
-                    left: objects_list["#0"].left + 10,
-                    top: objects_list["#0"].top + 10 * i,
+                    left: -100,
+                    top: -100,
                     fill: pawns_colors[color],
                     width: 10,
                     height: 10,
@@ -422,8 +423,8 @@ window.onload = function () {
         var controlPanelBackground = new fabric.Rect(
             {
                 id: "turn_cp_background",
-                left: objects_list["#8"].left - 10,
-                top: objects_list["#8"].top - 150,
+                left: objects_list["#7"].left - 10,
+                top: objects_list["#7"].top - 150,
                 fill: "#000000",
                 width: 200,
                 height: 30,
@@ -495,6 +496,32 @@ window.onload = function () {
             board.add(textbox);
             objects_list[textbox.id] = textbox;
         });
+
+        var managementWindow = new fabric.Rect(
+            {
+                id: "mw_main",
+                left: objects_list["#20"].left + 110,
+                top: objects_list["#20"].top + 110,
+                fill: "#ffffff",
+                width: 430,
+                height: 350,
+                stroke: "grey",
+                strokeWidth: 1,
+                angle: 0,
+                opacity: 1,
+                selectable: false,
+                evented: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                hasControls: false,
+                hasRotatingPoint: false,
+                hoverCursor: "....."
+            }
+        );
+
+        board.add(managementWindow);
+        objects_list[managementWindow.id] = managementWindow;
+        board.sendToBack(managementWindow);
     };
 
     function resizeBoard() {
