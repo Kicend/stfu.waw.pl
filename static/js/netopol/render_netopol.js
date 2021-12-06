@@ -617,10 +617,6 @@ window.onload = function () {
         board.renderAll();
     };
 
-    function rollDice() {
-        socket.emit("request_move_pawn");
-    };
-
     function updateBalance(accounts, players_number) {
         var i = 1;
         while(i != players_number+1) {
