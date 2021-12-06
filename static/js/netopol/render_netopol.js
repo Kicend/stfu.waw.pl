@@ -595,9 +595,6 @@ window.onload = function () {
     };
 
     function resizeBoard() {
-        var w = window.innerWidth;
-        var h = window.innerHeight;
-
         board.setZoom(1.35);
         board.setWidth(window.innerWidth * board.getZoom());
         board.setHeight(window.innerHeight * board.getZoom());
