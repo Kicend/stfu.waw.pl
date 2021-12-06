@@ -26,6 +26,11 @@ window.onload = function () {
                             "payBail": "Zapłać kaucję"
                         };
     var textboxes_names = ["auction_price"];
+    var tabs_buttons_names = {
+        "journal": "Dziennik",
+        "trade": "Handel",
+        "map_operations": "Operacje"
+    }
     var pawns_list = {};
     var pawns_colors = {"#1": "#ff1111",
                         "#2": "#3333ff",
@@ -522,6 +527,71 @@ window.onload = function () {
         board.add(managementWindow);
         objects_list[managementWindow.id] = managementWindow;
         board.sendToBack(managementWindow);
+        
+        var i = 1;
+        for(const [key, value] of Object.entries(tabs_buttons_names)) {
+            var tabButton = new fabric.Text(value,
+                {
+                    id: "text_tab_" + key,
+                    left: objects_list["#20"].left + (150 * i),
+                    top: objects_list["#20"].top + 115,
+                    fill: "#788086",
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            );
+
+            board.add(tabButton);
+            objects_list[tabButton.id] = tabButton;
+            i++;
+        }
+
+        i = 0
+        j = 1
+        while(i <= 2) {
+            var width = 0;
+            var shift = 143 * j;
+            if(i == 0) {
+                width = 144;
+                shift--;
+            } else {
+                width = 143;
+            }
+            var tabButtonBorder = new fabric.Rect(
+                {
+                    id: "mw_main",
+                    left: objects_list["#20"].left + (shift - 32),
+                    top: objects_list["#20"].top + 110,
+                    fill: "",
+                    width: width,
+                    height: 30,
+                    stroke: "grey",
+                    strokeWidth: 1,
+                    angle: 0,
+                    opacity: 1,
+                    selectable: false,
+                    evented: true,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            )
+
+            board.add(tabButtonBorder);
+            objects_list[tabButtonBorder.id] = tabButtonBorder;
+            j++;
+            i++;
+        }
     };
 
     function resizeBoard() {
