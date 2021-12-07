@@ -127,6 +127,8 @@ window.onload = function () {
             
             objects_list[message_text.id] = message_text;
             board.add(message_text);
+            board.sendToBack(message_text);
+            board.bringForward(message_text);
             i++;
         }
     };
