@@ -56,7 +56,7 @@ window.onload = function () {
                 "rent_level_5": "Czynsz za hotel",
                 "upgrade_price": "Cena kupna nieruchomości"
             };
-    var logs_buffer = [];
+    var logs_buffer = ["gracz #1 wszedł w pole #45 i złamał nogę i upadł na głupi ryj", "Arek gdzie karty do gwinta?", "tu brzoza tu brzoza, zaciągamy sieć"];
 
     var id = 0;
     var x = 10;
@@ -101,8 +101,34 @@ window.onload = function () {
         i++;
     };
 
-    function logs_frame(message) {
+    i = 1
 
+    function logs_frame(messages) {
+        for(let message in messages) {
+            var message_text = new fabric.Text("+ " + messages[message],
+                {
+                    id: "message_" + message,
+                    left: objects_list["mw_content"].left + 10,
+                    top: objects_list["mw_content"].top + objects_list["mw_content"].height - (20 * i),
+                    backgroundColor: "",
+                    fill: "grey",
+                    fontSize: 15,
+                    fontWeight: "bold",
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            );
+            
+            objects_list[message_text.id] = message_text;
+            board.add(message_text);
+            i++;
+        }
     };
 
     function modifyStack(pawns_coordinates) {
@@ -556,18 +582,20 @@ window.onload = function () {
 
         i = 0
         j = 1
-        while(i <= 2) {
+        for(let k in tabs_buttons_names) {
             var width = 0;
             var shift = 143 * j;
+            var opacity = 1;
             if(i == 0) {
                 width = 144;
                 shift--;
+                opacity = 0;
             } else {
                 width = 143;
             }
             var tabButtonBorder = new fabric.Rect(
                 {
-                    id: "mw_main",
+                    id: "tabButton_" + k,
                     left: objects_list["#20"].left + (shift - 32),
                     top: objects_list["#20"].top + 110,
                     fill: "",
@@ -576,7 +604,7 @@ window.onload = function () {
                     stroke: "grey",
                     strokeWidth: 1,
                     angle: 0,
-                    opacity: 1,
+                    opacity: opacity,
                     selectable: false,
                     evented: true,
                     lockMovementX: true,
@@ -592,6 +620,31 @@ window.onload = function () {
             j++;
             i++;
         }
+
+        var managementWindowContent = new fabric.Rect(
+            {
+                id: "mw_content",
+                left: objects_list["#20"].left + 110,
+                top: objects_list["#20"].top + 145,
+                fill: "",
+                width: 430,
+                height: 315,
+                stroke: "",
+                strokeWidth: 1,
+                angle: 0,
+                opacity: 1,
+                selectable: false,
+                evented: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                hasControls: false,
+                hasRotatingPoint: false,
+                hoverCursor: "....."
+            }
+        );
+
+        board.add(managementWindowContent);
+        objects_list[managementWindowContent.id] = managementWindowContent;
     };
 
     function resizeBoard() {
@@ -742,6 +795,7 @@ window.onload = function () {
         };
 
         createBoard({});
+        logs_frame(logs_buffer);
         window.onresize = resizeCanvas();
         resizeCanvas();
     });
@@ -913,6 +967,8 @@ window.onload = function () {
                     disableTextboxes("all");
                     objects_list["turn_cp_background"].opacity = 0;
                     socket.emit("request_pay_bail");
+                case "tabButton_journal":
+
             }
         };
     });
