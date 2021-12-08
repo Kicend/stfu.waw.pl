@@ -56,7 +56,7 @@ window.onload = function () {
                 "rent_level_5": "Czynsz za hotel",
                 "upgrade_price": "Cena kupna nieruchomości"
             };
-    var logs_buffer = ["gracz #1 wszedł w pole #45 i złamał nogę i upadł na głupi ryj", "Arek gdzie karty do gwinta?", "tu brzoza tu brzoza, zaciągamy sieć"];
+    var logs_buffer = [];
 
     var id = 0;
     var x = 10;
@@ -101,10 +101,19 @@ window.onload = function () {
         i++;
     };
 
-    i = 1
-
     function logs_frame(messages) {
+        var messages_counter = 0;
+        i = 1;
         for(let message in messages) {
+            if(messages[message].includes("\n")) {
+                messages_counter++;
+                i++;
+            };
+
+            if(messages_counter >= 16) {
+                break;
+            };
+
             var message_text = new fabric.Text("+ " + messages[message],
                 {
                     id: "message_" + message,
@@ -129,9 +138,21 @@ window.onload = function () {
             board.add(message_text);
             board.sendToBack(message_text);
             board.bringForward(message_text);
+            messages_counter++;
             i++;
         }
     };
+
+    function clear_logs_frame() {
+        for(const [key, messageText] of Object.entries(objects_list)) {
+            if(key.includes("message_")) {
+                board.remove(messageText);
+                delete objects_list[key];
+            }
+        }
+
+        board.renderAll();
+    }
 
     function modifyStack(pawns_coordinates) {
         for(const [pawn, coordinates] of Object.entries(pawns_coordinates)) {
@@ -887,6 +908,21 @@ window.onload = function () {
         resizeBoard();
     });
 
+    socket.on("get_messages", function(msg) {
+        var tab = [];
+        console.log(typeof(msg["messages"]));
+        if(typeof(msg["messages"]) === "string") {
+            tab = logs_buffer;
+            tab.splice(0, 0, msg["messages"]);
+        } else {
+            tab = msg["messages"].concat(logs_buffer);
+        }
+
+        logs_buffer = tab;
+        clear_logs_frame();
+        logs_frame(logs_buffer);
+    });
+
     board.on("mouse:over", function(e) {
         if(e.target !== null && e.target.id.includes("#") == true) {
             var info = {};
@@ -992,5 +1028,6 @@ window.onload = function () {
     socket.emit("request_properties_info");
     socket.emit("request_board_status");
     socket.emit("request_turn_state");
+    socket.emit("request_messages");
     resizeBoard();
 }

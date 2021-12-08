@@ -354,11 +354,18 @@ def request_turn_state():
         game_instance = sessions_list[board_id]
         if game_instance.state == "running":
             if current_user.username == game_instance.player_turn.nickname and game_instance.auction_state is False:
-                sid = users_socket_id[game_instance.player_turn.nickname]
-                emit("get_turn_state", {"state": game_instance.player_turn_state}, to=sid)
+                emit("get_turn_state", {"state": game_instance.player_turn_state})
             elif current_user.username == game_instance.auction_player_turn.nickname and game_instance.auction_state:
-                sid = users_socket_id[game_instance.auction_player_turn.nickname]
-                emit("get_auction_turn", {"price": str(game_instance.auction_price)}, to=sid)
+                emit("get_auction_turn", {"price": str(game_instance.auction_price)})
+
+
+@socketio.on("request_messages")
+def request_messages():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running":
+            emit("get_messages", {"messages": game_instance.journal[0:10]})
 
 
 @socketio.on("request_roll_dice")
@@ -369,6 +376,7 @@ def request_roll_dice_event():
         if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
             if not game_instance.player_turn.in_jail:
                 game_instance.move(game_instance.player_turn)
+                emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
                 is_buyable = game_instance.is_buyable(game_instance.player_turn)
                 game_instance.player_turn_state = "buy"
                 if is_buyable:

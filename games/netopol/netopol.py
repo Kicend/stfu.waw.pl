@@ -57,6 +57,8 @@ class Netopol(Session):
         self.auction_price = 0
         self.auction_winner = None
         self.bail_amount = 50
+        self.messages = self.load_messages()
+        self.journal = []
 
     @staticmethod
     def load_properties():
@@ -77,6 +79,20 @@ class Netopol(Session):
     def load_events():
         with open("games/netopol/data/events.json", "r", encoding="utf-8") as f:
             return load(f)
+
+    @staticmethod
+    def load_messages():
+        with open("games/netopol/data/messages.json", "r", encoding="utf-8") as f:
+            return load(f)
+
+    def journal_add_message(self, message: str):
+        # if len(self.journal) >= 10:
+        if len(message) >= 63:
+            last_space_index = message.rindex(" ")
+            one_before_last_space_index = message.rindex(" ", 0, last_space_index-1)
+            message = message[:one_before_last_space_index] + "\n" + message[one_before_last_space_index:]
+
+        self.journal.insert(0, message)
 
     def update_accounts(self, players: list):
         for player in players:
@@ -147,6 +163,7 @@ class Netopol(Session):
 
             if player.coordinates == "#30":
                 self.jail(player, 0)
+                self.journal_add_message(self.messages["go_to_jail"].format(player=player.seat))
             elif player.coordinates in ("#2", "#7", "#17", "#22", "#33", "#36"):
                 self.fate(player)
         else:
@@ -164,11 +181,18 @@ class Netopol(Session):
             player.coordinates = "#" + coordinates
             player.account += 200
 
+        from_field_name = self.properties_data[player.last_coordinates]["name"]
+        to_field_name = self.properties_data[player.coordinates]["name"]
+        self.journal_add_message(self.messages["move"].format(player=player.seat,
+                                                              from_field=from_field_name,
+                                                              to_field=to_field_name))
+
     def jail(self, player: Player, mode: int = 0, sentence_length: int = 3):
         if mode == 0:
             player.in_jail = True
             player.sentence_turn = sentence_length
             player.coordinates = "#10"
+            self.journal_add_message(self.messages["go_to_jail"].format(player=player.seat))
         else:
             dices = self.roll()
             player.doublet = dices[1]
