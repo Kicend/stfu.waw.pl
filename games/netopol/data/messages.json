@@ -3,5 +3,9 @@
   "buy": "Gracz #{player} kupił pole {field}",
   "pay": "Gracz #{player_one} zapłacił ${price} graczowi #{player_two}",
   "pay_tax": "Gracz #{player} zapłacił ${price} opłaty",
-  "go_to_jail": "Gracz #{player} trafił do więzienia"
+  "go_to_jail": "Gracz #{player} trafił do więzienia",
+  "start_auction": "Gracz #{player} rozpoczął aukcję",
+  "raise_auction_price": "Gracz #{player} licytuje za ${price}",
+  "pass_auction": "Gracz #{player} pasuje",
+  "auction_winner_announcement": "Gracz #{player} wygrał aukcję i zdobywa pole {field}"
 }
