@@ -388,6 +388,7 @@ def request_roll_dice_event():
                     if current_property["owner"] is not None and current_property["owner"] != "BANK":
                         game_instance.pay(game_instance.player_turn.seat, int(current_property["owner"][1:]),
                                           current_property["rent_basic"])
+                        emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
 
                     players = list(game_instance.players_seats.values())
                     players_number = 10 - players.count("--")
@@ -414,6 +415,7 @@ def request_buy_event():
                 players = list(game_instance.players_seats.values())
                 players_number = 10 - players.count("--")
                 game_instance.player_turn_state = "after_roll"
+                emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
                 emit("get_after_roll_dice")
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                      broadcast=True)
@@ -429,11 +431,17 @@ def request_auction_event(data):
                 and game_instance.auction_state is False:
             game_instance.auction_start()
             sid = users_socket_id[game_instance.auction_player_turn.nickname]
+            emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
             emit("get_auction_turn", {"price": str(game_instance.auction_price)}, to=sid)
         elif game_instance.state == "running" and game_instance.auction_player_turn.nickname == current_user.username \
                 and game_instance.auction_state is True:
             try:
                 game_instance.auction(int(data["price"]))
+                if int(data["price"]) == 0:
+                    emit("get_messages", {"messages": [game_instance.journal[0], game_instance.journal[1]]},
+                         broadcast=True)
+                else:
+                    emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
             except ValueError:
                 pass
             if game_instance.auction_state:

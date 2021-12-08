@@ -211,6 +211,7 @@ class Netopol(Session):
             player.account -= property_card["price"]
             self.update_accounts([player])
             property_card["owner"] = "#" + str(player.seat)
+            self.journal_add_message(self.messages["buy"].format(player=player.seat, field=property_card["name"]))
             player.inventory.fields.append(player.coordinates)
             if property_card["district"] not in player.inventory.fields_num_by_district.keys():
                 player.inventory.fields_num_by_district[property_card["district"]] = 1
@@ -229,6 +230,7 @@ class Netopol(Session):
         self.auction_participants.insert(0, player)
         self.auction_player_turn = player
         self.auction_state = True
+        self.journal_add_message(self.messages["start_auction"].format(player=player.seat))
 
     def auction(self, price: int):
         current_player = self.auction_participants.pop(0)
@@ -237,7 +239,10 @@ class Netopol(Session):
             self.auction_price = price
             self.auction_participants.append(current_player)
             self.auction_player_turn = self.auction_participants[0]
+            self.journal_add_message(self.messages["raise_auction_price"].format(player=self.auction_winner.seat,
+                                                                                 price=price))
         else:
+            self.journal_add_message(self.messages["pass_auction"].format(player=current_player.seat))
             if len(self.auction_participants) == 1:
                 property_card = self.properties_data[self.auction_field]
                 if self.auction_winner is None:
@@ -245,6 +250,8 @@ class Netopol(Session):
 
                 self.auction_winner.account -= self.auction_price
                 property_card["owner"] = "#" + str(self.auction_winner.seat)
+                self.journal_add_message(self.messages["auction_winner_announcement"].format(
+                    player=self.auction_winner.seat, field=property_card["name"]))
                 self.auction_end()
             else:
                 self.auction_player_turn = self.auction_participants[0]
@@ -265,6 +272,8 @@ class Netopol(Session):
         if sender.account >= amount:
             sender.account -= amount
             recipient.account += amount
+            self.journal_add_message(self.messages["pay"].format(player_one=sender.seat, price=amount,
+                                                                 player_two=recipient.seat))
         else:
             pass  # Przekazanie do funkcji logs_frame w pliku render.js
 
