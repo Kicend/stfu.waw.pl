@@ -386,7 +386,8 @@ def request_roll_dice_event():
                 else:
                     current_property = game_instance.properties_data[game_instance.player_turn.coordinates]
                     if current_property["owner"] is not None and current_property["owner"] != "BANK":
-                        game_instance.pay(game_instance.player_turn.seat, int(current_property["owner"][1:]),
+                        owner = game_instance.get_player(int(current_property["owner"][1:]))
+                        game_instance.pay(game_instance.player_turn, owner,
                                           current_property["rent_basic"])
                         emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
 

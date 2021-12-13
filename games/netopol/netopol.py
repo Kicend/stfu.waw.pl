@@ -48,6 +48,7 @@ class Netopol(Session):
         self.accounts = dict.fromkeys([i for i in range(1, 11)], self.start_balance)
         self.events = self.load_events()
         self.events_cards_stack = [i for i in range(0, 3)]
+        self.players = {}
         self.player_turn = None
         self.player_turn_state = None
         self.auction_state = False
@@ -85,6 +86,13 @@ class Netopol(Session):
         with open("games/netopol/data/messages.json", "r", encoding="utf-8") as f:
             return load(f)
 
+    def generate_players_dict(self):
+        tmp_dict = {}
+        for k in range(1, self.max_slots+1):
+            tmp_dict[k] = self.active_players[k-1]
+
+        return tmp_dict
+
     def journal_add_message(self, message: str):
         # if len(self.journal) >= 10:
         if len(message) >= 63:
@@ -105,6 +113,10 @@ class Netopol(Session):
             players_coordinates["#" + str(player.seat)] = [player.coordinates, player.last_coordinates]
 
         return players_coordinates
+
+    def get_player(self, seat: int):
+        player = self.players[seat]
+        return player
 
     def is_buyable(self, player: Player):
         if self.properties_data[player.coordinates]["owner"] is None and \
@@ -322,3 +334,4 @@ class Netopol(Session):
 
         if self.active_players:
             self.player_turn = choice(self.active_players)
+            self.players = self.generate_players_dict()
