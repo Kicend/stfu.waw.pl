@@ -389,7 +389,7 @@ def request_roll_dice_event():
                             game_instance.player_turn != game_instance.get_player(int(current_property["owner"][1:])):
                         owner = game_instance.get_player(int(current_property["owner"][1:]))
                         game_instance.pay(game_instance.player_turn, owner,
-                                          current_property["rent_basic"])
+                                          current_property["rent_basic"], current_property["district"])
                         emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
 
                     players = list(game_instance.players_seats.values())

@@ -151,6 +151,29 @@ class Netopol(Session):
             return False
 
     @staticmethod
+    def train_rent_calculator(owner: Player, field: dict):
+        district_name = field["district"]
+        player_district_fields_num = owner.inventory.fields_num_by_district[district_name]
+        amount = field["rent_basic"] * player_district_fields_num
+
+        return amount
+
+    def infra_rent_calculator(self, owner: Player, field: dict, dices_value: int):
+        district_name = field["district"]
+        district_fields_num = self.fields_list[district_name]
+        player_district_fields_num = owner.inventory.fields_num_by_district[district_name]
+
+        if player_district_fields_num == district_fields_num:
+            amount = dices_value * player_district_fields_num * 10
+        else:
+            amount = dices_value * player_district_fields_num * 4
+
+        if amount > 300:
+            amount = 300
+
+        return amount
+
+    @staticmethod
     def roll():
         dice_1 = randrange(1, 7)
         dice_2 = randrange(1, 7)
@@ -278,10 +301,17 @@ class Netopol(Session):
         self.auction_player_turn = None
         self.auction_state = False
 
-    def pay(self, sender: Player, recipient: Player, amount: int):
+    def pay(self, sender: Player, recipient: Player, amount: int, district: str):
         field = self.properties_data[sender.coordinates]
-        if self.is_full_district(recipient, field):
-            amount *= 2
+        if district == "train":
+            amount = self.train_rent_calculator(recipient, field)
+        elif district == "infra":
+            dices_value = abs(int(sender.coordinates[1:]) - int(sender.last_coordinates[1:]))
+            amount = self.infra_rent_calculator(recipient, field, dices_value)
+        else:
+            if self.is_full_district(recipient, field):
+                amount *= 2
+
         if sender.account >= amount:
             sender.account -= amount
             recipient.account += amount
