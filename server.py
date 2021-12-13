@@ -397,6 +397,8 @@ def request_roll_dice_event():
                          broadcast=True)
                     if game_instance.player_turn.doublet:
                         emit("get_turn")
+                        if game_instance.player_turn.doublet_counter == 3:
+                            emit("get_after_roll_dice")
                     else:
                         emit("get_after_roll_dice")
             else:

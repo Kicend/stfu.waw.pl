@@ -170,6 +170,7 @@ class Netopol(Session):
                 if player.doublet_counter == 3:
                     player.in_jail = True
                     player.coordinates = "#10"
+                    player.doublet_counter = 0
             else:
                 player.doublet_counter = 0
 
