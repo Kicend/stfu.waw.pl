@@ -41,6 +41,7 @@ def add_header(response):
 
 sessions_id_pool = list(range(1, 100))
 online_users_list = []
+built_in_rooms = ["netopol_lobby"]
 sessions_list = {}
 players_rooms = {}
 users_socket_id = {}
@@ -49,7 +50,8 @@ users_socket_id = {}
 def online_event():
     if current_user.username not in online_users_list:
         online_users_list.append(current_user.username)
-    emit("online_users_list", {"online_users": online_users_list}, broadcast=True)
+        join_room("netopol_lobby")
+    emit("online_users_list", {"online_users": online_users_list}, to="netopol_lobby")
 
 
 @socketio.on("connect")
@@ -64,7 +66,7 @@ def disconnect_event():
         del online_users_list[online_users_list.index(current_user.username)]
     if current_user.username in users_socket_id:
         del users_socket_id[current_user.username]
-    emit("online_users_list", {"online_users": online_users_list}, broadcast=True)
+    emit("online_users_list", {"online_users": online_users_list}, to="netopol_lobby")
 
 
 @socketio.on("request_sessions_list")
@@ -262,7 +264,7 @@ def change_settings_event(data):
                     visible_sessions_list.append(f"{session_id}p")
                 elif session.visible and session.private is False:
                     visible_sessions_list.append(session_id)
-            emit("get_sessions_list", {"sessions_list": visible_sessions_list}, broadcast=True)
+            emit("get_sessions_list", {"sessions_list": visible_sessions_list}, to="netopol_lobby")
 
 
 @socketio.on("kick_player")
