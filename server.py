@@ -279,7 +279,7 @@ def kick_player_event(data):
                 game_instance.players_seats[seats.index(data["username"])+1] = "--"
             del players_rooms[data["username"]]
             leave_room(board_id, sid=users_socket_id[data["username"]])
-            emit("get_kicked", room=users_socket_id[data["username"]])
+            emit("get_kicked", sid=users_socket_id[data["username"]])
             emit("get_players_list", {"online_players": game_instance.players_list, "operator_status": False},
                  to=board_id)
             emit("get_players_list", {"online_players": game_instance.players_list, "operator_status": True})
