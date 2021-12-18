@@ -375,7 +375,8 @@ def request_roll_dice_event():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
-        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username and \
+                game_instance.player_turn_state == "roll":
             if not game_instance.player_turn.in_jail:
                 game_instance.move(game_instance.player_turn)
                 emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
@@ -399,15 +400,17 @@ def request_roll_dice_event():
                     emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                          to=board_id)
                     if game_instance.player_turn.doublet:
+                        game_instance.player_turn_state = "roll"
                         emit("get_turn")
                         if game_instance.player_turn.doublet_counter == 3:
+                            game_instance.player_turn_state = "after_roll"
                             emit("get_after_roll_dice")
                     else:
+                        game_instance.player_turn_state = "after_roll"
                         emit("get_after_roll_dice")
             else:
                 game_instance.jail(game_instance.player_turn, mode=1)
 
-            game_instance.player_turn_state = "after_roll"
             emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()}, to=board_id)
 
 
@@ -416,7 +419,8 @@ def request_buy_event():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
-        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username and \
+                game_instance.player_turn_state == "buy":
             if game_instance.buy(game_instance.player_turn):
                 players = list(game_instance.players_seats.values())
                 players_number = 10 - players.count("--")
@@ -434,7 +438,7 @@ def request_auction_event(data):
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
         if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username \
-                and game_instance.auction_state is False:
+                and game_instance.auction_state is False and game_instance.player_turn_state == "buy":
             game_instance.auction_start()
             sid = users_socket_id[game_instance.auction_player_turn.nickname]
             emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
@@ -470,7 +474,7 @@ def request_pay_bail_event():
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
         if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username \
-                and game_instance.player_turn.in_jail is True:
+                and game_instance.player_turn.in_jail is True and game_instance.player_turn_state == "jail":
             game_instance.pay_bail(game_instance.player_turn)
             players = list(game_instance.players_seats.values())
             players_number = 10 - players.count("--")
@@ -485,7 +489,8 @@ def request_end_turn_event():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
-        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username and \
+                game_instance.player_turn_state == "after_roll":
             game_instance.end_turn()
             sid = users_socket_id[game_instance.player_turn.nickname]
             emit("get_end_turn")
