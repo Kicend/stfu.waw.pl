@@ -365,4 +365,5 @@ class Netopol(Session):
 
         if self.active_players:
             self.player_turn = choice(self.active_players)
+            self.player_turn_state = "roll"
             self.players = self.generate_players_dict()
