@@ -140,7 +140,7 @@ def leave_room_event():
             del sessions_list[int(room_id)]
             sessions_id_pool.append(room_id)
         else:
-            emit("get_slots", {"slots": slots}, broadcast=True)
+            emit("get_slots", {"slots": slots}, to=room_id)
 
 
 @socketio.on("check_previous_room")
@@ -169,13 +169,13 @@ def take_slot_event(data):
         if slot in slots.keys() and slots[slot] == "--" and current_user.username in players_list and \
                 current_user.username not in slots.values() and slot <= game_instance.max_slots:
             slots[slot] = current_user.username
-            emit("get_slots", {"slots": slots}, broadcast=True)
+            emit("get_slots", {"slots": slots}, to=board_id)
         elif slot in slots.keys() and slots[slot] == "--" and current_user.username in players_list and \
                 current_user.username in slots.values() and slot <= game_instance.max_slots:
             players = list(slots.values())
             slots[players.index(current_user.username)+1] = "--"
             slots[slot] = current_user.username
-            emit("get_slots", {"slots": slots}, broadcast=True)
+            emit("get_slots", {"slots": slots}, to=board_id)
 
 
 @socketio.on("kick_from_slot")
@@ -187,7 +187,7 @@ def kick_from_slot_event(data):
             slots = game_instance.players_seats
             slot = int(data["slot_id"][10:])
             slots[slot] = "--"
-            emit("get_slots", {"slots": slots}, broadcast=True)
+            emit("get_slots", {"slots": slots}, to=board_id)
 
 
 @socketio.on("request_operator_username")
@@ -255,7 +255,7 @@ def change_settings_event(data):
                 game_instance.players_seats[slot] = "--"
 
             game_instance.max_slots = int(new_settings["max_slots"])
-            emit("get_settings", {"settings": new_settings}, broadcast=True)
+            emit("get_settings", {"settings": new_settings}, to=board_id)
             visible_sessions_list = []
             for session_id, session in sessions_list.items():
                 if session.visible and session.private:
@@ -279,9 +279,9 @@ def kick_player_event(data):
             leave_room(board_id, sid=users_socket_id[data["username"]])
             emit("get_kicked", room=users_socket_id[data["username"]])
             emit("get_players_list", {"online_players": game_instance.players_list, "operator_status": False},
-                 broadcast=True)
+                 to=board_id)
             emit("get_players_list", {"online_players": game_instance.players_list, "operator_status": True})
-            emit("get_slots", {"slots": game_instance.players_seats}, broadcast=True)
+            emit("get_slots", {"slots": game_instance.players_seats}, to=board_id)
 
 
 @socketio.on("request_properties_info")
@@ -321,7 +321,7 @@ def request_start_game_event():
             game_instance.start_game()
             sid = users_socket_id[game_instance.player_turn.nickname]
             emit("start_game_success", {"accounts": game_instance.accounts, "players_number": players_number},
-                 broadcast=True)
+                 to=board_id)
             emit("get_turn", to=sid)
         elif players_number != game_instance.players_seats:
             emit("start_game_fail", {"error": "Nie wystarczająca liczba graczy!"})
@@ -376,7 +376,7 @@ def request_roll_dice_event():
         if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
             if not game_instance.player_turn.in_jail:
                 game_instance.move(game_instance.player_turn)
-                emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
+                emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
                 is_buyable = game_instance.is_buyable(game_instance.player_turn)
                 game_instance.player_turn_state = "buy"
                 if is_buyable:
@@ -390,12 +390,12 @@ def request_roll_dice_event():
                         owner = game_instance.get_player(int(current_property["owner"][1:]))
                         game_instance.pay(game_instance.player_turn, owner,
                                           current_property["rent_basic"], current_property["district"])
-                        emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
+                        emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
 
                     players = list(game_instance.players_seats.values())
                     players_number = 10 - players.count("--")
                     emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
-                         broadcast=True)
+                         to=board_id)
                     if game_instance.player_turn.doublet:
                         emit("get_turn")
                         if game_instance.player_turn.doublet_counter == 3:
@@ -406,7 +406,7 @@ def request_roll_dice_event():
                 game_instance.jail(game_instance.player_turn, mode=1)
 
             game_instance.player_turn_state = "after_roll"
-            emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()}, broadcast=True)
+            emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()}, to=board_id)
 
 
 @socketio.on("request_buy_property")
@@ -419,11 +419,11 @@ def request_buy_event():
                 players = list(game_instance.players_seats.values())
                 players_number = 10 - players.count("--")
                 game_instance.player_turn_state = "after_roll"
-                emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
+                emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
                 emit("get_after_roll_dice")
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
-                     broadcast=True)
-                emit("update_properties_info", {"properties_info": game_instance.properties_data}, broadcast=True)
+                     to=board_id)
+                emit("update_properties_info", {"properties_info": game_instance.properties_data}, to=board_id)
 
 
 @socketio.on("request_auction")
@@ -435,7 +435,7 @@ def request_auction_event(data):
                 and game_instance.auction_state is False:
             game_instance.auction_start()
             sid = users_socket_id[game_instance.auction_player_turn.nickname]
-            emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
+            emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
             emit("get_auction_turn", {"price": str(game_instance.auction_price)}, to=sid)
         elif game_instance.state == "running" and game_instance.auction_player_turn.nickname == current_user.username \
                 and game_instance.auction_state is True:
@@ -443,9 +443,9 @@ def request_auction_event(data):
                 game_instance.auction(int(data["price"]))
                 if int(data["price"]) == 0:
                     emit("get_messages", {"messages": [game_instance.journal[0], game_instance.journal[1]]},
-                         broadcast=True)
+                         to=board_id)
                 else:
-                    emit("get_messages", {"messages": game_instance.journal[0]}, broadcast=True)
+                    emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
             except ValueError:
                 pass
             if game_instance.auction_state:
@@ -458,8 +458,8 @@ def request_auction_event(data):
                 game_instance.player_turn_state = "after_roll"
                 emit("get_after_roll_dice", to=sid)
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
-                     broadcast=True)
-                emit("update_properties_info", {"properties_info": game_instance.properties_data}, broadcast=True)
+                     to=board_id)
+                emit("update_properties_info", {"properties_info": game_instance.properties_data}, to=board_id)
 
 
 @socketio.on("request_pay_bail")
@@ -474,7 +474,7 @@ def request_pay_bail_event():
             players_number = 10 - players.count("--")
             game_instance.player_turn_state = "roll"
             emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
-                 broadcast=True)
+                 to=board_id)
             emit("get_turn")
 
 
