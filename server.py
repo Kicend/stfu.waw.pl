@@ -494,7 +494,7 @@ def request_end_turn_event():
             game_instance.end_turn()
             sid = users_socket_id[game_instance.player_turn.nickname]
             emit("get_end_turn")
-            emit("get_turn", to=sid)
+            emit("get_turn_state", {"state": game_instance.player_turn_state}, to=sid)
 
 
 # TODO: Mechanizm gotowości graczy
