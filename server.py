@@ -41,7 +41,7 @@ def add_header(response):
 
 sessions_id_pool = list(range(1, 100))
 online_users_list = []
-built_in_rooms = ["netopol_lobby"]
+built_in_rooms = ("netopol_lobby", "gwent_lobby")
 sessions_list = {}
 players_rooms = {}
 users_socket_id = {}
