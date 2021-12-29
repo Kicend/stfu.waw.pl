@@ -1,5 +1,6 @@
 "use strict";
 var socket = getSocketInstance();
+var maxPlayer = 10;
 
 window.onload = function () {
     var board = new fabric.Canvas("board_content", {width: window.innerWidth, height: window.innerHeight});
@@ -13,6 +14,7 @@ window.onload = function () {
     };
 
     var objects_list = {};
+    var fieldsIconNames = ["fate", "jail", "parking", "power_station", "tax", "train", "waterworks"]
     var properties_info = {};
     var properties_types = ["start", "fate", "tax", "train", "jail", "infra", "parking", "police"];
     var buttons_names = {
@@ -25,12 +27,18 @@ window.onload = function () {
                             "auction_pass": "Pas",
                             "payBail": "Zapłać kaucję"
                         };
+    var trade_buttons_names = {
+        "trade_send_offer": "Wyślij ofertę",
+        "trade_reset_offer": "Resetuj ofertę"
+    };
     var textboxes_names = ["auction_price"];
+    var trade_textboxes_names = ["my_money", "colleague_money"];
+    var trade_text_values = ["Twoja oferta", "Oferta oponenta", "Gotówka:", "Gotówka:"];
     var tabs_buttons_names = {
         "journal": "Dziennik",
         "trade": "Handel",
         "map_operations": "Operacje"
-    }
+    };
     var pawns_list = {};
     var pawns_colors = {"#1": "#ff1111",
                         "#2": "#3333ff",
@@ -57,6 +65,7 @@ window.onload = function () {
                 "upgrade_price": "Cena kupna nieruchomości"
             };
     var logs_buffer = [];
+    var current_tab = "journal";
 
     var id = 0;
     var x = 10;
@@ -64,26 +73,6 @@ window.onload = function () {
     var angle = 0;
     const width_corner = 100;
     const width_card = 50;
-
-    /*
-    var pawn = new fabric.Image.fromURL("../static/img/pawn_1.svg", function(img) {
-        img.set({
-            id: 1,
-            width: 50,
-            height: 50
-        });
-        board.add(img);
-    });
-    */
-
-    /*
-    fabric.loadSVGFromURL("../static/img/pawn_1.svg", function(objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(0.05);
-
-        board.add(obj);
-    })
-    */
 
    var i = 1;
 
@@ -102,44 +91,45 @@ window.onload = function () {
     };
 
     function logs_frame(messages) {
-        var messages_counter = 0;
-        i = 1;
-        for(let message in messages) {
-            if(messages[message].includes("\n")) {
+        if(current_tab == "journal") {
+            var messages_counter = 0;
+            i = 1;
+            for(let message in messages) {
+                if(messages[message].includes("\n")) {
+                    messages_counter++;
+                    i++;
+                };
+
+                if(messages_counter >= 16) {
+                    break;
+                };
+
+                var message_text = new fabric.Text("+ " + messages[message],
+                    {
+                        id: "message_" + message,
+                        left: objects_list["mw_content"].left + 10,
+                        top: objects_list["mw_content"].top + objects_list["mw_content"].height - (20 * i),
+                        backgroundColor: "",
+                        fill: "grey",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        opacity: 1,
+                        selectable: false,
+                        evented: false,
+                        lockMovementX: true,
+                        lockMovementY: true,
+                        hasControls: false,
+                        hasRotatingPoint: false,
+                        hoverCursor: "....."
+                    }
+                );
+                
+                objects_list[message_text.id] = message_text;
+                board.add(message_text);
+                message_text.bringForward();
                 messages_counter++;
                 i++;
-            };
-
-            if(messages_counter >= 16) {
-                break;
-            };
-
-            var message_text = new fabric.Text("+ " + messages[message],
-                {
-                    id: "message_" + message,
-                    left: objects_list["mw_content"].left + 10,
-                    top: objects_list["mw_content"].top + objects_list["mw_content"].height - (20 * i),
-                    backgroundColor: "",
-                    fill: "grey",
-                    fontSize: 15,
-                    fontWeight: "bold",
-                    opacity: 1,
-                    selectable: false,
-                    evented: false,
-                    lockMovementX: true,
-                    lockMovementY: true,
-                    hasControls: false,
-                    hasRotatingPoint: false,
-                    hoverCursor: "....."
-                }
-            );
-            
-            objects_list[message_text.id] = message_text;
-            board.add(message_text);
-            board.sendToBack(message_text);
-            board.bringForward(message_text);
-            messages_counter++;
-            i++;
+            }
         }
     };
 
@@ -164,6 +154,242 @@ window.onload = function () {
             };
         };
     };
+
+    function createTradeUI() {
+        i = 0;
+        var width = 15;
+        for(const [key, value] of Object.entries(trade_buttons_names)) {
+            var tradeUIButton = new fabric.Text(value,
+                {
+                    id: "text_" + key,
+                    left: objects_list["mw_content"].left + 5 + (i * 90),
+                    top: objects_list["mw_content"].top + 295,
+                    fill: "#788086",
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....." 
+                }
+            );
+
+            objects_list[tradeUIButton.id] = tradeUIButton;
+            board.add(tradeUIButton);
+            i++;
+        }
+
+        for(i = 1; i <= maxPlayer; i++) {
+            var tradeUIPlayerButton = new fabric.Text("#" + i,
+                {
+                    id: "text_trade_player_" + i,
+                    left: objects_list["mw_content"].left + 180 + (i * 22),
+                    top: objects_list["mw_content"].top + 295,
+                    fill: "#788086",
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....." 
+                }
+            );
+
+            objects_list[tradeUIPlayerButton.id] = tradeUIPlayerButton;
+            board.add(tradeUIPlayerButton);
+            tradeUIPlayerButton.moveTo(39);
+
+            if(i == 10) {
+                width = 22;
+            }
+
+            var tradeUIPlayerButtonBorder = new fabric.Rect(
+                {
+                    id: "textBorder_trade_player_" + i,
+                    left: objects_list["mw_content"].left + 180 + (i * 22),
+                    top: objects_list["mw_content"].top + 295,
+                    fill: "",
+                    width: width,
+                    height: 15,
+                    stroke: "grey",
+                    strokeWidth: 1,
+                    angle: 0,
+                    opacity: 1,
+                    selectable: false,
+                    evented: true,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "pointer"
+                }
+            )
+
+            objects_list[tradeUIPlayerButtonBorder.id] = tradeUIPlayerButtonBorder;
+            board.add(tradeUIPlayerButtonBorder);
+            tradeUIPlayerButtonBorder.moveTo(39);
+
+            var selectedButtonBackground = new fabric.Rect(
+                {
+                    id: "textBackground_trade_" + i,
+                    left: objects_list["mw_content"].left + 180 + (i * 22),
+                    top: objects_list["mw_content"].top + 295,
+                    fill: "#788086",
+                    width: width,
+                    height: 15,
+                    stroke: "grey",
+                    strokeWidth: 1,
+                    angle: 0,
+                    opacity: 0,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            )
+
+            objects_list[selectedButtonBackground.id] = selectedButtonBackground;
+            board.add(selectedButtonBackground);
+            selectedButtonBackground.moveTo(39);
+        }
+
+        var field_20_X = objects_list["#20"].left
+        var field_20_Y = objects_list["#20"].top
+        var linesCoords = [
+            [field_20_X + 110, field_20_Y + 175, field_20_X + 540, field_20_Y + 175],
+            [field_20_X + 110, field_20_Y + 410, field_20_X + 540, field_20_Y + 410],
+            [field_20_X + 110, field_20_Y + 435, field_20_X + 540, field_20_Y + 435], 
+            [field_20_X + 325, field_20_Y + 140, field_20_X + 325, field_20_Y + 435]
+        ];
+        i = 1;
+
+        linesCoords.forEach(coords => {
+            var line = new fabric.Line(coords,
+                {
+                    id: "trade_line_" + i,
+                    fill: "#788086",
+                    stroke: "#788086",
+                    strokeWidth: 1,
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                } 
+            )
+        
+            objects_list[line.id] = line;
+            board.add(line);
+            line.moveTo(39);
+            i++;
+        });
+
+        var mw_content_X = objects_list["mw_content"].left;
+        var mw_content_Y = objects_list["mw_content"].top;
+        var tradeLine_1_X = objects_list["trade_line_3"].left;
+        var tradeLine_1_Y = objects_list["trade_line_3"].top;
+        var textTitlesCoords = [
+            [mw_content_X + 75, mw_content_Y + 5],
+            [mw_content_X + 275, mw_content_Y + 5],
+            [tradeLine_1_X + 10, tradeLine_1_Y - 20],
+            [tradeLine_1_X + 225, tradeLine_1_Y - 20]
+        ];
+        i = 1;
+
+        trade_text_values.forEach(value => {
+            var tradeText = new fabric.Text(value,
+                {
+                    id: "text_trade_title_" + i,
+                    left: textTitlesCoords[i-1][0],
+                    top: textTitlesCoords[i-1][1],
+                    fill: "#788086",
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....." 
+                }
+            );
+            
+            objects_list[tradeText.id] = tradeText;
+            board.add(tradeText);
+            tradeText.moveTo(39);
+            i++;
+        });
+
+        var textTradeTitle_3_X = objects_list["text_trade_title_3"].left;
+        var textTradeTitle_3_Y = objects_list["text_trade_title_3"].top;
+        var textTradeTitle_4_X = objects_list["text_trade_title_4"].left;
+        var textTradeTitle_4_Y = objects_list["text_trade_title_4"].top;
+        var tradeTextBoxesCoords = [
+            [textTradeTitle_3_X + 65, textTradeTitle_3_Y + 0.75],
+            [textTradeTitle_4_X + 65, textTradeTitle_4_Y + 0.75]
+        ];
+        i = 0;
+
+        trade_textboxes_names.forEach(name => {
+            var textbox = new fabric.Textbox("0",
+                {
+                    id: "textbox_" + name,
+                    width: 40,
+                    left: tradeTextBoxesCoords[i][0],
+                    top: tradeTextBoxesCoords[i][1],
+                    backgroundColor: "#ffffff",
+                    fontSize: 13,
+                    fixedWitdh: 40,
+                    maxLines: 1,
+                    opacity: 1,
+                    selectable: true,
+                    evented: true,
+                    editable: true,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            );
+
+            objects_list[textbox.id] = textbox;
+            board.add(textbox);
+            textbox.moveTo(39);
+            i++
+        });
+    }
+
+    function createMapOperationsUI() {
+
+    }
+
+    function addFieldsIcons() {
+        fieldsIconNames.forEach(name => {
+            fabric.loadSVGFromURL("../static/img/netopol/fields/" + name + ".svg", function(objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(0.05);
+        
+                board.add(obj);
+            })    
+        });
+    }
 
     function place_pawns(pawns_coordinates) {
         modifyStack(pawns_coordinates);
@@ -417,7 +643,7 @@ window.onload = function () {
 
             board.add(text);
             objects_list[text.id] = text;
-            board.bringToFront(text);
+            text.bringToFront();
         };
 
         var property_district = new fabric.Rect(
@@ -575,7 +801,7 @@ window.onload = function () {
 
         board.add(managementWindow);
         objects_list[managementWindow.id] = managementWindow;
-        board.sendToBack(managementWindow);
+        managementWindow.sendToBack();
         
         var i = 1;
         for(const [key, value] of Object.entries(tabs_buttons_names)) {
@@ -668,6 +894,9 @@ window.onload = function () {
 
         board.add(managementWindowContent);
         objects_list[managementWindowContent.id] = managementWindowContent;
+
+        createTradeUI();
+        // addFieldsIcons();
     };
 
     function resizeBoard() {
@@ -769,6 +998,29 @@ window.onload = function () {
                 objects_list[textbox].top = -300;
             });
         };
+    }
+
+    function clearWindowManagementContent() {
+        
+    }
+
+    function displayJournalUI() {
+        objects_list["tabButton_" + current_tab].opacity = 1;
+        objects_list["tabButton_journal"].opacity = 0;
+        current_tab = "journal";
+        logs_frame(logs_buffer);
+    }
+
+    function displayTradeUI() {
+        objects_list["tabButton_" + current_tab].opacity = 1;
+        objects_list["tabButton_trade"].opacity = 0;
+        current_tab = "trade";
+    }
+
+    function displayMapOperationsUI() {
+        objects_list["tabButton_" + current_tab].opacity = 1;
+        objects_list["tabButton_map_operations"].opacity = 0;
+        current_tab = "map_operations";
     }
 
     function gameStates(state) {
@@ -1006,7 +1258,17 @@ window.onload = function () {
                     objects_list["turn_cp_background"].opacity = 0;
                     socket.emit("request_pay_bail");
                 case "tabButton_journal":
-
+                    clearWindowManagementContent();
+                    displayJournalUI();
+                    break;
+                case "tabButton_trade":
+                    clearWindowManagementContent();
+                    displayTradeUI();
+                    break;
+                case "tabButton_map_operations":
+                    clearWindowManagementContent();
+                    displayMapOperationsUI();
+                    break;
             }
         };
     });
