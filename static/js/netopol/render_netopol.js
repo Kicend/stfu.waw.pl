@@ -36,6 +36,12 @@ window.onload = function () {
     var textboxes_names = ["auction_price"];
     var trade_textboxes_names = ["my_money", "colleague_money"];
     var trade_text_values = ["Twoja oferta", "Oferta oponenta", "Gotówka:", "Gotówka:"];
+    var map_operations_buttons_names = {
+        "map_operations_pladge": "Oddawanie pod zastaw",
+        "map_operations_buyout_pledge": "Wykupowanie spod zastawu",
+        "map_operations_buy_buildings": "Kupowanie budynków",
+        "map_operations_sell_buildings": "Sprzedawanie budynków"
+    };
     var tabs_buttons_names = {
         "journal": "Dziennik",
         "trade": "Handel",
@@ -386,7 +392,91 @@ window.onload = function () {
     }
 
     function createMapOperationsUI() {
-        
+        i = 0;
+        for(const [key, value] of Object.entries(map_operations_buttons_names)) {
+            var map_operations_UIButton = new fabric.Text(value,
+                {
+                    id: "text_" + key,
+                    left: objects_list["mw_content"].left + 135,
+                    top: objects_list["mw_content"].top + 50 + (i * 40),
+                    fill: "#788086",
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    opacity: 0,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....." 
+                }
+            );
+
+            objects_list[map_operations_UIButton.id] = map_operations_UIButton;
+            map_operationsUI_objects_list.push(map_operations_UIButton.id)
+            board.add(map_operations_UIButton);
+            map_operations_UIButton.moveTo(39);
+            i++;
+        }
+
+        var j = 0;
+        for(i = 1; i <= Object.keys(map_operations_buttons_names).length; i++) {
+            var map_operations_UIButtonBorder = new fabric.Rect(
+                {
+                    id: "textBorder_map_operations_" + i,
+                    left: objects_list["mw_content"].left + 110,
+                    top: objects_list["mw_content"].top + 40 + (j * 40),
+                    fill: "",
+                    width: 200,
+                    height: 39,
+                    stroke: "grey",
+                    strokeWidth: 1,
+                    angle: 0,
+                    opacity: 0,
+                    selectable: false,
+                    evented: true,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "pointer"
+                }
+            );
+
+            objects_list[map_operations_UIButtonBorder.id] = map_operations_UIButtonBorder;
+            map_operationsUI_objects_list.push(map_operations_UIButtonBorder.id)
+            board.add(map_operations_UIButtonBorder);
+            map_operations_UIButtonBorder.moveTo(39);
+
+            var selectedButtonBackground = new fabric.Rect(
+                {
+                    id: "textBackground_map_operations_" + i,
+                    left: objects_list["mw_content"].left + 110,
+                    top: objects_list["mw_content"].top + 40 + (j * 40),
+                    fill: "#788086",
+                    width: 200,
+                    height: 39,
+                    stroke: "grey",
+                    strokeWidth: 1,
+                    angle: 0,
+                    opacity: 0,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            )
+
+            objects_list[selectedButtonBackground.id] = selectedButtonBackground;
+            map_operationsUI_objects_list.push(selectedButtonBackground.id);
+            board.add(selectedButtonBackground);
+            selectedButtonBackground.moveTo(39);
+            j++;
+        }
     }
 
     function addFieldsIcons() {
@@ -905,6 +995,7 @@ window.onload = function () {
         objects_list[managementWindowContent.id] = managementWindowContent;
 
         createTradeUI();
+        createMapOperationsUI();
         // addFieldsIcons();
     };
 
@@ -1037,7 +1128,9 @@ window.onload = function () {
             objects_list["tabButton_" + current_tab].opacity = 1;
             objects_list["tabButton_trade"].opacity = 0;
             tradeUI_objects_list.forEach(object => {
-                objects_list[object].opacity = 1;
+                if(!object.includes("Background")) {
+                    objects_list[object].opacity = 1;
+                }
             });
             current_tab = "trade";
         }
@@ -1048,7 +1141,9 @@ window.onload = function () {
             objects_list["tabButton_" + current_tab].opacity = 1;
             objects_list["tabButton_map_operations"].opacity = 0;
             map_operationsUI_objects_list.forEach(object => {
-                objects_list[object].opacity = 1;
+                if(!object.includes("Background")) {
+                    objects_list[object].opacity = 1;
+                }
             });
             current_tab = "map_operations";
         }
@@ -1289,16 +1384,22 @@ window.onload = function () {
                     objects_list["turn_cp_background"].opacity = 0;
                     socket.emit("request_pay_bail");
                 case "tabButton_journal":
-                    clearWindowManagementContent(current_tab);
-                    displayJournalUI();
+                    if(current_tab != "journal") {
+                        clearWindowManagementContent(current_tab);
+                        displayJournalUI();
+                    }
                     break;
                 case "tabButton_trade":
-                    clearWindowManagementContent(current_tab);
-                    displayTradeUI();
+                    if(current_tab != "trade") {
+                        clearWindowManagementContent(current_tab);
+                        displayTradeUI();
+                    }
                     break;
                 case "tabButton_map_operations":
-                    clearWindowManagementContent(current_tab);
-                    displayMapOperationsUI();
+                    if(current_tab != "map_operations") {
+                        clearWindowManagementContent(current_tab);
+                        displayMapOperationsUI();
+                    }
                     break;
             }
         };
