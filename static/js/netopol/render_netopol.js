@@ -14,6 +14,8 @@ window.onload = function () {
     };
 
     var objects_list = {};
+    var tradeUI_objects_list = [];
+    var map_operationsUI_objects_list = [];
     var fieldsIconNames = ["fate", "jail", "parking", "power_station", "tax", "train", "waterworks"]
     var properties_info = {};
     var properties_types = ["start", "fate", "tax", "train", "jail", "infra", "parking", "police"];
@@ -179,6 +181,7 @@ window.onload = function () {
             );
 
             objects_list[tradeUIButton.id] = tradeUIButton;
+            tradeUI_objects_list.push(tradeUIButton.id)
             board.add(tradeUIButton);
             i++;
         }
@@ -204,6 +207,7 @@ window.onload = function () {
             );
 
             objects_list[tradeUIPlayerButton.id] = tradeUIPlayerButton;
+            tradeUI_objects_list.push(tradeUIPlayerButton.id)
             board.add(tradeUIPlayerButton);
             tradeUIPlayerButton.moveTo(39);
 
@@ -234,6 +238,7 @@ window.onload = function () {
             )
 
             objects_list[tradeUIPlayerButtonBorder.id] = tradeUIPlayerButtonBorder;
+            tradeUI_objects_list.push(tradeUIPlayerButtonBorder.id)
             board.add(tradeUIPlayerButtonBorder);
             tradeUIPlayerButtonBorder.moveTo(39);
 
@@ -260,6 +265,7 @@ window.onload = function () {
             )
 
             objects_list[selectedButtonBackground.id] = selectedButtonBackground;
+            tradeUI_objects_list.push(selectedButtonBackground.id)
             board.add(selectedButtonBackground);
             selectedButtonBackground.moveTo(39);
         }
@@ -293,6 +299,7 @@ window.onload = function () {
             )
         
             objects_list[line.id] = line;
+            tradeUI_objects_list.push(line.id)
             board.add(line);
             line.moveTo(39);
             i++;
@@ -331,6 +338,7 @@ window.onload = function () {
             );
             
             objects_list[tradeText.id] = tradeText;
+            tradeUI_objects_list.push(tradeText.id)
             board.add(tradeText);
             tradeText.moveTo(39);
             i++;
@@ -370,6 +378,7 @@ window.onload = function () {
             );
 
             objects_list[textbox.id] = textbox;
+            tradeUI_objects_list.push(textbox.id)
             board.add(textbox);
             textbox.moveTo(39);
             i++
@@ -377,7 +386,7 @@ window.onload = function () {
     }
 
     function createMapOperationsUI() {
-
+        
     }
 
     function addFieldsIcons() {
@@ -1000,27 +1009,49 @@ window.onload = function () {
         };
     }
 
-    function clearWindowManagementContent() {
-        
+    function clearWindowManagementContent(current_tab) {
+        if(current_tab == "journal") {
+            clear_logs_frame();
+        } else if(current_tab == "trade") {
+            tradeUI_objects_list.forEach(object => {
+                objects_list[object].opacity = 0;
+            });
+        } else {
+            map_operationsUI_objects_list.forEach(object => {
+                objects_list[object].opacity = 0;
+            });
+        };
     }
 
     function displayJournalUI() {
-        objects_list["tabButton_" + current_tab].opacity = 1;
-        objects_list["tabButton_journal"].opacity = 0;
-        current_tab = "journal";
-        logs_frame(logs_buffer);
+        if(current_tab != "journal") {
+            objects_list["tabButton_" + current_tab].opacity = 1;
+            objects_list["tabButton_journal"].opacity = 0;
+            current_tab = "journal";
+            logs_frame(logs_buffer);
+        };
     }
 
     function displayTradeUI() {
-        objects_list["tabButton_" + current_tab].opacity = 1;
-        objects_list["tabButton_trade"].opacity = 0;
-        current_tab = "trade";
+        if(current_tab != "trade") {
+            objects_list["tabButton_" + current_tab].opacity = 1;
+            objects_list["tabButton_trade"].opacity = 0;
+            tradeUI_objects_list.forEach(object => {
+                objects_list[object].opacity = 1;
+            });
+            current_tab = "trade";
+        }
     }
 
     function displayMapOperationsUI() {
-        objects_list["tabButton_" + current_tab].opacity = 1;
-        objects_list["tabButton_map_operations"].opacity = 0;
-        current_tab = "map_operations";
+        if(current_tab != "map_operations") {
+            objects_list["tabButton_" + current_tab].opacity = 1;
+            objects_list["tabButton_map_operations"].opacity = 0;
+            map_operationsUI_objects_list.forEach(object => {
+                objects_list[object].opacity = 1;
+            });
+            current_tab = "map_operations";
+        }
     }
 
     function gameStates(state) {
@@ -1258,15 +1289,15 @@ window.onload = function () {
                     objects_list["turn_cp_background"].opacity = 0;
                     socket.emit("request_pay_bail");
                 case "tabButton_journal":
-                    clearWindowManagementContent();
+                    clearWindowManagementContent(current_tab);
                     displayJournalUI();
                     break;
                 case "tabButton_trade":
-                    clearWindowManagementContent();
+                    clearWindowManagementContent(current_tab);
                     displayTradeUI();
                     break;
                 case "tabButton_map_operations":
-                    clearWindowManagementContent();
+                    clearWindowManagementContent(current_tab);
                     displayMapOperationsUI();
                     break;
             }
