@@ -299,7 +299,12 @@ def request_game_state_event():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
-        emit("get_game_state", {"game_state": game_instance.state})
+        if game_instance.state == "preparing":
+            emit("get_game_state", {"game_state": game_instance.state})
+        else:
+            nicknames = list(game_instance.players_seats.values())
+            slot_id = nicknames.index(current_user.username) + 1
+            emit("get_game_state", {"game_state": game_instance.state, "slot_id": slot_id})
 
 
 @socketio.on("request_operator_options")
