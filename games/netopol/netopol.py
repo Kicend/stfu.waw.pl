@@ -345,6 +345,9 @@ class Netopol(Session):
 
         self.update_accounts([player])
 
+    def bankruptcy(self):
+        pass
+
     def end_turn(self):
         current_player = self.player_turn
         current_player_index = self.active_players.index(current_player)
@@ -367,3 +370,6 @@ class Netopol(Session):
             self.player_turn = choice(self.active_players)
             self.player_turn_state = "roll"
             self.players = self.generate_players_dict()
+
+    def end_game(self):
+        pass
