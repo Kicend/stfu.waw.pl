@@ -276,7 +276,7 @@ window.onload = function () {
             objects_list[selectedButtonBackground.id] = selectedButtonBackground;
             tradeUI_objects_list.push(selectedButtonBackground.id)
             board.add(selectedButtonBackground);
-            selectedButtonBackground.moveTo(39);
+            selectedButtonBackground.moveTo(38);
         }
 
         var field_20_X = objects_list["#20"].left
@@ -1131,6 +1131,29 @@ window.onload = function () {
 
     }
 
+    function tradeSelectPlayer(player_id) {
+        player_id = Number(player_id);
+        if(trade_selected_player != 0) {
+            board.setActiveObject(objects_list["text_trade_player_" + trade_selected_player]);
+            board.getActiveObject().set("fill", "#788086");
+
+            board.setActiveObject(objects_list["textBorder_trade_player_" + trade_selected_player]);
+            board.getActiveObject().set("stroke", "grey");
+
+            objects_list["textBackground_trade_" + trade_selected_player].opacity = 0;
+        };
+
+        board.setActiveObject(objects_list["text_trade_player_" + player_id]);
+        board.getActiveObject().set("fill", "#ffffff");
+
+        board.setActiveObject(objects_list["textBorder_trade_player_" + player_id]);
+        board.getActiveObject().set("stroke", "grey");
+
+        objects_list["textBackground_trade_" + player_id].opacity = 1;
+
+        trade_selected_player = player_id;
+    }
+
     function displayJournalUI() {
         if(current_tab != "journal") {
             objects_list["tabButton_" + current_tab].opacity = 1;
@@ -1435,8 +1458,10 @@ window.onload = function () {
                 }
             } else if(e.target.id.includes("#")) {
                 console.log("test");
-            } else if(e.target.id.includes("trade_player")) {
-                console.log("test2");
+            } else if(e.target.id.includes("text_trade_player")) {
+                var player_id = e.target.text.substring(1); 
+                tradeSelectPlayer(player_id);
+                trade_selected_player = player_id;
             }
         };
     });
