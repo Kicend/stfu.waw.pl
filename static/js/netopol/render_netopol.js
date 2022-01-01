@@ -1,6 +1,7 @@
 "use strict";
 var socket = getSocketInstance();
 var maxPlayer = 10;
+var mySlotID = 0;
 
 window.onload = function () {
     var board = new fabric.Canvas("board_content", {width: window.innerWidth, height: window.innerHeight});
@@ -1119,6 +1120,12 @@ window.onload = function () {
                 objects_list[object].opacity = 0;
                 objects_list[object].evented = false;
             });
+            
+            if(trade_selected_player != 0) {
+                board.setActiveObject(objects_list["text_trade_player_" + trade_selected_player]);
+                board.getActiveObject().set("fill", "#788086");
+                trade_selected_player = 0;
+            };
         } else {
             map_operationsUI_objects_list.forEach(object => {
                 objects_list[object].opacity = 0;
@@ -1253,6 +1260,8 @@ window.onload = function () {
     socket.on("get_game_state", function(msg) {
         if(msg["game_state"] == "preparing") {
             socket.emit("request_operator_options");
+        } else {
+            mySlotID = msg["slot_id"];
         };
     });
 
@@ -1457,7 +1466,10 @@ window.onload = function () {
                         break;
                 }
             } else if(e.target.id.includes("#")) {
-                console.log("test");
+                var property_info = properties_info[e.target.id];
+                if(property_info["owner"] == 0) {
+
+                }
             } else if(e.target.id.includes("text_trade_player")) {
                 var player_id = e.target.text.substring(1); 
                 tradeSelectPlayer(player_id);
