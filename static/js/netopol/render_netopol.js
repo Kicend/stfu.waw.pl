@@ -74,6 +74,9 @@ window.onload = function () {
             };
     var logs_buffer = [];
     var current_tab = "journal";
+    var trade_selected_player = 0;
+    var trade_my_properties = [];
+    var trade_colleague_properties = [];
 
     var id = 0;
     var x = 10;
@@ -999,6 +1002,14 @@ window.onload = function () {
         // addFieldsIcons();
     };
 
+    function disableBankPropertiesEvent() {
+        for(i = 0; i <= Object.keys(properties_info).length - 1; i++) {
+            if(properties_info["#" + i]["owner"] == "BANK") {
+                objects_list["#" + i].evented = false;
+            };
+        };
+    }
+
     function resizeBoard() {
         board.setZoom(1.35);
         board.setWidth(window.innerWidth * board.getZoom());
@@ -1116,6 +1127,10 @@ window.onload = function () {
         };
     }
 
+    function resetOfferWindow() {
+
+    }
+
     function displayJournalUI() {
         if(current_tab != "journal") {
             objects_list["tabButton_" + current_tab].opacity = 1;
@@ -1202,6 +1217,7 @@ window.onload = function () {
         };
 
         createBoard({});
+        disableBankPropertiesEvent();
         logs_frame(logs_buffer);
         window.onresize = resizeCanvas();
         resizeCanvas();
@@ -1355,7 +1371,8 @@ window.onload = function () {
 
     board.on("mouse:down", function(e) {
         if(e.target != null) {
-            if(!e.target.id.includes("#")) {
+            console.log(e.target.id);
+            if(!e.target.id.includes("#") && !e.target.id.includes("trade_player")) {
                 switch(e.target.id) {
                     case "text_startGame":
                         socket.emit("request_start_game");
@@ -1408,10 +1425,19 @@ window.onload = function () {
                             displayMapOperationsUI();
                         }
                         break;
+                    case "text_trade_send_offer":
+                        break;
+                    case "text_trade_reset_offer":
+                        trade_my_properties = [];
+                        trade_colleague_properties = [];
+                        resetOfferWindow();
+                        break;
                 }
-            } else {
+            } else if(e.target.id.includes("#")) {
                 console.log("test");
-            };
+            } else if(e.target.id.includes("trade_player")) {
+                console.log("test2");
+            }
         };
     });
 
