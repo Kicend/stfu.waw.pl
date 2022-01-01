@@ -1355,59 +1355,63 @@ window.onload = function () {
 
     board.on("mouse:down", function(e) {
         if(e.target != null) {
-            switch(e.target.id) {
-                case "text_startGame":
-                    socket.emit("request_start_game");
-                    break;
-                case "text_rollDice":
-                    socket.emit("request_roll_dice");
-                    break;
-                case "text_endTurn":
-                    socket.emit("request_end_turn");
-                    break;
-                case "text_buyProperty":
-                    socket.emit("request_buy_property");
-                    break;
-                case "text_auction":
-                    socket.emit("request_auction", {"foobar": -1});
-                    break;
-                case "text_auction_send_offer":
-                    disableButtons("all");
-                    disableTextboxes("all");
-                    objects_list["turn_cp_background"].opacity = 0;
-                    var textbox = objects_list["textbox_auction_price"];
-                    socket.emit("request_auction", {"price": textbox.text});
-                    break;
-                case "text_auction_pass":
-                    disableButtons("all");
-                    disableTextboxes("all");
-                    objects_list["turn_cp_background"].opacity = 0;
-                    socket.emit("request_auction", {"price": 0});
-                    break;
-                case "text_payBail":
-                    disableButtons("all");
-                    disableTextboxes("all");
-                    objects_list["turn_cp_background"].opacity = 0;
-                    socket.emit("request_pay_bail");
-                case "tabButton_journal":
-                    if(current_tab != "journal") {
-                        clearWindowManagementContent(current_tab);
-                        displayJournalUI();
-                    }
-                    break;
-                case "tabButton_trade":
-                    if(current_tab != "trade") {
-                        clearWindowManagementContent(current_tab);
-                        displayTradeUI();
-                    }
-                    break;
-                case "tabButton_map_operations":
-                    if(current_tab != "map_operations") {
-                        clearWindowManagementContent(current_tab);
-                        displayMapOperationsUI();
-                    }
-                    break;
-            }
+            if(!e.target.id.includes("#")) {
+                switch(e.target.id) {
+                    case "text_startGame":
+                        socket.emit("request_start_game");
+                        break;
+                    case "text_rollDice":
+                        socket.emit("request_roll_dice");
+                        break;
+                    case "text_endTurn":
+                        socket.emit("request_end_turn");
+                        break;
+                    case "text_buyProperty":
+                        socket.emit("request_buy_property");
+                        break;
+                    case "text_auction":
+                        socket.emit("request_auction", {"foobar": -1});
+                        break;
+                    case "text_auction_send_offer":
+                        disableButtons("all");
+                        disableTextboxes("all");
+                        objects_list["turn_cp_background"].opacity = 0;
+                        var textbox = objects_list["textbox_auction_price"];
+                        socket.emit("request_auction", {"price": textbox.text});
+                        break;
+                    case "text_auction_pass":
+                        disableButtons("all");
+                        disableTextboxes("all");
+                        objects_list["turn_cp_background"].opacity = 0;
+                        socket.emit("request_auction", {"price": 0});
+                        break;
+                    case "text_payBail":
+                        disableButtons("all");
+                        disableTextboxes("all");
+                        objects_list["turn_cp_background"].opacity = 0;
+                        socket.emit("request_pay_bail");
+                    case "tabButton_journal":
+                        if(current_tab != "journal") {
+                            clearWindowManagementContent(current_tab);
+                            displayJournalUI();
+                        }
+                        break;
+                    case "tabButton_trade":
+                        if(current_tab != "trade") {
+                            clearWindowManagementContent(current_tab);
+                            displayTradeUI();
+                        }
+                        break;
+                    case "tabButton_map_operations":
+                        if(current_tab != "map_operations") {
+                            clearWindowManagementContent(current_tab);
+                            displayMapOperationsUI();
+                        }
+                        break;
+                }
+            } else {
+                console.log("test");
+            };
         };
     });
 
