@@ -1132,7 +1132,9 @@ window.onload = function () {
             tradeUI_objects_list.forEach(object => {
                 if(!object.includes("Background")) {
                     objects_list[object].opacity = 1;
-                    objects_list[object].evented = true;
+                    if(!object.includes("title")) {
+                        objects_list[object].evented = true;
+                    }
                 }
             });
             current_tab = "trade";
