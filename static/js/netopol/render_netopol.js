@@ -208,7 +208,7 @@ window.onload = function () {
                     lockMovementY: true,
                     hasControls: false,
                     hasRotatingPoint: false,
-                    hoverCursor: "....." 
+                    hoverCursor: "pointer" 
                 }
             );
 
@@ -234,7 +234,7 @@ window.onload = function () {
                     angle: 0,
                     opacity: 0,
                     selectable: false,
-                    evented: true,
+                    evented: false,
                     lockMovementX: true,
                     lockMovementY: true,
                     hasControls: false,
@@ -373,7 +373,7 @@ window.onload = function () {
                     maxLines: 1,
                     opacity: 0,
                     selectable: true,
-                    evented: true,
+                    evented: false,
                     editable: true,
                     lockMovementX: true,
                     lockMovementY: true,
@@ -435,7 +435,7 @@ window.onload = function () {
                     angle: 0,
                     opacity: 0,
                     selectable: false,
-                    evented: true,
+                    evented: false,
                     lockMovementX: true,
                     lockMovementY: true,
                     hasControls: false,
@@ -1106,10 +1106,12 @@ window.onload = function () {
         } else if(current_tab == "trade") {
             tradeUI_objects_list.forEach(object => {
                 objects_list[object].opacity = 0;
+                objects_list[object].evented = false;
             });
         } else {
             map_operationsUI_objects_list.forEach(object => {
                 objects_list[object].opacity = 0;
+                objects_list[object].evented = false;
             });
         };
     }
@@ -1130,6 +1132,7 @@ window.onload = function () {
             tradeUI_objects_list.forEach(object => {
                 if(!object.includes("Background")) {
                     objects_list[object].opacity = 1;
+                    objects_list[object].evented = true;
                 }
             });
             current_tab = "trade";
@@ -1143,6 +1146,7 @@ window.onload = function () {
             map_operationsUI_objects_list.forEach(object => {
                 if(!object.includes("Background")) {
                     objects_list[object].opacity = 1;
+                    objects_list[object].evented = true;
                 }
             });
             current_tab = "map_operations";
