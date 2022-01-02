@@ -3,6 +3,7 @@ var socket = getSocketInstance();
 var maxPlayer = 10;
 var mySlotID = 0;
 var gameState = "";
+var myTurn = false;
 
 window.onload = function () {
     var board = new fabric.Canvas("board_content", {width: window.innerWidth, height: window.innerHeight});
@@ -157,6 +158,14 @@ window.onload = function () {
         }
 
         board.renderAll();
+    }
+
+    function displayTradeProperties() {
+
+    }
+
+    function clearTradeProperties() {
+
     }
 
     function modifyStack(pawns_coordinates) {
@@ -1321,6 +1330,7 @@ window.onload = function () {
     });
 
     socket.on("get_turn", function() {
+        myTurn = true;
         enableButtons(["text_rollDice"]);
         objects_list["turn_cp_background"].opacity = 1;
         resizeBoard();
@@ -1361,6 +1371,7 @@ window.onload = function () {
     })
 
     socket.on("get_end_turn", function() {
+        myTurn = false;
         objects_list["text_endTurn"].opacity = 0;
         objects_list["text_endTurn"].evented = false;
         objects_list["text_endTurn"].left = -300;
