@@ -2,6 +2,7 @@
 var socket = getSocketInstance();
 var maxPlayer = 10;
 var mySlotID = 0;
+var gameState = "";
 
 window.onload = function () {
     var board = new fabric.Canvas("board_content", {width: window.innerWidth, height: window.innerHeight});
@@ -32,7 +33,9 @@ window.onload = function () {
                         };
     var trade_buttons_names = {
         "trade_send_offer": "Wyślij ofertę",
-        "trade_reset_offer": "Resetuj ofertę"
+        "trade_reset_offer": "Resetuj ofertę",
+        "tradeOfferMode_accept_offer": "Akceptuj",
+        "tradeOfferMode_discard_offer": "Odrzuć"
     };
     var textboxes_names = ["auction_price"];
     var trade_textboxes_names = ["my_money", "colleague_money"];
@@ -169,12 +172,13 @@ window.onload = function () {
 
     function createTradeUI() {
         i = 0;
+        var j = 0;
         var width = 15;
         for(const [key, value] of Object.entries(trade_buttons_names)) {
             var tradeUIButton = new fabric.Text(value,
                 {
                     id: "text_" + key,
-                    left: objects_list["mw_content"].left + 5 + (i * 90),
+                    left: objects_list["mw_content"].left + 5 + (j * 90),
                     top: objects_list["mw_content"].top + 295,
                     fill: "#788086",
                     fontSize: 14,
@@ -194,6 +198,10 @@ window.onload = function () {
             tradeUI_objects_list.push(tradeUIButton.id)
             board.add(tradeUIButton);
             i++;
+            j++;
+            if(j > 1) {
+                j = 0;
+            }
         }
 
         for(i = 1; i <= maxPlayer; i++) {
@@ -1159,6 +1167,7 @@ window.onload = function () {
         objects_list["textBackground_trade_" + player_id].opacity = 1;
 
         trade_selected_player = player_id;
+        trade_colleague_properties = [];
     }
 
     function displayJournalUI() {
@@ -1175,7 +1184,7 @@ window.onload = function () {
             objects_list["tabButton_" + current_tab].opacity = 1;
             objects_list["tabButton_trade"].opacity = 0;
             tradeUI_objects_list.forEach(object => {
-                if(!object.includes("Background")) {
+                if(!object.includes("Background") && !object.includes("tradeOfferMode")) {
                     objects_list[object].opacity = 1;
                     if(!object.includes("title")) {
                         objects_list[object].evented = true;
@@ -1198,6 +1207,25 @@ window.onload = function () {
             });
             current_tab = "map_operations";
         }
+    }
+
+    function displayOfferUI() {
+        objects_list["tabButton_trade"].opacity = 0;
+        objects_list["tabButton_map_operations"].opacity = 1;
+        objects_list["tabButton_journal"].opacity = 1;
+
+        displayTradeUI();
+        objects_list["trade_send_offer"].opacity = 0;
+        objects_list["trade_send_offer"].evented = false;
+        objects_list["trade_reset_offer"].opacity = 0;
+        objects_list["trade_reset_offer"].evented = false;
+        
+        tradeUI_objects_list.forEach(object => {
+            if(object.includes("text_trade_player") || object.includes("textBorder_trade_player")) {
+                objects_list[object].opacity = 0;
+                objects_list[object].evented = false;
+            }
+        });
     }
 
     function gameStates(state) {
@@ -1258,6 +1286,7 @@ window.onload = function () {
     });
 
     socket.on("get_game_state", function(msg) {
+        gameState = msg["game_state"];
         if(msg["game_state"] == "preparing") {
             socket.emit("request_operator_options");
         } else {
@@ -1342,7 +1371,6 @@ window.onload = function () {
 
     socket.on("get_messages", function(msg) {
         var tab = [];
-        console.log(typeof(msg["messages"]));
         if(typeof(msg["messages"]) === "string") {
             tab = logs_buffer;
             tab.splice(0, 0, msg["messages"]);
@@ -1465,12 +1493,24 @@ window.onload = function () {
                         resetOfferWindow();
                         break;
                 }
-            } else if(e.target.id.includes("#")) {
+            } else if(e.target.id.includes("#") && gameState === "running") {
                 var property_info = properties_info[e.target.id];
-                if(property_info["owner"] == 0) {
-
+                if(property_info["owner"] == "#" + mySlotID) {
+                    if(!trade_my_properties.includes(e.target.id)) {
+                        trade_my_properties.push(e.target.id);
+                    } else {
+                        i = trade_my_properties.indexOf(e.target.id);
+                        trade_my_properties.splice(i);
+                    };
+                } else if(property_info["owner"] == "#" + trade_selected_player) {
+                    if(!trade_colleague_properties.includes(e.target.id)) {
+                        trade_colleague_properties.push(e.target.id);
+                    } else {
+                        i = trade_colleague_properties.indexOf(e.target.id);
+                        trade_colleague_properties.splice(i);
+                    };
                 }
-            } else if(e.target.id.includes("text_trade_player")) {
+            } else if(e.target.id.includes("text_trade_player") && gameState === "running") {
                 var player_id = e.target.text.substring(1); 
                 tradeSelectPlayer(player_id);
                 trade_selected_player = player_id;
