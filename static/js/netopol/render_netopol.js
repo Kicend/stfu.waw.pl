@@ -19,6 +19,8 @@ window.onload = function () {
     var objects_list = {};
     var tradeUI_objects_list = [];
     var map_operationsUI_objects_list = [];
+    var trade_my_properties_objects_list = [];
+    var trade_colleague_properties_objects_list = [];
     var fieldsIconNames = ["fate", "jail", "parking", "power_station", "tax", "train", "waterworks"]
     var properties_info = {};
     var properties_types = ["start", "fate", "tax", "train", "jail", "infra", "parking", "police"];
@@ -161,11 +163,73 @@ window.onload = function () {
     }
 
     function displayTradeProperties() {
+        var properties_in_line_counter = 0;
+        i = 1;
+        for(let property in trade_my_properties) {
+            var property_text = new fabric.Text(trade_my_properties[property],
+                {
+                    id: "trade_property_" + i,
+                    left: objects_list["trade_line_1"].left + 10 + (i-1 * 20),
+                    top: objects_list["trade_line_1"].top + objects_list["trade_line_1"].height,
+                    backgroundColor: "",
+                    fill: "grey",
+                    fontSize: 15,
+                    fontWeight: "bold",
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            );
 
-    }
+            if(properties_in_line_counter > 5) {
+                property_text.top += 50;
+            };
 
-    function clearTradeProperties() {
+            objects_list[property_text.id] = property_text;
+            trade_my_properties_objects_list.push(property_text.id);
+            board.add(property_text);
+            properties_in_line_counter++;
+            i++;
+        }
 
+        properties_in_line_counter = 0;
+        i = 1;
+        for(let property in trade_colleague_properties) {
+            var property_text = new fabric.Text(trade_colleague_properties[property],
+                {
+                    id: "trade_property_c" + i,
+                    left: objects_list["trade_line_2"].left + 10 + (i-1 * 20),
+                    top: objects_list["trade_line_2"].top + objects_list["trade_line_2"].height,
+                    backgroundColor: "",
+                    fill: "grey",
+                    fontSize: 15,
+                    fontWeight: "bold",
+                    opacity: 1,
+                    selectable: false,
+                    evented: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasRotatingPoint: false,
+                    hoverCursor: "....."
+                }
+            );
+
+            if(properties_in_line_counter > 5) {
+                property_text.top += 50;
+            };
+
+            objects_list[property_text.id] = property_text;
+            trade_colleague_properties_objects_list.push(property_text.id);
+            board.add(property_text);
+            properties_in_line_counter++;
+            i++;
+        }
     }
 
     function modifyStack(pawns_coordinates) {
@@ -1151,8 +1215,27 @@ window.onload = function () {
         };
     }
 
-    function resetOfferWindow() {
+    function resetOfferWindow(reset) {
+        var keyInclude = "trade_property_";
+        if(reset == "full") {
+            trade_my_properties = [];
+            trade_my_properties_objects_list = [];
+            trade_colleague_properties = [];
+            trade_colleague_properties_objects_list = [];
+        } else if(reset == "half") {
+            keyInclude = "trade_property_c";
+            trade_colleague_properties = [];
+            trade_colleague_properties_objects_list = [];
+        };
 
+        for(const [key, propertyText] of Object.entries(objects_list)) {
+            if(key.includes(keyInclude)) {
+                board.remove(propertyText);
+                delete objects_list[key];
+            }
+        }
+
+        board.renderAll();
     }
 
     function tradeSelectPlayer(player_id) {
@@ -1323,6 +1406,7 @@ window.onload = function () {
         };
 
         renderBoard({}, false, false);
+        socket.emit("request_game_state");
     });
 
     socket.on("start_game_fail", function(msg) {
@@ -1499,9 +1583,7 @@ window.onload = function () {
                     case "text_trade_send_offer":
                         break;
                     case "text_trade_reset_offer":
-                        trade_my_properties = [];
-                        trade_colleague_properties = [];
-                        resetOfferWindow();
+                        resetOfferWindow(reset);
                         break;
                 }
             } else if(e.target.id.includes("#") && gameState === "running") {
@@ -1521,6 +1603,9 @@ window.onload = function () {
                         trade_colleague_properties.splice(i);
                     };
                 }
+
+                resetOfferWindow();
+                displayTradeProperties();
             } else if(e.target.id.includes("text_trade_player") && gameState === "running") {
                 var player_id = e.target.text.substring(1); 
                 tradeSelectPlayer(player_id);
