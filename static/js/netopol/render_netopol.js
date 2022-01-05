@@ -164,12 +164,18 @@ window.onload = function () {
 
     function displayTradeProperties() {
         var properties_in_line_counter = 0;
+        var last_property_id = null;
         i = 1;
         for(let property in trade_my_properties) {
+            if(last_property_id >= 10) {
+                i += 0.3;
+                properties_in_line_counter++;
+            };
+
             var property_text = new fabric.Text(trade_my_properties[property],
                 {
                     id: "trade_property_" + i,
-                    left: objects_list["trade_line_1"].left + 10 + (i-1 * 20),
+                    left: objects_list["trade_line_1"].left + 5 + ((i-1) * 20),
                     top: objects_list["trade_line_1"].top + objects_list["trade_line_1"].height,
                     backgroundColor: "",
                     fill: "grey",
@@ -193,18 +199,25 @@ window.onload = function () {
             objects_list[property_text.id] = property_text;
             trade_my_properties_objects_list.push(property_text.id);
             board.add(property_text);
+            last_property_id = Number(trade_my_properties[property].substring(1));
             properties_in_line_counter++;
             i++;
         }
 
         properties_in_line_counter = 0;
+        last_property_id = null;
         i = 1;
         for(let property in trade_colleague_properties) {
+            if(last_property_id >= 10) {
+                i += 0.3;
+                properties_in_line_counter++;
+            };
+            
             var property_text = new fabric.Text(trade_colleague_properties[property],
                 {
                     id: "trade_property_c" + i,
-                    left: objects_list["trade_line_2"].left + 10 + (i-1 * 20),
-                    top: objects_list["trade_line_2"].top + objects_list["trade_line_2"].height,
+                    left: objects_list["trade_line_4"].left + 5 + ((i-1) * 20),
+                    top: objects_list["trade_line_4"].top + 35,
                     backgroundColor: "",
                     fill: "grey",
                     fontSize: 15,
@@ -227,6 +240,7 @@ window.onload = function () {
             objects_list[property_text.id] = property_text;
             trade_colleague_properties_objects_list.push(property_text.id);
             board.add(property_text);
+            last_property_id = Number(trade_colleague_properties[property].substring(1));
             properties_in_line_counter++;
             i++;
         }
@@ -1197,6 +1211,7 @@ window.onload = function () {
         if(current_tab == "journal") {
             clear_logs_frame();
         } else if(current_tab == "trade") {
+            resetOfferWindow("full");
             tradeUI_objects_list.forEach(object => {
                 objects_list[object].opacity = 0;
                 objects_list[object].evented = false;
@@ -1581,32 +1596,61 @@ window.onload = function () {
                         }
                         break;
                     case "text_trade_send_offer":
+                        var player_1_money = objects_list["textbox_my_money"].text;
+                        var player_2_money = objects_list["textbox_colleague_money"].text;
+
+                        if(trade_my_properties != [] || trade_colleague_properties != [] || player_1_money > 0 || player_2_money > 0) {
+                            if(myTurn && trade_selected_player != mySlotID) {
+                                var player_1_balance = document.getElementById("balance_" + mySlotID).value;
+                                var player_2_balance = document.getElementById("balance_" + trade_selected_player).value;
+
+                                if(player_1_money > player_1_balance) {
+                                    player_1_money = player_1_balance;
+                                };
+
+                                if(player_2_money > player_2_balance) {
+                                    player_2_money = player_2_balance;
+                                };
+
+                                socket.emit("request_trade_send_offer", {"player_1_id": mySlotID, "player_1_items": {"properties": trade_my_properties, "money": player_1_money},
+                                                                         "player_2_id": trade_selected_player, "player_2_items": {"properties": trade_colleague_properties, "money": player_2_money}});
+                            };
+                        };
                         break;
                     case "text_trade_reset_offer":
-                        resetOfferWindow(reset);
+                        resetOfferWindow("full");
+                        break;
+                    case "tradeOfferMode_accept_offer":
+                        break;
+                    case "tradeOfferMode_discard_offer":
                         break;
                 }
-            } else if(e.target.id.includes("#") && gameState === "running") {
+            } else if(e.target.id.includes("#") && gameState === "running" && current_tab == "trade") {
                 var property_info = properties_info[e.target.id];
+                if(trade_selected_player == 0 && property_info["owner"] != "#" + mySlotID) {
+                    trade_selected_player = property_info["owner"].substring(1);
+                    tradeSelectPlayer(trade_selected_player);
+                };
+
                 if(property_info["owner"] == "#" + mySlotID) {
                     if(!trade_my_properties.includes(e.target.id)) {
                         trade_my_properties.push(e.target.id);
                     } else {
                         i = trade_my_properties.indexOf(e.target.id);
-                        trade_my_properties.splice(i);
+                        trade_my_properties.splice(i, 1);
                     };
                 } else if(property_info["owner"] == "#" + trade_selected_player) {
                     if(!trade_colleague_properties.includes(e.target.id)) {
                         trade_colleague_properties.push(e.target.id);
                     } else {
                         i = trade_colleague_properties.indexOf(e.target.id);
-                        trade_colleague_properties.splice(i);
+                        trade_colleague_properties.splice(i, 1);
                     };
                 }
 
                 resetOfferWindow();
                 displayTradeProperties();
-            } else if(e.target.id.includes("text_trade_player") && gameState === "running") {
+            } else if(e.target.id.includes("text_trade_player") && gameState === "running" && current_tab == "trade") {
                 var player_id = e.target.text.substring(1); 
                 tradeSelectPlayer(player_id);
                 trade_selected_player = player_id;
