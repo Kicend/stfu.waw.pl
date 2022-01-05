@@ -212,7 +212,7 @@ window.onload = function () {
                 i += 0.3;
                 properties_in_line_counter++;
             };
-            
+
             var property_text = new fabric.Text(trade_colleague_properties[property],
                 {
                     id: "trade_property_c" + i,
@@ -1336,6 +1336,7 @@ window.onload = function () {
     }
 
     function gameStates(state) {
+        myTurn = true;
         objects_list["turn_cp_background"].opacity = 1;
         switch(state) {
             case "roll":
