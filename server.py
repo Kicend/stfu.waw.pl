@@ -489,6 +489,21 @@ def request_pay_bail_event():
             emit("get_turn")
 
 
+@socketio.on("request_trade_send_offer")
+def request_trade_send_offer(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username \
+                and game_instance.player_turn.in_jail is False and game_instance.player_turn_state != "jail":
+            if game_instance.is_valid_offer(int(data["player_1_id"]), int(data["player_2_id"]), data["player_1_items"],
+                                            data["player_2_items"]):
+                sid_sender = users_socket_id[game_instance.player_turn.nickname]
+                sid_recipient = users_socket_id[game_instance.players[int(data["player_2_id"])].nickname]
+                emit("get_send_offer_success", to=sid_sender)
+                emit("get_offer", {"offer": data}, to=sid_recipient)
+
+
 @socketio.on("request_end_turn")
 def request_end_turn_event():
     if current_user.username in players_rooms:
