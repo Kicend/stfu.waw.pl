@@ -2,6 +2,7 @@ from json import load
 from random import randrange, choice, shuffle
 from time import time
 
+
 class Session:
     def __init__(self, board_id, op):
         self.board_id = board_id
@@ -88,8 +89,8 @@ class Netopol(Session):
 
     def generate_players_dict(self):
         tmp_dict = {}
-        for k in range(1, self.max_slots+1):
-            tmp_dict[k] = self.active_players[k-1]
+        for k in range(1, self.max_slots + 1):
+            tmp_dict[k] = self.active_players[k - 1]
 
         return tmp_dict
 
@@ -97,7 +98,7 @@ class Netopol(Session):
         # if len(self.journal) >= 10:
         if len(message) >= 63:
             last_space_index = message.rindex(" ")
-            one_before_last_space_index = message.rindex(" ", 0, last_space_index-1)
+            one_before_last_space_index = message.rindex(" ", 0, last_space_index - 1)
             message = message[:one_before_last_space_index] + "\n" + message[one_before_last_space_index:]
 
         self.journal.insert(0, message)
@@ -178,9 +179,9 @@ class Netopol(Session):
         dice_1 = randrange(1, 7)
         dice_2 = randrange(1, 7)
         if dice_1 == dice_2:
-            return [dice_1+dice_2, True]
+            return [dice_1 + dice_2, True]
         else:
-            return [dice_1+dice_2, False]
+            return [dice_1 + dice_2, False]
 
     def move(self, player: Player, mode=0, field="#--", number=0):
         if mode == 0:
@@ -328,6 +329,45 @@ class Netopol(Session):
             prisoner.in_jail = False
             prisoner.sentence_turn = 0
             self.update_accounts([prisoner])
+
+    def is_valid_offer(self, player_1_id: int, player_2_id: int, player_1_items: dict, player_2_items: dict):
+        i = 0
+        j = 0
+        if 0 < player_1_id <= self.max_slots and 0 < player_2_id <= self.max_slots:
+            player_1 = self.players[player_1_id]
+            player_2 = self.players[player_2_id]
+            for key in player_1_items.keys():
+                if player_1_items[key] and key != "money":
+                    if key == "properties":
+                        for field in player_1_items[key]:
+                            if field not in player_1.inventory.fields:
+                                i = -99
+                                break
+                            else:
+                                i += 1
+                    if key == "cards":
+                        pass
+                elif key == "money" and int(player_1_items["money"]) > 0:
+                    i += 1
+
+            for key in player_2_items.keys():
+                if player_2_items[key] and key != "money":
+                    if key == "properties":
+                        for field in player_2_items[key]:
+                            if field not in player_2.inventory.fields:
+                                j = -99
+                                break
+                            else:
+                                j += 1
+                    if key == "cards":
+                        pass
+                elif key == "money" and int(player_2_items["money"]) > 0:
+                    j += 1
+
+            if i > 0 or j > 0:
+                return True
+            else:
+                return False
 
     def trade(self, player_1: Player, player_2: Player, player_1_items: dict, player_2_items: dict):
         pass
