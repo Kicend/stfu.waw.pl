@@ -4,6 +4,7 @@ var maxPlayer = 10;
 var mySlotID = 0;
 var gameState = "";
 var myTurn = false;
+var is_trade_offer_sent = false;
 
 window.onload = function () {
     var board = new fabric.Canvas("board_content", {width: window.innerWidth, height: window.innerHeight});
@@ -1286,7 +1287,7 @@ window.onload = function () {
         };
     }
 
-    function displayTradeUI() {
+    function displayTradeUI(mode="trade") {
         if(current_tab != "trade") {
             objects_list["tabButton_" + current_tab].opacity = 1;
             objects_list["tabButton_trade"].opacity = 0;
@@ -1294,7 +1295,9 @@ window.onload = function () {
                 if(!object.includes("Background") && !object.includes("tradeOfferMode")) {
                     objects_list[object].opacity = 1;
                     if(!object.includes("title")) {
-                        objects_list[object].evented = true;
+                        if(mode == "trade") {
+                            objects_list[object].evented = true;
+                        };
                     }
                 }
             });
@@ -1316,23 +1319,28 @@ window.onload = function () {
         }
     }
 
-    function displayOfferUI() {
+    function displayOfferUI(sender_id) {
         objects_list["tabButton_trade"].opacity = 0;
+        objects_list["tabButton_trade"].evented = false;
         objects_list["tabButton_map_operations"].opacity = 1;
+        objects_list["tabButton_map_operations"].evented = false;
         objects_list["tabButton_journal"].opacity = 1;
+        objects_list["tabButton_journal"].evented = false;
 
-        displayTradeUI();
-        objects_list["trade_send_offer"].opacity = 0;
-        objects_list["trade_send_offer"].evented = false;
-        objects_list["trade_reset_offer"].opacity = 0;
-        objects_list["trade_reset_offer"].evented = false;
-        
-        tradeUI_objects_list.forEach(object => {
-            if(object.includes("text_trade_player") || object.includes("textBorder_trade_player")) {
-                objects_list[object].opacity = 0;
-                objects_list[object].evented = false;
-            }
-        });
+        displayTradeUI("offer");
+        objects_list["text_trade_send_offer"].opacity = 0;
+        objects_list["text_trade_send_offer"].evented = false;
+        objects_list["text_trade_reset_offer"].opacity = 0;
+        objects_list["text_trade_reset_offer"].evented = false;
+
+        trade_selected_player = 0;
+        tradeSelectPlayer(sender_id);
+        objects_list["text_tradeOfferMode_accept_offer"].opacity = 1;
+        objects_list["text_tradeOfferMode_accept_offer"].evented = true;
+        objects_list["text_tradeOfferMode_discard_offer"].opacity = 1;
+        objects_list["text_tradeOfferMode_discard_offer"].evented = true;
+
+        current_tab = "offer";
     }
 
     function gameStates(state) {
@@ -1468,7 +1476,37 @@ window.onload = function () {
         objects_list["text_auction_pass"].left = objects_list["turn_cp_background"].left + 90;
         objects_list["text_auction_pass"].top = objects_list["turn_cp_background"].top + 10;
         resizeBoard();
-    })
+    });
+
+    socket.on("get_send_offer_success", function() {
+        clearWindowManagementContent(current_tab);
+        displayJournalUI();
+        is_trade_offer_sent = true;
+    });
+
+    socket.on("get_offer", function(msg) {
+        clearWindowManagementContent(current_tab);
+        displayOfferUI(msg["offer"]["player_1_id"]);
+        trade_my_properties = msg["offer"]["player_2_items"]["properties"];
+        trade_colleague_properties = msg["offer"]["player_1_items"]["properties"];
+        displayTradeProperties();
+        objects_list["textbox_my_money"].text = msg["offer"]["player_2_items"]["money"];
+        objects_list["textbox_colleague_money"].text = msg["offer"]["player_1_items"]["money"];
+        resizeBoard();
+    });
+
+    socket.on("get_after_trade", function() {
+        clearWindowManagementContent("trade");
+        objects_list["tabButton_trade"].evented = true;
+        objects_list["tabButton_map_operations"].evented = true;
+        objects_list["tabButton_journal"].evented = true;
+        trade_selected_player = 0;
+        trade_my_properties = [];
+        trade_colleague_properties = [];
+        current_tab = "trade";
+        displayJournalUI();
+        current_tab = "journal";
+    });
 
     socket.on("get_end_turn", function() {
         myTurn = false;
@@ -1492,6 +1530,10 @@ window.onload = function () {
         logs_buffer = tab;
         clear_logs_frame();
         logs_frame(logs_buffer);
+    });
+
+    socket.on("get_offer_sent_status", function(msg) {
+        is_trade_offer_sent = msg["offer_sent_status"];
     });
 
     board.on("mouse:over", function(e) {
@@ -1601,7 +1643,7 @@ window.onload = function () {
                         var player_2_money = objects_list["textbox_colleague_money"].text;
 
                         if(trade_my_properties != [] || trade_colleague_properties != [] || player_1_money > 0 || player_2_money > 0) {
-                            if(myTurn && trade_selected_player != mySlotID) {
+                            if(myTurn && trade_selected_player != mySlotID && !is_trade_offer_sent) {
                                 var player_1_balance = document.getElementById("balance_" + mySlotID).value;
                                 var player_2_balance = document.getElementById("balance_" + trade_selected_player).value;
 
@@ -1621,9 +1663,11 @@ window.onload = function () {
                     case "text_trade_reset_offer":
                         resetOfferWindow("full");
                         break;
-                    case "tradeOfferMode_accept_offer":
+                    case "text_tradeOfferMode_accept_offer":
+                        socket.emit("request_trade_accept_offer");
                         break;
-                    case "tradeOfferMode_discard_offer":
+                    case "text_tradeOfferMode_discard_offer":
+                        socket.emit("request_trade_discard_offer");
                         break;
                 }
             } else if(e.target.id.includes("#") && gameState === "running" && current_tab == "trade") {
@@ -1677,5 +1721,7 @@ window.onload = function () {
     socket.emit("request_board_status");
     socket.emit("request_turn_state");
     socket.emit("request_messages");
+    socket.emit("request_offer_sent_status");
+    socket.emit("request_offer");
     resizeBoard();
 }

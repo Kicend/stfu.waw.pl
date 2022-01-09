@@ -61,6 +61,8 @@ class Netopol(Session):
         self.bail_amount = 50
         self.messages = self.load_messages()
         self.journal = []
+        self.trade_recipient = None
+        self.trade_offer = None
 
     @staticmethod
     def load_properties():
@@ -333,7 +335,7 @@ class Netopol(Session):
     def is_valid_offer(self, player_1_id: int, player_2_id: int, player_1_items: dict, player_2_items: dict):
         i = 0
         j = 0
-        if 0 < player_1_id <= self.max_slots and 0 < player_2_id <= self.max_slots:
+        if 0 < player_1_id <= self.max_slots and 0 < player_2_id <= self.max_slots and self.trade_offer is None:
             player_1 = self.players[player_1_id]
             player_2 = self.players[player_2_id]
             for key in player_1_items.keys():
@@ -365,12 +367,60 @@ class Netopol(Session):
                     j += 1
 
             if i > 0 or j > 0:
+                self.trade_recipient = player_2.nickname
+                self.trade_offer = {"player_1": player_1, "player_1_items": player_1_items, "player_2": player_2,
+                                    "player_2_items": player_2_items}
+                self.journal_add_message(self.messages["send_offer_success"].format(player_one=player_1_id,
+                                                                                    player_two=player_2_id))
                 return True
             else:
                 return False
 
-    def trade(self, player_1: Player, player_2: Player, player_1_items: dict, player_2_items: dict):
-        pass
+    def trade(self):
+        if self.trade_offer is not None:
+            player_1 = self.trade_offer["player_1"]
+            player_2 = self.trade_offer["player_2"]
+            for key in self.trade_offer["player_1_items"].keys():
+                if self.trade_offer["player_1_items"][key] and key != "money":
+                    if key == "properties":
+                        for field in self.trade_offer["player_1_items"][key]:
+                            property_card = self.properties_data[field]
+                            property_card["owner"] = "#" + str(player_2.seat)
+                            player_2.inventory.fields.append(field)
+                    if key == "cards":
+                        pass
+                elif key == "money" and int(self.trade_offer["player_1_items"]["money"]) > 0:
+                    player_1.account -= int(self.trade_offer["player_1_items"]["money"])
+                    player_2.account += int(self.trade_offer["player_1_items"]["money"])
+                    self.update_accounts([player_1, player_2])
+
+            for key in self.trade_offer["player_2_items"].keys():
+                if self.trade_offer["player_2_items"][key] and key != "money":
+                    if key == "properties":
+                        for field in self.trade_offer["player_2_items"][key]:
+                            property_card = self.properties_data[field]
+                            property_card["owner"] = "#" + str(player_1.seat)
+                            player_1.inventory.fields.append(field)
+                    if key == "cards":
+                        pass
+                elif key == "money" and int(self.trade_offer["player_2_items"]["money"]) > 0:
+                    player_2.account -= int(self.trade_offer["player_2_items"]["money"])
+                    player_1.account += int(self.trade_offer["player_2_items"]["money"])
+                    self.update_accounts([player_1, player_2])
+
+            self.journal_add_message(self.messages["send_offer_accept"].format(player_one=player_1.seat,
+                                                                               player_two=player_2.seat))
+            self.trade_recipient = None
+            self.trade_offer = None
+
+    def trade_discard(self):
+        if self.trade_offer is not None:
+            player_1 = self.trade_offer["player_1"]
+            player_2 = self.trade_offer["player_2"]
+            self.trade_recipient = None
+            self.trade_offer = None
+            self.journal_add_message(self.messages["send_offer_discard"].format(player_one=player_1.seat,
+                                                                                player_two=player_2.seat))
 
     def fate(self, player: Player):
         event_card = self.events_cards_stack.pop(0)
