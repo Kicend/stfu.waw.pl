@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Centralny Rejestr | stfu.waw.pl</title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/cr.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/cr.css">
 </head>
 <body>
     <div id="nav_cr" class="nav nav_left">
         <a href="{{ url_for('routes.dashboard') }}">Strona główna</a>
+        <a href="{{ url_for('routes.games') }}">Gry</a>
+        <a href="{{ url_for('routes.kanos') }}">Kanos</a>
         <a href="#nav_cr" class="active">CR</a>
     </div>
     <div id="user_panel" class="nav nav_right">
