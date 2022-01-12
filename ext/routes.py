@@ -136,6 +136,12 @@ def netopol_game(board_id):
     return render_template("netopol/netopol_session.html", board_id=board_id, slots=colors)
 
 
+@routes.route("/game")
+@login_required
+def games():
+    return render_template("games.html")
+
+
 @routes.route("/game/error")
 def game_error():
     return render_template("game_404.html")
@@ -193,3 +199,9 @@ def edit_registry(registry_id):
 @login_required
 def memory_game():
     return render_template("memory/memory.html")
+
+# Kanos routes
+@routes.route("/kanos")
+@login_required
+def kanos():
+    return render_template("kanos/kanos_lobby.html")
