@@ -123,13 +123,13 @@ def logout():
     return redirect("/")
 
 # Netopol routes
-@routes.route("/netopol_lobby", methods=["GET", "POST"])
+@routes.route("/game/<game_name>_lobby", methods=["GET", "POST"])
 @login_required
-def netopol_lobby():
-    return render_template("netopol/netopol_lobby.html")
+def game_lobby(game_name):
+    return render_template("{}/{}_lobby.html".format(game_name, game_name))
 
 
-@routes.route("/game/<board_id>")
+@routes.route("/game/netopol/<board_id>")
 @login_required
 def netopol_game(board_id):
     colors = ["red", "blue", "green", "yellow", "purple", "orange", "pink", "brown", "grey", "white"]

@@ -3,7 +3,7 @@ var socket = getSocketInstance();
 
 function getRoomId() {
     var pathname = window.location.href;
-    var startIndex = pathname.indexOf("game") + 5;
+    var startIndex = pathname.indexOf(gameName) + gameName.length + 1;
     var room_id = pathname.substring(startIndex);
 
     return room_id;
