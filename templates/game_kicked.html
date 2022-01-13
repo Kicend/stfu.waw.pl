@@ -2,10 +2,13 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Netopol | stfu.waw.pl</title>
+    <title>{{ game_name }} | stfu.waw.pl</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script type="text/javascript" src="/static/js/games_netstack/socket.js"></script>
+    <script type="text/javascript" src="/static/js/games_netstack/room.js"></script>
 </head>
 <body>
     <div>Zostałeś wyrzucony z gry!</div>
-    <a href="{{ url_for('routes.netopol_lobby') }}">Powrót do lobby</a>
+    <a id="back_to_lobby" href="{{ url_for('routes.game_lobby', game_name='') }}">Powrót do lobby</a>
 </body>
 </html>
