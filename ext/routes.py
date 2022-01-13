@@ -144,12 +144,12 @@ def games():
 
 @routes.route("/game/<game_name>/event/error")
 def game_error(game_name):
-    return render_template("game_404.html", game_name=game_name)
+    return render_template("game_404.html", game_name=game_name.capitalize())
 
 
 @routes.route("/game/<game_name>/event/kicked")
 def game_kicked(game_name):
-    return render_template("game_kicked.html", game_name=game_name)
+    return render_template("game_kicked.html", game_name=game_name.capitalize())
 
 # Central registry routes
 @routes.route("/cr")
