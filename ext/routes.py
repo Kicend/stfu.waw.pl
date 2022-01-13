@@ -142,14 +142,14 @@ def games():
     return render_template("games.html")
 
 
-@routes.route("/game/error")
-def game_error():
-    return render_template("game_404.html")
+@routes.route("/game/<game_name>/event/error")
+def game_error(game_name):
+    return render_template("game_404.html", game_name=game_name)
 
 
-@routes.route("/game/kicked")
-def game_kicked():
-    return render_template("game_kicked.html")
+@routes.route("/game/<game_name>/event/kicked")
+def game_kicked(game_name):
+    return render_template("game_kicked.html", game_name=game_name)
 
 # Central registry routes
 @routes.route("/cr")
