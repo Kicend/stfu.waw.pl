@@ -132,11 +132,11 @@ socket.on("join_room_success", function() {
 });
 
 socket.on("join_room_error", function() {
-    window.location.pathname = "/game/error";
+    window.location.pathname = "/game/" + gameName + "/event/error";
 });
 
 socket.on("get_kicked", function() {
-    window.location.pathname = "/game/kicked";
+    window.location.pathname = "/game/" + gameName + "/event/kicked";
 });
 
 socket.emit("join_room", {"room_id": getRoomId()});
