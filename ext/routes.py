@@ -205,3 +205,9 @@ def memory_game():
 @login_required
 def kanos():
     return render_template("kanos/kanos_lobby.html")
+
+# Account management routes
+@routes.route("/account/settings")
+@login_required
+def account_settings():
+    return render_template("account/settings.html")
