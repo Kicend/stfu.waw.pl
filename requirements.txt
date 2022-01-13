@@ -1,4 +1,5 @@
 Werkzeug>=2.0.2
+eventlet>=0.33.0
 itsdangerous>=2.0.1
 Flask>=2.0.2
 Flask-SocketIO>=5.1.1
