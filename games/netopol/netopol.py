@@ -4,9 +4,10 @@ from time import time
 
 
 class Session:
-    def __init__(self, board_id, op):
+    def __init__(self, board_id, op, game_name):
         self.board_id = board_id
         self.op = op
+        self.game_name = game_name
         self.created_at = time()
         self.private = False
         self.visible = False
@@ -40,8 +41,8 @@ class Inventory:
 
 
 class Netopol(Session):
-    def __init__(self, board_id, op):
-        super().__init__(board_id, op)
+    def __init__(self, board_id, op, game_name):
+        super().__init__(board_id, op, game_name)
         self.max_slots = 6
         self.properties_data = self.load_properties()
         self.fields_list = self.count_fields_by_district()

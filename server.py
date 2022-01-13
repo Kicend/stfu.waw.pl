@@ -85,7 +85,7 @@ def create_room_event():
         if sessions_id_pool:
             room_id = sessions_id_pool.pop(0)
         join_room(room_id)
-        sessions_list[room_id] = Netopol(room_id, current_user.username)
+        sessions_list[room_id] = Netopol(room_id, current_user.username, "netopol")
         game_instance = sessions_list[room_id]
         game_instance.players_list.append(current_user.username)
         players_rooms[current_user.username] = room_id
