@@ -5,6 +5,7 @@
   "pay_tax": "Gracz #{player} zapłacił ${price} opłaty",
   "pay_bail": "Gracz #{player} uiścił kaucję w wysokości ${amount}",
   "go_to_jail": "Gracz #{player} trafił do więzienia",
+  "conditional_release_from_jail": "Gracz #{player} wyszedł wcześniej z więzienia za dobre sprawowanie",
   "start_auction": "Gracz #{player} rozpoczął aukcję",
   "raise_auction_price": "Gracz #{player} licytuje za ${price}",
   "pass_auction": "Gracz #{player} pasuje",
