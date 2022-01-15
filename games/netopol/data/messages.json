@@ -3,6 +3,7 @@
   "buy": "Gracz #{player} kupił pole {field}",
   "pay": "Gracz #{player_one} zapłacił ${price} graczowi #{player_two}",
   "pay_tax": "Gracz #{player} zapłacił ${price} opłaty",
+  "pay_bail": "Gracz #{player} uiścił kaucję w wysokości ${amount}",
   "go_to_jail": "Gracz #{player} trafił do więzienia",
   "start_auction": "Gracz #{player} rozpoczął aukcję",
   "raise_auction_price": "Gracz #{player} licytuje za ${price}",
@@ -12,5 +13,5 @@
   "send_offer_accept": "Gracz #{player_one} zaakceptował ofertę handlu gracza #{player_two}",
   "send_offer_discard": "Gracz #{player_one} odrzucił ofertę handlu gracza #{player_two}",
   "event_income": "Gracz #{player} otrzymał ${amount}",
-  "event_pay": "Gracz #{player} zapłacił ${amount},"
+  "event_pay": "Gracz #{player} zapłacił ${amount}"
 }
