@@ -10,5 +10,7 @@
   "auction_winner_announcement": "Gracz #{player} wygrał aukcję i zdobywa pole {field}",
   "send_offer_success": "Gracz #{player_one} wysłał ofertę handlu do gracza #{player_two}",
   "send_offer_accept": "Gracz #{player_one} zaakceptował ofertę handlu gracza #{player_two}",
-  "send_offer_discard": "Gracz #{player_one} odrzucił ofertę handlu gracza #{player_two}"
+  "send_offer_discard": "Gracz #{player_one} odrzucił ofertę handlu gracza #{player_two}",
+  "event_income": "Gracz #{player} otrzymał ${amount}",
+  "event_pay": "Gracz #{player} zapłacił ${amount},"
 }
