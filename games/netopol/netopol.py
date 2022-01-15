@@ -26,8 +26,8 @@ class Inventory:
 
 
 class Netopol(Session):
-    def __init__(self, board_id, op, game_name):
-        super().__init__(board_id, op, game_name)
+    def __init__(self, board_id, op, game_name, max_slots):
+        super().__init__(board_id, op, game_name, max_slots)
         self.max_slots = 6
         self.properties_data = self.load_properties()
         self.fields_list = self.count_fields_by_district()
