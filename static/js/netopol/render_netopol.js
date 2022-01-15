@@ -1356,9 +1356,9 @@ window.onload = function () {
                 objects_list["text_auction"].top = objects_list["turn_cp_background"].top + 10;
                 break;
             case "jail":
-                enableButtons["text_rollDice", "text_payBail"];
-                objects_list["text_payBill"].left = objects_list["turn_cp_background"].left + 30;
-                objects_list["text_payBill"].top = objects_list["turn_cp_background"].top + 10;
+                enableButtons(["text_rollDice", "text_payBail"]);
+                objects_list["text_payBail"].left = objects_list["turn_cp_background"].left + 55;
+                objects_list["text_payBail"].top = objects_list["turn_cp_background"].top + 10;
                 break;
             case "after_roll":
                 enableButtons(["text_endTurn"]);

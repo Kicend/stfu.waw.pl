@@ -175,20 +175,18 @@ class Netopol(Session):
         if mode == 0:
             dices = self.roll()
             player.last_coordinates = player.coordinates
-            player.coordinates = "#" + str(int(player.coordinates[1:]) + dices[0])
+            # player.coordinates = "#" + str(int(player.coordinates[1:]) + dices[0])
+            player.coordinates = "#30"
             player.doublet = dices[1]
             if player.doublet:
                 player.doublet_counter += 1
                 if player.doublet_counter == 3:
-                    player.in_jail = True
-                    player.coordinates = "#10"
-                    player.doublet_counter = 0
+                    self.jail(player)
             else:
                 player.doublet_counter = 0
 
             if player.coordinates == "#30":
-                self.jail(player, 0)
-                self.journal_add_message(self.messages["go_to_jail"].format(player=player.seat))
+                self.jail(player)
             elif player.coordinates in ("#2", "#7", "#17", "#22", "#33", "#36"):
                 self.fate(player)
         else:

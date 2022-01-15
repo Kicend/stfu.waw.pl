@@ -407,9 +407,8 @@ def request_roll_dice_event():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
-        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username and \
-                game_instance.player_turn_state == "roll":
-            if not game_instance.player_turn.in_jail:
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+            if game_instance.player_turn_state == "roll":
                 game_instance.move(game_instance.player_turn)
                 emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
                 is_buyable = game_instance.is_buyable(game_instance.player_turn)
@@ -431,17 +430,16 @@ def request_roll_dice_event():
                     players_number = 10 - players.count("--")
                     emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                          to=board_id)
-                    if game_instance.player_turn.doublet:
+                    if game_instance.player_turn.doublet and game_instance.player_turn.in_jail is False:
                         game_instance.player_turn_state = "roll"
                         emit("get_turn")
-                        if game_instance.player_turn.doublet_counter == 3:
-                            game_instance.player_turn_state = "after_roll"
-                            emit("get_after_roll_dice")
                     else:
                         game_instance.player_turn_state = "after_roll"
                         emit("get_after_roll_dice")
             else:
                 game_instance.jail(game_instance.player_turn, mode=1)
+                game_instance.player_turn_state = "after_roll"
+                emit("get_after_roll_dice")
 
             emit("board_update", {"pawns_coordinates": game_instance.get_coordinates()}, to=board_id)
 
