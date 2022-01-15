@@ -221,6 +221,7 @@ class Netopol(Session):
             if player.doublet:
                 player.in_jail = False
                 player.coordinates = "#" + str(int(player.coordinates[1:]) + dices[0])
+                self.journal_add_message(self.messages["conditional_release_from_jail"].format(player=player.seat))
             else:
                 player.sentence_turn -= 1
                 if player.sentence_turn == 0:
@@ -314,6 +315,7 @@ class Netopol(Session):
             prisoner.in_jail = False
             prisoner.sentence_turn = 0
             self.update_accounts([prisoner])
+            self.journal_add_message(self.messages["pay_bail"].format(player=prisoner.seat))
 
     def is_valid_offer(self, player_1_id: int, player_2_id: int, player_1_items: dict, player_2_items: dict):
         i = 0
