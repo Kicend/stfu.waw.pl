@@ -388,6 +388,13 @@ class Netopol(Session):
                             property_card = self.properties_data[field]
                             property_card["owner"] = "#" + str(player_2.seat)
                             player_2.inventory.fields.append(field)
+                            try:
+                                player_2.inventory.fields_num_by_district[property_card["district"]] += 1
+                            except KeyError:
+                                player_2.inventory.fields_num_by_district[property_card["district"]] = 1
+
+                            del player_1.inventory.fields[player_1.inventory.fields.index(field)]
+                            player_1.inventory.fields_num_by_district[property_card["district"]] -= 1
                     if key == "cards":
                         pass
                 elif key == "money" and int(self.trade_offer["player_1_items"]["money"]) > 0:
@@ -402,6 +409,13 @@ class Netopol(Session):
                             property_card = self.properties_data[field]
                             property_card["owner"] = "#" + str(player_1.seat)
                             player_1.inventory.fields.append(field)
+                            try:
+                                player_1.inventory.fields_num_by_district[property_card["district"]] += 1
+                            except KeyError:
+                                player_1.inventory.fields_num_by_district[property_card["district"]] = 1
+
+                            del player_2.inventory.fields[player_2.inventory.fields.index(field)]
+                            player_2.inventory.fields_num_by_district[property_card["district"]] -= 1
                     if key == "cards":
                         pass
                 elif key == "money" and int(self.trade_offer["player_2_items"]["money"]) > 0:
