@@ -54,15 +54,13 @@ socket.on("get_sessions_list", function(msg) {
 });
 
 checkPreviousRoomExist();
+var pathname = window.location.href;
+var startIndex = pathname.indexOf("game") + 5;
 if(window.location.href.includes("lobby")) {
-    var pathname = window.location.href;
-    var startIndex = pathname.indexOf("game") + 5;
     var endIndex = pathname.indexOf("_");
     gameName = pathname.substring(startIndex, endIndex);
     socket.emit("request_sessions_list");
 } else {
-    var pathname = window.location.href;
-    var startIndex = pathname.indexOf("game") + 5;
     var endIndex = pathname.indexOf("/", startIndex);
     gameName = pathname.substring(startIndex, endIndex);
 };

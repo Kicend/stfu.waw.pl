@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ game_name }} | stfu.waw.pl</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-    <script type="text/javascript" src="/static/js/games_netstack/socket.js"></script>
-    <script type="text/javascript" src="/static/js/games_netstack/room.js"></script>
+    <script>
+        var gameName = null;
+        window.onload = function() {
+            var pathname = window.location.href;
+            var startIndex = pathname.indexOf("game") + 5;
+            var endIndex = pathname.indexOf("/", startIndex);
+            gameName = pathname.substring(startIndex, endIndex);
+            var a = document.getElementById("back_to_lobby");
+            a.href = "/game/" + gameName + "_lobby";
+        };
+    </script>
 </head>
 <body>
     <div>Zostałeś wyrzucony z gry!</div>
