@@ -184,9 +184,10 @@ class Netopol(Session):
             else:
                 player.doublet_counter = 0
 
-            if player.coordinates == "#30":
+            property_data = self.properties_data[player.coordinates]
+            if property_data["district"] == "police":
                 self.jail(player)
-            elif player.coordinates in ("#2", "#7", "#17", "#22", "#33", "#36"):
+            elif property_data["district"] == "fate":
                 self.fate(player)
         else:
             player.last_coordinates = player.coordinates
@@ -437,6 +438,9 @@ class Netopol(Session):
                                                                        amount=event_card["value"]))
 
         self.update_accounts([player])
+
+    def tax(self, player: Player):
+        pass
 
     def bankruptcy(self):
         pass
