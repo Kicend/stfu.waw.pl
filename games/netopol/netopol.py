@@ -429,8 +429,12 @@ class Netopol(Session):
             player.coordinates = event_card["coordinates"]
         elif event_card["type"] == "income":
             player.account += event_card["value"]
+            self.journal_add_message(self.messages["event_income"].format(player=player.seat,
+                                                                          amount=event_card["value"]))
         elif event_card["type"] == "pay":
             player.account -= event_card["value"]
+            self.journal_add_message(self.messages["event_pay"].format(player=player.seat,
+                                                                       amount=event_card["value"]))
 
         self.update_accounts([player])
 
