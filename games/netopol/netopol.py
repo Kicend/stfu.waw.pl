@@ -189,6 +189,8 @@ class Netopol(Session):
                 self.jail(player)
             elif property_data["district"] == "fate":
                 self.fate(player)
+            elif property_data["district"] == "tax":
+                self.tax(player, property_data)
         else:
             player.last_coordinates = player.coordinates
             if field != "#--":
@@ -439,8 +441,22 @@ class Netopol(Session):
 
         self.update_accounts([player])
 
-    def tax(self, player: Player):
-        pass
+    def tax(self, player: Player, field: dict, mode=0):
+        if mode == 0:
+            amount = field["rent_basic"]
+            player.account -= amount
+        else:
+            tax_base = 0
+            for field in player.inventory.fields:
+                tax_base += self.properties_data[field]["price"]
+
+            tax_base += player.account
+            amount = tax_base * float(self.properties_data[field]["rent_level_1"][:-1] / 100)
+            player.account -= amount
+
+        self.journal_add_message(self.messages["pay_tax"].format(player=player.seat,
+                                                                 amount=amount))
+        self.update_accounts([player])
 
     def bankruptcy(self):
         pass
