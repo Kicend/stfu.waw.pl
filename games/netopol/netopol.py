@@ -175,7 +175,8 @@ class Netopol(Session):
         if mode == 0:
             dices = self.roll()
             player.last_coordinates = player.coordinates
-            player.coordinates = "#" + str(int(player.coordinates[1:]) + dices[0])
+            # player.coordinates = "#" + str(int(player.coordinates[1:]) + dices[0])
+            player.coordinates = "#4"
             player.doublet = dices[1]
             if player.doublet:
                 player.doublet_counter += 1
@@ -189,8 +190,8 @@ class Netopol(Session):
                 self.jail(player)
             elif property_data["district"] == "fate":
                 self.fate(player)
-            elif property_data["district"] == "tax":
-                self.tax(player, property_data)
+            elif property_data["district"] == "tax" and property_data["rent_level_1"] == 0:
+                self.tax(player)
         else:
             player.last_coordinates = player.coordinates
             if field != "#--":
@@ -441,7 +442,8 @@ class Netopol(Session):
 
         self.update_accounts([player])
 
-    def tax(self, player: Player, field: dict, mode=0):
+    def tax(self, player: Player, mode=0):
+        field = self.properties_data[player.coordinates]
         if mode == 0:
             amount = field["rent_basic"]
             player.account -= amount
@@ -451,7 +453,7 @@ class Netopol(Session):
                 tax_base += self.properties_data[field]["price"]
 
             tax_base += player.account
-            amount = tax_base * float(self.properties_data[field]["rent_level_1"][:-1] / 100)
+            amount = int(tax_base * float(field["rent_level_1"][:-1]) / 100)
             player.account -= amount
 
         self.journal_add_message(self.messages["pay_tax"].format(player=player.seat,
