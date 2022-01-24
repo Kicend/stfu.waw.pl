@@ -430,7 +430,10 @@ def request_roll_dice_event():
                     players_number = 10 - players.count("--")
                     emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                          to=board_id)
-                    if game_instance.player_turn.doublet and game_instance.player_turn.in_jail is False:
+                    if current_property["district"] == "tax" and current_property["rent_level_1"] != 0:
+                        game_instance.player_turn_state = "tax"
+                        emit("ask_tax_form")
+                    elif game_instance.player_turn.doublet and game_instance.player_turn.in_jail is False:
                         game_instance.player_turn_state = "roll"
                         emit("get_turn")
                     else:
@@ -512,6 +515,22 @@ def request_pay_bail_event():
             emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                  to=board_id)
             emit("get_turn")
+
+
+@socketio.on("request_pay_tax")
+def request_pay_tax_event(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username \
+                and game_instance.player_turn_state == "tax":
+            game_instance.tax(game_instance.player_turn, data["type"])
+            players = list(game_instance.players_seats.values())
+            players_number = 10 - players.count("--")
+            game_instance.player_turn_state = "after_roll"
+            emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                 to=board_id)
+            emit("get_after_roll_dice")
 
 
 @socketio.on("request_trade_send_offer")
