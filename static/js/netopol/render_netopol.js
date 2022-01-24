@@ -33,7 +33,9 @@ window.onload = function () {
                             "auction": "Aukcja",
                             "auction_send_offer": "Podbij",
                             "auction_pass": "Pas",
-                            "payBail": "Zapłać kaucję"
+                            "payBail": "Zapłać kaucję",
+                            "payTax_fixed": "Podatek stały",
+                            "payTax_interest": "Podatek procentowy"
                         };
     var trade_buttons_names = {
         "trade_send_offer": "Wyślij ofertę",
@@ -1360,6 +1362,11 @@ window.onload = function () {
                 objects_list["text_payBail"].left = objects_list["turn_cp_background"].left + 55;
                 objects_list["text_payBail"].top = objects_list["turn_cp_background"].top + 10;
                 break;
+            case "tax":
+                enableButtons(["text_payTax_fixed", "text_payTax_interest"]);
+                objects_list["text_payTax_interest"].left = objects_list["turn_cp_background"].left + 60;
+                objects_list["text_payTax_interest"].top = objects_list["turn_cp_background"].top + 10;
+                break;
             case "after_roll":
                 enableButtons(["text_endTurn"]);
                 break;
@@ -1462,6 +1469,16 @@ window.onload = function () {
             enableButtons(["text_auction"]);
         };
 
+        resizeBoard();
+    });
+
+    socket.on("ask_tax_form", function() {
+        disableButtons("all");
+        disableTextboxes("all");
+        enableButtons(["text_payTax_fixed", "text_payTax_interest"]);
+        objects_list["turn_cp_background"].opacity = 1;
+        objects_list["text_payTax_interest"].left = objects_list["turn_cp_background"].left + 60;
+        objects_list["text_payTax_interest"].top = objects_list["turn_cp_background"].top + 10;
         resizeBoard();
     });
 
@@ -1620,6 +1637,18 @@ window.onload = function () {
                         disableTextboxes("all");
                         objects_list["turn_cp_background"].opacity = 0;
                         socket.emit("request_pay_bail");
+                    case "text_payTax_fixed":
+                        disableButtons("all");
+                        disableTextboxes("all");
+                        objects_list["turn_cp_background"].opacity = 0;
+                        socket.emit("request_pay_tax", {"type": 0});
+                        break;
+                    case "text_payTax_interest":
+                        disableButtons("all");
+                        disableTextboxes("all");
+                        objects_list["turn_cp_background"].opacity = 0;
+                        socket.emit("request_pay_tax", {"type": 1});
+                        break;
                     case "tabButton_journal":
                         if(current_tab != "journal") {
                             clearWindowManagementContent(current_tab);
