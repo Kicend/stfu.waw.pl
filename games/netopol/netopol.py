@@ -175,8 +175,7 @@ class Netopol(Session):
         if mode == 0:
             dices = self.roll()
             player.last_coordinates = player.coordinates
-            # player.coordinates = "#" + str(int(player.coordinates[1:]) + dices[0])
-            player.coordinates = "#4"
+            player.coordinates = "#" + str(int(player.coordinates[1:]) + dices[0])
             player.doublet = dices[1]
             if player.doublet:
                 player.doublet_counter += 1
