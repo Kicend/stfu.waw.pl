@@ -1240,11 +1240,14 @@ window.onload = function () {
             trade_my_properties_objects_list = [];
             trade_colleague_properties = [];
             trade_colleague_properties_objects_list = [];
+            objects_list["textbox_my_money"].text = "0";
         } else if(reset == "half") {
             keyInclude = "trade_property_c";
             trade_colleague_properties = [];
             trade_colleague_properties_objects_list = [];
         };
+
+        objects_list["textbox_colleague_money"].text = "0";
 
         for(const [key, propertyText] of Object.entries(objects_list)) {
             if(key.includes(keyInclude)) {
