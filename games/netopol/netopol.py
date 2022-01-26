@@ -183,14 +183,6 @@ class Netopol(Session):
                     self.jail(player)
             else:
                 player.doublet_counter = 0
-
-            property_data = self.properties_data[player.coordinates]
-            if property_data["district"] == "police":
-                self.jail(player)
-            elif property_data["district"] == "fate":
-                self.fate(player)
-            elif property_data["district"] == "tax" and property_data["rent_level_1"] == 0:
-                self.tax(player)
         else:
             player.last_coordinates = player.coordinates
             if field != "#--":
@@ -205,6 +197,14 @@ class Netopol(Session):
             coordinates = str(int(player.coordinates[1:]) - 40)
             player.coordinates = "#" + coordinates
             player.account += 200
+
+        property_data = self.properties_data[player.coordinates]
+        if property_data["district"] == "police":
+            self.jail(player)
+        elif property_data["district"] == "fate":
+            self.fate(player)
+        elif property_data["district"] == "tax" and property_data["rent_level_1"] == 0:
+            self.tax(player)
 
         from_field_name = self.properties_data[player.last_coordinates]["name"]
         to_field_name = self.properties_data[player.coordinates]["name"]
