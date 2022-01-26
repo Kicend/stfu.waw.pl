@@ -47,7 +47,7 @@ window.onload = function () {
     var trade_textboxes_names = ["my_money", "colleague_money"];
     var trade_text_values = ["Twoja oferta", "Oferta oponenta", "Gotówka:", "Gotówka:"];
     var map_operations_buttons_names = {
-        "map_operations_pladge": "Oddawanie pod zastaw",
+        "map_operations_pledge": "Oddawanie pod zastaw",
         "map_operations_buyout_pledge": "Wykupowanie spod zastawu",
         "map_operations_buy_buildings": "Kupowanie budynków",
         "map_operations_sell_buildings": "Sprzedawanie budynków"
@@ -87,6 +87,9 @@ window.onload = function () {
     var trade_selected_player = 0;
     var trade_my_properties = [];
     var trade_colleague_properties = [];
+    var operations = ["map_operations_pledge", "map_operations_buyout_pledge", "map_operations_buy_buildings", "map_operations_sell_buildings"];
+    var operation_selected_id = null;
+    var operation_selected_name = null;
 
     var id = 0;
     var x = 10;
@@ -1283,6 +1286,34 @@ window.onload = function () {
         trade_colleague_properties = [];
     }
 
+    function selectOperation(operation_id) {
+        if(operation_selected_id != null) {
+            board.setActiveObject(objects_list["text_" + operation_selected_name]);
+            board.getActiveObject().set("fill", "#788086");
+
+            board.setActiveObject(objects_list["textBorder_map_operations_" + operation_selected_id]);
+            board.getActiveObject().set("stroke", "grey");
+
+            objects_list["textBackground_map_operations_" + operation_selected_id].opacity = 0;
+        };
+
+        if(operation_id != operation_selected_id) {
+            board.setActiveObject(objects_list["text_" + operations[operation_id - 1]]);
+            board.getActiveObject().set("fill", "#ffffff");
+
+            board.setActiveObject(objects_list["textBorder_map_operations_" + operation_id]);
+            board.getActiveObject().set("stroke", "grey");
+
+            objects_list["textBackground_map_operations_" + operation_id].opacity = 1;
+
+            operation_selected_id = operation_id;
+            operation_selected_name = operations[operation_id - 1];
+        } else {
+            operation_selected_id = null;
+            operation_selected_name = null; 
+        };
+    }
+
     function displayJournalUI() {
         if(current_tab != "journal") {
             objects_list["tabButton_" + current_tab].opacity = 1;
@@ -1605,7 +1636,7 @@ window.onload = function () {
     board.on("mouse:down", function(e) {
         if(e.target != null) {
             console.log(e.target.id);
-            if(!e.target.id.includes("#") && !e.target.id.includes("trade_player")) {
+            if(!e.target.id.includes("#") && !e.target.id.includes("trade_player") && !e.target.id.includes("map_operations_")) {
                 switch(e.target.id) {
                     case "text_startGame":
                         socket.emit("request_start_game");
@@ -1731,7 +1762,17 @@ window.onload = function () {
                 var player_id = e.target.text.substring(1); 
                 tradeSelectPlayer(player_id);
                 trade_selected_player = player_id;
-            }
+            } else if(e.target.id.includes("map_operations_") && gameState === "running" && current_tab == "map_operations") {
+                var operation_id = e.target.id.substring(e.target.id.indexOf("_", e.target.id.indexOf("operations")) + 1);
+                if(isNaN(operation_id)) {
+                    operation_id = e.target.id.substring(e.target.id.indexOf("_") + 1);
+                    selectOperation(operations.indexOf(operation_id) + 1);
+                } else {
+                    selectOperation(operation_id);
+                };
+
+                board.renderAll();
+            };
         };
     });
 
