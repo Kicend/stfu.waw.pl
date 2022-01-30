@@ -90,6 +90,7 @@ window.onload = function () {
     var operations = ["map_operations_pledge", "map_operations_buyout_pledge", "map_operations_buy_buildings", "map_operations_sell_buildings"];
     var operation_selected_id = null;
     var operation_selected_name = null;
+    var non_pledge_districts = ["tax", "police", "start", "jail", "parking", "fate"]
 
     var id = 0;
     var x = 10;
@@ -582,6 +583,104 @@ window.onload = function () {
             selectedButtonBackground.moveTo(39);
             j++;
         }
+    }
+
+    function createFieldsIndicators() {
+        var left_tag_shift = -48;
+        var top_tag_shift = -93;
+        var left_building_shift = -38;
+        var top_building_shift = -92;
+        var left_shift = 10;
+        var top_shift = 0;
+        for(const [key, value] of Object.entries(properties_info)) {
+            if(!non_pledge_districts.includes(value["district"])) {
+                if(key.substring(1) > 10 && key.substring(1) < 20) {
+                    left_tag_shift = 87;
+                    top_tag_shift = -48;
+                    left_building_shift = 88;
+                    top_building_shift = -39;
+                    left_shift = 0;
+                    top_shift = 10;
+                } else if(key.substring(1) > 20 && key.substring(1) < 30) {
+                    left_tag_shift = 41;
+                    top_tag_shift = 85;
+                    left_building_shift = 33;
+                    top_building_shift = 85;
+                    left_shift = -10;
+                    top_shift = 0;
+                } else if(key.substring(1) > 30 && key.substring(1) < 40) {
+                    left_tag_shift = -95;
+                    top_tag_shift = 40;
+                    left_building_shift = -94;
+                    top_building_shift = 32;
+                    left_shift = 0;
+                    top_shift = -10;
+                };
+
+                var ownerTag = new fabric.Circle(
+                    {
+                        id: key + "_owner_tag",
+                        left: objects_list[key].left + left_tag_shift,
+                        top: objects_list[key].top + top_tag_shift,
+                        fill: "#ffffff",
+                        radius: 3,
+                        stroke: "black",
+                        strokeWidth: 1,
+                        angle: 0,
+                        opacity: 0,
+                        selectable: false,
+                        evented: false,
+                        lockMovementX: true,
+                        lockMovementY: true,
+                        hasControls: false,
+                        hasRotatingPoint: false,
+                        hoverCursor: "....."
+                    }
+                )
+
+                objects_list[ownerTag.id] = ownerTag;
+                board.add(ownerTag);
+
+                if(!["train", "infra"].includes(value["district"])) {
+                    var building_color = "#7cfc00";
+                    i = 0;
+                    var j = 0;
+                    while(i != 5) {
+                        if(i == 4) {
+                            building_color = "#ff0000";
+                            j = 0;
+                        };
+
+                        var building = new fabric.Rect(
+                            {
+                                id: key + "_building_" + (i+1),
+                                left: objects_list[key].left + left_building_shift + (j * left_shift),
+                                top: objects_list[key].top + top_building_shift + (j * top_shift),
+                                fill: building_color,
+                                width: 5,
+                                height: 5,
+                                stroke: "black",
+                                strokeWidth: 1,
+                                angle: 0,
+                                opacity: 0,
+                                selectable: false,
+                                evented: false,
+                                lockMovementX: true,
+                                lockMovementY: true,
+                                hasControls: false,
+                                hasRotatingPoint: false,
+                                hoverCursor: "....."
+                            }
+                        )
+
+                        objects_list[building.id] = building;
+                        board.add(building);
+                        i++;
+                        j++;
+                    };
+                };
+            };
+        };
     }
 
     function addFieldsIcons() {
@@ -1101,6 +1200,7 @@ window.onload = function () {
 
         createTradeUI();
         createMapOperationsUI();
+        createFieldsIndicators();
         // addFieldsIcons();
     };
 
@@ -1636,6 +1736,7 @@ window.onload = function () {
     board.on("mouse:down", function(e) {
         if(e.target != null) {
             console.log(e.target.id);
+            var property_info = properties_info[e.target.id];
             if(!e.target.id.includes("#") && !e.target.id.includes("trade_player") && !e.target.id.includes("map_operations_")) {
                 switch(e.target.id) {
                     case "text_startGame":
@@ -1734,7 +1835,6 @@ window.onload = function () {
                         break;
                 }
             } else if(e.target.id.includes("#") && gameState === "running" && current_tab == "trade") {
-                var property_info = properties_info[e.target.id];
                 if(trade_selected_player == 0 && property_info["owner"] != "#" + mySlotID) {
                     trade_selected_player = property_info["owner"].substring(1);
                     tradeSelectPlayer(trade_selected_player);
@@ -1772,6 +1872,8 @@ window.onload = function () {
                 };
 
                 board.renderAll();
+            } else if(!non_pledge_districts.includes(property_info["district"]) && operation_selected_id != null) {
+                socket.emit("request_map_operation", {"operation_id": operation_selected_id});
             };
         };
     });
