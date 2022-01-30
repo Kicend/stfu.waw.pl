@@ -641,6 +641,31 @@ window.onload = function () {
                 objects_list[ownerTag.id] = ownerTag;
                 board.add(ownerTag);
 
+                var pledgeTag = new fabric.Rect(
+                    {
+                        id: key + "_pledge_tag",
+                        left: objects_list[key].left + left_building_shift,
+                        top: objects_list[key].top + top_building_shift,
+                        fill: "black",
+                        width: 5,
+                        height: 5,
+                        stroke: "white",
+                        strokeWidth: 1,
+                        angle: 0,
+                        opacity: 0,
+                        selectable: false,
+                        evented: false,
+                        lockMovementX: true,
+                        lockMovementY: true,
+                        hasControls: false,
+                        hasRotatingPoint: false,
+                        hoverCursor: "....."
+                    }
+                )
+
+                objects_list[pledgeTag.id] = pledgeTag;
+                board.add(pledgeTag);
+
                 if(!["train", "infra"].includes(value["district"])) {
                     var building_color = "#7cfc00";
                     i = 0;
