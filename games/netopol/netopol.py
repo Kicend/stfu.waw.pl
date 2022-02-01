@@ -31,6 +31,9 @@ class Netopol(Session):
         self.max_slots = 6
         self.properties_data = self.load_properties()
         self.fields_list = self.count_fields_by_district()
+        self.pledge_properties = []
+        self.properties_buildings = self.load_buildable_fields()
+        self.buildable_properties_by_district = {}
         self.start_balance = 1500
         self.accounts = dict.fromkeys([i for i in range(1, 11)], self.start_balance)
         self.events = self.load_events()
@@ -74,6 +77,14 @@ class Netopol(Session):
     def load_messages():
         with open("games/netopol/data/messages.json", "r", encoding="utf-8") as f:
             return load(f)
+
+    def load_buildable_fields(self):
+        properties_list = {}
+        for key, value in self.properties_data.items():
+            if value["district"] not in ("tax", "start", "parking", "train", "infra", "police", "jail", "fate"):
+                properties_list[key] = 0
+
+        return properties_list
 
     def generate_players_dict(self):
         tmp_dict = {}
@@ -458,6 +469,22 @@ class Netopol(Session):
         self.journal_add_message(self.messages["pay_tax"].format(player=player.seat,
                                                                  amount=amount))
         self.update_accounts([player])
+
+    def pledge(self, field: str):
+        property_info = self.properties_data[field]
+
+        if field not in self.pledge_properties:
+            property_value = property_info["price"]
+            self.player_turn.account += property_value / 2
+            self.journal_add_message(self.messages["pledge"].format(player=self.player_turn.seat,
+                                                                    field=property_info["name"]))
+            self.pledge_properties.append(field)
+
+            self.update_accounts([self.player_turn])
+
+            return True
+        else:
+            return False
 
     def bankruptcy(self):
         pass

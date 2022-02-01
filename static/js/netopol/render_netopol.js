@@ -1684,6 +1684,11 @@ window.onload = function () {
         current_tab = "journal";
     });
 
+    socket.on("get_pledge", function(msg) {
+        objects_list[msg["property"] + "_pledge_tag"].opacity = 1;
+        resizeBoard();
+    });
+
     socket.on("get_end_turn", function() {
         myTurn = false;
         objects_list["text_endTurn"].opacity = 0;
@@ -1897,8 +1902,21 @@ window.onload = function () {
                 };
 
                 board.renderAll();
-            } else if(!non_pledge_districts.includes(property_info["district"]) && operation_selected_id != null) {
-                socket.emit("request_map_operation", {"operation_id": operation_selected_id});
+            } else if(!non_pledge_districts.includes(property_info["district"]) && operation_selected_id != null && current_tab == "map_operations") {
+                switch(operation_selected_id) {
+                    case 1:
+                        socket.emit("request_pledge", {"property": e.target.id});
+                        break;
+                    case 2:
+                        socket.emit("request_pledge_buyout", {"property": e.target.id});
+                        break;
+                    case 3:
+                        socket.emit("request_buy_building", {"property": e.target.id});
+                        break;
+                    case 4:
+                        socket.emit("request_sell_building", {"property": e.target.id});
+                        break;
+                };
             };
         };
     });
