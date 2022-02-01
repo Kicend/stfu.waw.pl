@@ -74,7 +74,7 @@ window.onload = function () {
                 "name": "Nazwa",
                 "owner": "Właściciel",
                 "price": "Cena kupna",
-                "rent_basic": "Czynsz",
+                "rent_level_0": "Czynsz",
                 "rent_level_1": "Czynsz za 1 domek",
                 "rent_level_2": "Czynsz za 2 domki",
                 "rent_level_3": "Czynsz za 3 domki",
@@ -1695,12 +1695,12 @@ window.onload = function () {
     });
 
     socket.on("get_buy_building", function(msg) {
-        objects_list[msg["property"] + "building_" + msg["buildings_level"]].opacity = 1;
+        objects_list[msg["property"] + "_building_" + msg["buildings_level"]].opacity = 1;
         resizeBoard();
     });
 
     socket.on("get_sell_building", function(msg) {
-        objects_list[msg["property"] + "building_" + msg["buildings_level"]].opacity = 0;
+        objects_list[msg["property"] + "_building_" + msg["buildings_level"]].opacity = 0;
         resizeBoard();
     });
 
@@ -1740,7 +1740,7 @@ window.onload = function () {
             info["owner"] = properties_info[e.target.id]["owner"];
             info["district"] = properties_info[e.target.id]["district"];
             info["price"] = properties_info[e.target.id]["price"];
-            info["rent_basic"] = properties_info[e.target.id]["rent_basic"];
+            info["rent_level_0"] = properties_info[e.target.id]["rent_level_0"];
             info["rent_level_1"] = properties_info[e.target.id]["rent_level_1"];
             info["rent_level_2"] = properties_info[e.target.id]["rent_level_2"];
             info["rent_level_3"] = properties_info[e.target.id]["rent_level_3"];
@@ -1918,7 +1918,7 @@ window.onload = function () {
 
                 board.renderAll();
             } else if(!non_pledge_districts.includes(property_info["district"]) && operation_selected_id != null && current_tab == "map_operations") {
-                switch(operation_selected_id) {
+                switch(Number(operation_selected_id)) {
                     case 1:
                         socket.emit("request_pledge", {"property": e.target.id});
                         break;
