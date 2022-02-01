@@ -1689,6 +1689,11 @@ window.onload = function () {
         resizeBoard();
     });
 
+    socket.on("get_pledge_buyout", function(msg) {
+        objects_list[msg["property"] + "_pledge_tag"].opacity = 0;
+        resizeBoard();
+    });
+
     socket.on("get_end_turn", function() {
         myTurn = false;
         objects_list["text_endTurn"].opacity = 0;

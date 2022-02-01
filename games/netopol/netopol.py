@@ -486,6 +486,25 @@ class Netopol(Session):
         else:
             return False
 
+    def pledge_buyout(self, field: str):
+        property_info = self.properties_data[field]
+
+        if field in self.pledge_properties:
+            property_value = property_info["price"]
+            amount = property_value / 2 + int(round(property_value * 0.1, 0))
+            if self.player_turn.account >= amount:
+                self.player_turn.account -= amount
+                self.journal_add_message(self.messages["pledge_buyout"].format(player=self.player_turn.seat,
+                                                                               field=property_info["name"]))
+                property_index = self.pledge_properties.index(field)
+                del self.pledge_properties[property_index]
+
+                self.update_accounts([self.player_turn])
+
+                return True
+
+        return False
+
     def bankruptcy(self):
         pass
 

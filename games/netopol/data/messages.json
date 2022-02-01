@@ -15,5 +15,6 @@
   "send_offer_discard": "Gracz #{player_one} odrzucił ofertę handlu gracza #{player_two}",
   "event_income": "Gracz #{player} otrzymał ${amount}",
   "event_pay": "Gracz #{player} zapłacił ${amount}",
-  "pledge": "Gracz #{player} zastawił pole {field}"
+  "pledge": "Gracz #{player} zastawił pole {field}",
+  "pledge_buyout": "Gracz #{player} odkupił z zastawu pole {field}"
 }
