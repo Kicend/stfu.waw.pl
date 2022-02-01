@@ -1699,6 +1699,11 @@ window.onload = function () {
         resizeBoard();
     });
 
+    socket.on("get_sell_building", function(msg) {
+        objects_list[msg["property"] + "building_" + msg["buildings_level"]].opacity = 0;
+        resizeBoard();
+    });
+
     socket.on("get_end_turn", function() {
         myTurn = false;
         objects_list["text_endTurn"].opacity = 0;

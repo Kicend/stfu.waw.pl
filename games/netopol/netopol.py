@@ -533,6 +533,35 @@ class Netopol(Session):
                         self.player_turn.account -= property_info["upgrade_price"]
                         self.player_turn.wealth += property_info["upgrade_price"]
                         field_buildings_level += 1
+                        if field_buildings_level < 5:
+                            self.houses -= 1
+                        else:
+                            self.hotels -= 1
+
+                        self.update_accounts([self.player_turn])
+
+                        return True
+                    else:
+                        return False
+
+    def sell_building(self, field: str):
+        property_info = self.properties_data[field]
+
+        if self.player_turn.inventory.fields_num_by_district[property_info["district"]] == \
+                self.fields_list[property_info["district"]]:
+            field_buildings_level = self.properties_buildings[field]
+            if self.properties_buildings[field] > 0:
+                for another_property_in_district in self.buildable_properties_by_district[property_info["district"]]:
+                    buildings_level = self.properties_buildings[another_property_in_district]
+                    if abs(buildings_level - field_buildings_level) <= 1:
+                        self.player_turn.account += property_info["upgrade_price"] / 2
+                        self.player_turn.wealth -= property_info["upgrade_price"]
+                        if field_buildings_level < 5:
+                            self.houses += 1
+                        else:
+                            self.hotels += 1
+
+                        field_buildings_level -= 1
 
                         self.update_accounts([self.player_turn])
 
