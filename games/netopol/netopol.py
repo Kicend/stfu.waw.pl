@@ -32,8 +32,8 @@ class Netopol(Session):
         self.properties_data = self.load_properties()
         self.fields_list = self.count_fields_by_district()
         self.pledge_properties = []
-        self.properties_buildings = self.load_buildable_fields()
         self.buildable_properties_by_district = {}
+        self.properties_buildings = self.load_buildable_fields()
         self.start_balance = 1500
         self.accounts = dict.fromkeys([i for i in range(1, 11)], self.start_balance)
         self.events = self.load_events()
@@ -83,6 +83,11 @@ class Netopol(Session):
         for key, value in self.properties_data.items():
             if value["district"] not in ("tax", "start", "parking", "train", "infra", "police", "jail", "fate"):
                 properties_list[key] = 0
+
+                if value["district"] not in self.buildable_properties_by_district.keys():
+                    self.buildable_properties_by_district[value["district"]] = [key]
+                else:
+                    self.buildable_properties_by_district[value["district"]].append(key)
 
         return properties_list
 
@@ -504,6 +509,9 @@ class Netopol(Session):
                 return True
 
         return False
+
+    def buy_building(self, field: str):
+        pass
 
     def bankruptcy(self):
         pass
