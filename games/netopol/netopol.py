@@ -396,6 +396,8 @@ class Netopol(Session):
                         for field in self.trade_offer["player_1_items"][key]:
                             property_card = self.properties_data[field]
                             property_card["owner"] = "#" + str(player_2.seat)
+                            player_1.wealth -= property_card["price"]
+                            player_2.wealth += property_card["price"]
                             player_2.inventory.fields.append(field)
                             try:
                                 player_2.inventory.fields_num_by_district[property_card["district"]] += 1
@@ -417,6 +419,8 @@ class Netopol(Session):
                         for field in self.trade_offer["player_2_items"][key]:
                             property_card = self.properties_data[field]
                             property_card["owner"] = "#" + str(player_1.seat)
+                            player_2.wealth -= property_card["price"]
+                            player_1.wealth += property_card["price"]
                             player_1.inventory.fields.append(field)
                             try:
                                 player_1.inventory.fields_num_by_district[property_card["district"]] += 1
@@ -469,11 +473,7 @@ class Netopol(Session):
             amount = field["rent_basic"]
             player.account -= amount
         else:
-            tax_base = 0
-            for field in player.inventory.fields:
-                tax_base += self.properties_data[field]["price"]
-
-            tax_base += player.account
+            tax_base = player.account + player.wealth
             amount = int(tax_base * float(field["rent_level_1"][:-1]) / 100)
             player.account -= amount
 
