@@ -483,6 +483,7 @@ class Netopol(Session):
             self.player_turn.account += property_value / 2
             self.journal_add_message(self.messages["pledge"].format(player=self.player_turn.seat,
                                                                     field=property_info["name"]))
+            self.player_turn.inventory.fields_num_by_district[property_info["district"]] -= 1
             self.pledge_properties.append(field)
 
             self.update_accounts([self.player_turn])
@@ -501,6 +502,7 @@ class Netopol(Session):
                 self.player_turn.account -= amount
                 self.journal_add_message(self.messages["pledge_buyout"].format(player=self.player_turn.seat,
                                                                                field=property_info["name"]))
+                self.player_turn.inventory.fields_num_by_district[property_info["district"]] += 1
                 property_index = self.pledge_properties.index(field)
                 del self.pledge_properties[property_index]
 
