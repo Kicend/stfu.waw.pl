@@ -422,8 +422,7 @@ def request_roll_dice_event():
                     if current_property["owner"] is not None and current_property["owner"] != "BANK" and \
                             game_instance.player_turn != game_instance.get_player(int(current_property["owner"][1:])):
                         owner = game_instance.get_player(int(current_property["owner"][1:]))
-                        game_instance.pay(game_instance.player_turn, owner,
-                                          current_property["rent_basic"], current_property["district"])
+                        game_instance.pay(game_instance.player_turn, owner, current_property["district"])
                         emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
 
                     players = list(game_instance.players_seats.values())
@@ -584,6 +583,70 @@ def request_trade_discard_offer():
             emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
             emit("get_offer_sent_status", {"offer_sent_status": False}, to=sid_sender)
             emit("get_after_trade", to=sid_recipient)
+
+
+@socketio.on("request_pledge")
+def request_pledge_event(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+            if game_instance.pledge(data["property"]):
+                players = list(game_instance.players_seats.values())
+                players_number = 10 - players.count("--")
+                emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
+                emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                     to=board_id)
+                emit("get_pledge", {"property": data["property"]}, to=board_id)
+
+
+@socketio.on("request_pledge_buyout")
+def request_pledge_buyout_event(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username \
+                and game_instance.player_turn.in_jail is False and game_instance.player_turn_state != "jail":
+            if game_instance.pledge_buyout(data["property"]):
+                players = list(game_instance.players_seats.values())
+                players_number = 10 - players.count("--")
+                emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
+                emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                     to=board_id)
+                emit("get_pledge_buyout", {"property": data["property"]}, to=board_id)
+
+
+@socketio.on("request_buy_building")
+def request_buy_building_event(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username \
+                and game_instance.player_turn.in_jail is False and game_instance.player_turn_state != "jail":
+            if game_instance.buy_building(data["property"]):
+                players = list(game_instance.players_seats.values())
+                players_number = 10 - players.count("--")
+                emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
+                emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                     to=board_id)
+                emit("get_buy_building", {"property": data["property"], "buildings_level":
+                     game_instance.properties_buildings[data["property"]]}, to=board_id)
+
+
+@socketio.on("request_sell_building")
+def request_sell_building_event(data):
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running" and game_instance.player_turn.nickname == current_user.username:
+            if game_instance.sell_building(data["property"]):
+                players = list(game_instance.players_seats.values())
+                players_number = 10 - players.count("--")
+                emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
+                emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
+                     to=board_id)
+                emit("get_sell_building", {"property": data["property"], "buildings_level":
+                     game_instance.properties_buildings[data["property"] + 1]}, to=board_id)
 
 
 @socketio.on("request_end_turn")
