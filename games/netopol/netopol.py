@@ -163,7 +163,7 @@ class Netopol(Session):
     def train_rent_calculator(owner: Player, field: dict):
         district_name = field["district"]
         player_district_fields_num = owner.inventory.fields_num_by_district[district_name]
-        amount = field["rent_basic"] * player_district_fields_num
+        amount = field["rent_level_0"] * player_district_fields_num
 
         return amount
 
@@ -313,8 +313,9 @@ class Netopol(Session):
         self.auction_player_turn = None
         self.auction_state = False
 
-    def pay(self, sender: Player, recipient: Player, amount: int, district: str):
+    def pay(self, sender: Player, recipient: Player, district: str):
         field = self.properties_data[sender.coordinates]
+        amount = field["rent_level_" + str(self.properties_buildings[field])]
         if district == "train":
             amount = self.train_rent_calculator(recipient, field)
         elif district == "infra":
@@ -470,7 +471,7 @@ class Netopol(Session):
     def tax(self, player: Player, mode=0):
         field = self.properties_data[player.coordinates]
         if mode == 0:
-            amount = field["rent_basic"]
+            amount = field["rent_level_0"]
             player.account -= amount
         else:
             tax_base = player.account + player.wealth
@@ -520,6 +521,24 @@ class Netopol(Session):
 
     def buy_building(self, field: str):
         property_info = self.properties_data[field]
+
+        if self.player_turn.inventory.fields_num_by_district[property_info["district"]] == \
+                self.fields_list[property_info["district"]]:
+            field_buildings_level = self.properties_buildings[field]
+            if self.properties_buildings[field] < 5 and self.houses > 0 or self.properties_buildings[field] == 5 and \
+                    self.hotels > 0:
+                for another_property_in_district in self.buildable_properties_by_district[property_info["district"]]:
+                    buildings_level = self.properties_buildings[another_property_in_district]
+                    if abs(buildings_level - field_buildings_level) <= 1:
+                        self.player_turn.account -= property_info["upgrade_price"]
+                        self.player_turn.wealth += property_info["upgrade_price"]
+                        field_buildings_level += 1
+
+                        self.update_accounts([self.player_turn])
+
+                        return True
+                    else:
+                        return False
 
     def bankruptcy(self):
         pass
