@@ -15,6 +15,7 @@ class Player:
         self.sentence_turn = 0
         self.free_jail_card = False
         self.account = account_start_balance
+        self.wealth = 0
         self.inventory = Inventory()
 
 
@@ -52,6 +53,9 @@ class Netopol(Session):
         self.journal = []
         self.trade_recipient = None
         self.trade_offer = None
+        self.default_building_number = {"houses": 32, "hotels": 8}
+        self.houses = self.default_building_number["houses"]
+        self.hotels = self.default_building_number["hotels"]
 
     @staticmethod
     def load_properties():
@@ -251,6 +255,7 @@ class Netopol(Session):
         property_card = self.properties_data[player.coordinates]
         if player.account >= property_card["price"]:
             player.account -= property_card["price"]
+            player.wealth += property_card["price"]
             self.update_accounts([player])
             property_card["owner"] = "#" + str(player.seat)
             self.journal_add_message(self.messages["buy"].format(player=player.seat, field=property_card["name"]))
@@ -291,6 +296,7 @@ class Netopol(Session):
                     self.auction_winner = self.auction_participants[0]
 
                 self.auction_winner.account -= self.auction_price
+                self.auction_winner.wealth += property_card["price"]
                 property_card["owner"] = "#" + str(self.auction_winner.seat)
                 self.journal_add_message(self.messages["auction_winner_announcement"].format(
                     player=self.auction_winner.seat, field=property_card["name"]))
@@ -513,7 +519,7 @@ class Netopol(Session):
         return False
 
     def buy_building(self, field: str):
-        pass
+        property_info = self.properties_data[field]
 
     def bankruptcy(self):
         pass
