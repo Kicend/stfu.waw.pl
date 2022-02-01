@@ -315,7 +315,7 @@ class Netopol(Session):
 
     def pay(self, sender: Player, recipient: Player, district: str):
         field = self.properties_data[sender.coordinates]
-        amount = field["rent_level_" + str(self.properties_buildings[field])]
+        amount = field["rent_level_" + str(self.properties_buildings[sender.coordinates])]
         if district == "train":
             amount = self.train_rent_calculator(recipient, field)
         elif district == "infra":
@@ -341,7 +341,8 @@ class Netopol(Session):
             prisoner.in_jail = False
             prisoner.sentence_turn = 0
             self.update_accounts([prisoner])
-            self.journal_add_message(self.messages["pay_bail"].format(player=prisoner.seat))
+            self.journal_add_message(self.messages["pay_bail"].format(player=prisoner.seat,
+                                                                      amount=self.bail_amount))
 
     def is_valid_offer(self, player_1_id: int, player_2_id: int, player_1_items: dict, player_2_items: dict):
         i = 0
@@ -527,12 +528,14 @@ class Netopol(Session):
             field_buildings_level = self.properties_buildings[field]
             if self.properties_buildings[field] < 5 and self.houses > 0 or self.properties_buildings[field] == 5 and \
                     self.hotels > 0:
-                for another_property_in_district in self.buildable_properties_by_district[property_info["district"]]:
+                properties_in_district_num = len(self.buildable_properties_by_district[property_info["district"]])
+                for i, another_property_in_district in \
+                        enumerate(self.buildable_properties_by_district[property_info["district"]]):
                     buildings_level = self.properties_buildings[another_property_in_district]
-                    if abs(buildings_level - field_buildings_level) <= 1:
+                    if abs(buildings_level - field_buildings_level) <= 1 and i == properties_in_district_num - 1:
                         self.player_turn.account -= property_info["upgrade_price"]
                         self.player_turn.wealth += property_info["upgrade_price"]
-                        field_buildings_level += 1
+                        self.properties_buildings[field] += 1
                         if field_buildings_level < 5:
                             self.houses -= 1
                         else:
@@ -551,9 +554,11 @@ class Netopol(Session):
                 self.fields_list[property_info["district"]]:
             field_buildings_level = self.properties_buildings[field]
             if self.properties_buildings[field] > 0:
-                for another_property_in_district in self.buildable_properties_by_district[property_info["district"]]:
+                properties_in_district_num = len(self.buildable_properties_by_district[property_info["district"]])
+                for i, another_property_in_district in \
+                        enumerate(self.buildable_properties_by_district[property_info["district"]]):
                     buildings_level = self.properties_buildings[another_property_in_district]
-                    if abs(buildings_level - field_buildings_level) <= 1:
+                    if abs(buildings_level - field_buildings_level) <= 1 and i == properties_in_district_num - 1:
                         self.player_turn.account += property_info["upgrade_price"] / 2
                         self.player_turn.wealth -= property_info["upgrade_price"]
                         if field_buildings_level < 5:
@@ -561,7 +566,7 @@ class Netopol(Session):
                         else:
                             self.hotels += 1
 
-                        field_buildings_level -= 1
+                        self.properties_buildings[field] -= 1
 
                         self.update_accounts([self.player_turn])
 
