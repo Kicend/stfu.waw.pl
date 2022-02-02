@@ -646,7 +646,7 @@ def request_sell_building_event(data):
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                      to=board_id)
                 emit("get_sell_building", {"property": data["property"], "buildings_level":
-                     game_instance.properties_buildings[data["property"] + 1]}, to=board_id)
+                     game_instance.properties_buildings[data["property"]] + 1}, to=board_id)
 
 
 @socketio.on("request_end_turn")
