@@ -382,8 +382,8 @@ class Netopol(Session):
                 self.trade_recipient = player_2.nickname
                 self.trade_offer = {"player_1": player_1, "player_1_items": player_1_items, "player_2": player_2,
                                     "player_2_items": player_2_items}
-                self.journal_add_message(self.messages["send_offer_success"].format(player_one=player_2_id,
-                                                                                    player_two=player_1_id))
+                self.journal_add_message(self.messages["send_offer_success"].format(player_one=player_1_id,
+                                                                                    player_two=player_2_id))
                 return True
             else:
                 return False
@@ -438,8 +438,8 @@ class Netopol(Session):
                     player_1.account += int(self.trade_offer["player_2_items"]["money"])
                     self.update_accounts([player_1, player_2])
 
-            self.journal_add_message(self.messages["send_offer_accept"].format(player_one=player_1.seat,
-                                                                               player_two=player_2.seat))
+            self.journal_add_message(self.messages["send_offer_accept"].format(player_one=player_2.seat,
+                                                                               player_two=player_1.seat))
             self.trade_recipient = None
             self.trade_offer = None
 
@@ -449,8 +449,8 @@ class Netopol(Session):
             player_2 = self.trade_offer["player_2"]
             self.trade_recipient = None
             self.trade_offer = None
-            self.journal_add_message(self.messages["send_offer_discard"].format(player_one=player_1.seat,
-                                                                                player_two=player_2.seat))
+            self.journal_add_message(self.messages["send_offer_discard"].format(player_one=player_2.seat,
+                                                                                player_two=player_1.seat))
 
     def fate(self, player: Player):
         event_card = self.events_cards_stack.pop(0)
