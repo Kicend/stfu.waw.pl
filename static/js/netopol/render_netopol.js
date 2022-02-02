@@ -1684,6 +1684,20 @@ window.onload = function () {
         current_tab = "journal";
     });
 
+    socket.on("get_change_owner", function(msg) {
+        for(const [seat, properties] of Object.entries(msg["properties"])) {
+            if(properties !== null) {
+                var color = pawns_colors["#" + seat];
+                properties.forEach(property => {
+                    objects_list[property + "_owner_tag"].fill = color;
+                    objects_list[property + "_owner_tag"].opacity = 1;
+                });
+            };
+        };
+
+        resizeBoard();
+    });
+
     socket.on("get_pledge", function(msg) {
         objects_list[msg["property"] + "_pledge_tag"].opacity = 1;
         resizeBoard();
