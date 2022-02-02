@@ -382,8 +382,8 @@ class Netopol(Session):
                 self.trade_recipient = player_2.nickname
                 self.trade_offer = {"player_1": player_1, "player_1_items": player_1_items, "player_2": player_2,
                                     "player_2_items": player_2_items}
-                self.journal_add_message(self.messages["send_offer_success"].format(player_one=player_1_id,
-                                                                                    player_two=player_2_id))
+                self.journal_add_message(self.messages["send_offer_success"].format(player_one=player_2_id,
+                                                                                    player_two=player_1_id))
                 return True
             else:
                 return False
