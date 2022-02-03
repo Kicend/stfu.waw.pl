@@ -1358,6 +1358,18 @@ window.onload = function () {
                 objects_list[object].opacity = 0;
                 objects_list[object].evented = false;
             });
+
+            if(operation_selected_id != null) {
+                board.setActiveObject(objects_list["text_" + operation_selected_name]);
+                board.getActiveObject().set("fill", "#788086");
+
+                board.setActiveObject(objects_list["textBorder_map_operations_" + operation_selected_id]);
+                board.getActiveObject().set("stroke", "grey");
+
+                objects_list["textBackground_map_operations_" + operation_selected_id].opacity = 0;
+                operation_selected_id = null;
+                operation_selected_name = null;
+            };
         };
     }
 
