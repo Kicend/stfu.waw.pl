@@ -1561,6 +1561,18 @@ window.onload = function () {
         logs_frame(logs_buffer);
         window.onresize = resizeCanvas();
         resizeCanvas();
+
+        if(msg["game_status"] == "running") {
+            for(const [property, attributes] of Object.entries(properties_info)) {
+                if(attributes["owner"] !== null && attributes["owner"] !== "BANK") {
+                    var color = pawns_colors[attributes["owner"]];
+                    objects_list[property + "_owner_tag"].fill = color;
+                    objects_list[property + "_owner_tag"].opacity = 1;
+                };
+            };
+
+            resizeBoard();
+        };
     });
 
     socket.on("update_properties_info", function(msg) {

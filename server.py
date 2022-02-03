@@ -291,7 +291,8 @@ def request_properties_info_event():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
-        emit("get_properties_info", {"properties_info": game_instance.properties_data})
+        emit("get_properties_info", {"properties_info": game_instance.properties_data,
+                                     "game_status": game_instance.state})
 
 
 @socketio.on("request_game_state")
@@ -462,6 +463,9 @@ def request_buy_event():
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                      to=board_id)
                 emit("update_properties_info", {"properties_info": game_instance.properties_data}, to=board_id)
+                emit("get_change_owner", {"properties": {game_instance.player_turn.seat:
+                                                         [game_instance.player_turn.coordinates],
+                                                         None: None}}, to=board_id)
 
 
 @socketio.on("request_auction")
