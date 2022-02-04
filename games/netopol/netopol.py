@@ -298,6 +298,12 @@ class Netopol(Session):
                 self.auction_winner.account -= self.auction_price
                 self.auction_winner.wealth += property_card["price"]
                 property_card["owner"] = "#" + str(self.auction_winner.seat)
+                self.auction_winner.inventory.fields.append(self.auction_field)
+                if property_card["district"] not in self.auction_winner.inventory.fields_num_by_district.keys():
+                    self.auction_winner.inventory.fields_num_by_district[property_card["district"]] = 1
+                else:
+                    self.auction_winner.inventory.fields_num_by_district[property_card["district"]] += 1
+
                 self.journal_add_message(self.messages["auction_winner_announcement"].format(
                     player=self.auction_winner.seat, field=property_card["name"]))
                 self.auction_end()
@@ -531,7 +537,7 @@ class Netopol(Session):
                 for i, another_property_in_district in \
                         enumerate(self.buildable_properties_by_district[property_info["district"]]):
                     buildings_level = self.properties_buildings[another_property_in_district]
-                    if abs(buildings_level - field_buildings_level) <= 1 and i == properties_in_district_num - 1:
+                    if i == properties_in_district_num - 1:
                         self.player_turn.account -= property_info["upgrade_price"]
                         self.player_turn.wealth += property_info["upgrade_price"]
                         self.properties_buildings[field] += 1
@@ -543,7 +549,7 @@ class Netopol(Session):
                         self.update_accounts([self.player_turn])
 
                         return True
-                    else:
+                    elif abs(buildings_level - field_buildings_level) > 1:
                         return False
 
     def sell_building(self, field: str):
