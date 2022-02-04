@@ -1713,7 +1713,7 @@ window.onload = function () {
             if(properties !== null) {
                 var color = pawns_colors["#" + seat];
                 properties.forEach(property => {
-                    objects_list[property + "_owner_tag"].fill = color;
+                    objects_list[property + "_owner_tag"].set("fill", color);
                     objects_list[property + "_owner_tag"].opacity = 1;
                 });
             };
