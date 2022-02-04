@@ -494,14 +494,19 @@ def request_auction_event(data):
                 sid = users_socket_id[game_instance.auction_player_turn.nickname]
                 emit("get_auction_turn", {"price": str(game_instance.auction_price)}, to=sid)
             else:
+                field = game_instance.auction_field
+                winner = game_instance.auction_winner.seat
                 players = list(game_instance.players_seats.values())
                 players_number = 10 - players.count("--")
                 sid = users_socket_id[game_instance.player_turn.nickname]
+                game_instance.auction_field = None
+                game_instance.auction_winner = None
                 game_instance.player_turn_state = "after_roll"
                 emit("get_after_roll_dice", to=sid)
                 emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                      to=board_id)
                 emit("update_properties_info", {"properties_info": game_instance.properties_data}, to=board_id)
+                emit("get_change_owner", {"properties": {winner: [field], None: None}}, to=board_id)
 
 
 @socketio.on("request_pay_bail")
