@@ -327,7 +327,7 @@ class Netopol(Session):
             dices_value = abs(int(sender.coordinates[1:]) - int(sender.last_coordinates[1:]))
             amount = self.infra_rent_calculator(recipient, field, dices_value)
         else:
-            if self.is_full_district(recipient, field):
+            if self.is_full_district(recipient, field) and self.properties_buildings[field] == 0:
                 amount *= 2
 
         if sender.account >= amount:
@@ -530,7 +530,7 @@ class Netopol(Session):
 
         if self.player_turn.inventory.fields_num_by_district[property_info["district"]] == \
                 self.fields_list[property_info["district"]]:
-            field_buildings_level = self.properties_buildings[field]
+            field_buildings_level = self.properties_buildings[field] + 1
             if self.properties_buildings[field] < 5 and self.houses > 0 or self.properties_buildings[field] == 5 and \
                     self.hotels > 0:
                 properties_in_district_num = len(self.buildable_properties_by_district[property_info["district"]])
@@ -557,13 +557,13 @@ class Netopol(Session):
 
         if self.player_turn.inventory.fields_num_by_district[property_info["district"]] == \
                 self.fields_list[property_info["district"]]:
-            field_buildings_level = self.properties_buildings[field]
+            field_buildings_level = self.properties_buildings[field] - 1
             if self.properties_buildings[field] > 0:
                 properties_in_district_num = len(self.buildable_properties_by_district[property_info["district"]])
                 for i, another_property_in_district in \
                         enumerate(self.buildable_properties_by_district[property_info["district"]]):
                     buildings_level = self.properties_buildings[another_property_in_district]
-                    if abs(buildings_level - field_buildings_level) <= 1 and i == properties_in_district_num - 1:
+                    if i == properties_in_district_num - 1:
                         self.player_turn.account += property_info["upgrade_price"] / 2
                         self.player_turn.wealth -= property_info["upgrade_price"]
                         if field_buildings_level < 5:
@@ -576,7 +576,7 @@ class Netopol(Session):
                         self.update_accounts([self.player_turn])
 
                         return True
-                    else:
+                    elif abs(buildings_level - field_buildings_level) > 1:
                         return False
 
     def bankruptcy(self):

@@ -1734,11 +1734,26 @@ window.onload = function () {
 
     socket.on("get_buy_building", function(msg) {
         objects_list[msg["property"] + "_building_" + msg["buildings_level"]].opacity = 1;
+        if(msg["buildings_level"] == 5) {
+            i = 1;
+            while(i < 5) {
+                objects_list[msg["property"] + "_building_" + i].opacity = 0;
+                i++;
+            };
+        };
+
         resizeBoard();
     });
 
     socket.on("get_sell_building", function(msg) {
         objects_list[msg["property"] + "_building_" + msg["buildings_level"]].opacity = 0;
+        if(msg["buildings_level"] == 5) {
+            i = 1;
+            while(i < 5) {
+                objects_list[msg["property"] + "_building_" + i].opacity = 1;
+                i++;
+            };
+        };
         resizeBoard();
     });
 
