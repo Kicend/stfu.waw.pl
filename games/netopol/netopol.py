@@ -307,7 +307,6 @@ class Netopol(Session):
         self.update_accounts([self.auction_winner])
 
     def auction_end(self):
-        self.auction_field = None
         self.auction_participants = []
         self.auction_price = 0
         self.auction_player_turn = None
