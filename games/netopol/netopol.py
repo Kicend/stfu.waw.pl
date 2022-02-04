@@ -320,14 +320,14 @@ class Netopol(Session):
 
     def pay(self, sender: Player, recipient: Player, district: str):
         field = self.properties_data[sender.coordinates]
-        amount = field["rent_level_" + str(self.properties_buildings[sender.coordinates])]
         if district == "train":
             amount = self.train_rent_calculator(recipient, field)
         elif district == "infra":
             dices_value = abs(int(sender.coordinates[1:]) - int(sender.last_coordinates[1:]))
             amount = self.infra_rent_calculator(recipient, field, dices_value)
         else:
-            if self.is_full_district(recipient, field) and self.properties_buildings[field] == 0:
+            amount = field["rent_level_" + str(self.properties_buildings[sender.coordinates])]
+            if self.is_full_district(recipient, field) and self.properties_buildings[sender.coordinates] == 0:
                 amount *= 2
 
         if sender.account >= amount:
@@ -362,6 +362,9 @@ class Netopol(Session):
                             if field not in player_1.inventory.fields:
                                 i = -99
                                 break
+                            elif self.properties_buildings[field] != 0:
+                                i = -99
+                                break
                             else:
                                 i += 1
                     if key == "cards":
@@ -375,6 +378,9 @@ class Netopol(Session):
                         for field in player_2_items[key]:
                             if field not in player_2.inventory.fields:
                                 j = -99
+                                break
+                            elif self.properties_buildings[field] != 0:
+                                i = -99
                                 break
                             else:
                                 j += 1
