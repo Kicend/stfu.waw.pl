@@ -562,18 +562,23 @@ def request_trade_accept_offer():
     if current_user.username in players_rooms:
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
-        if game_instance.state == "running" and game_instance.trade_recipient == current_user.username \
+        if game_instance.state == "running" and game_instance.trade_recipient.nickname == current_user.username \
             and game_instance.trade_offer is not None and game_instance.player_turn.in_jail is False and \
                 game_instance.player_turn_state != "jail":
             players = list(game_instance.players_seats.values())
             players_number = 10 - players.count("--")
             sid_sender = users_socket_id[game_instance.player_turn.nickname]
-            sid_recipient = users_socket_id[game_instance.trade_recipient]
+            sid_recipient = users_socket_id[game_instance.trade_recipient.nickname]
+            player_1_new_properties = game_instance.trade_offer["player_2_items"]["properties"]
+            player_2 = game_instance.trade_recipient
+            player_2_new_properties = game_instance.trade_offer["player_1_items"]["properties"]
             game_instance.trade()
             emit("get_messages", {"messages": game_instance.journal[0]}, to=board_id)
             emit("get_accounts", {"accounts": game_instance.accounts, "players_number": players_number},
                  to=board_id)
             emit("update_properties_info", {"properties_info": game_instance.properties_data}, to=board_id)
+            emit("get_change_owner", {"properties": {game_instance.player_turn.seat: player_1_new_properties,
+                                                     player_2.seat: player_2_new_properties}}, to=board_id)
             emit("get_offer_sent_status", {"offer_sent_status": False}, to=sid_sender)
             emit("get_after_trade", to=sid_recipient)
 
