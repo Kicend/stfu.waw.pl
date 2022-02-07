@@ -292,7 +292,8 @@ def request_properties_info_event():
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
         emit("get_properties_info", {"properties_info": game_instance.properties_data,
-                                     "game_status": game_instance.state})
+                                     "game_status": game_instance.state,
+                                     "pledge_properties": game_instance.pledge_properties})
 
 
 @socketio.on("request_game_state")
@@ -361,10 +362,13 @@ def request_turn_state():
         board_id = int(players_rooms[current_user.username])
         game_instance = sessions_list[board_id]
         if game_instance.state == "running":
-            if current_user.username == game_instance.player_turn.nickname and game_instance.auction_state is False:
-                emit("get_turn_state", {"state": game_instance.player_turn_state})
-            elif current_user.username == game_instance.auction_player_turn.nickname and game_instance.auction_state:
-                emit("get_auction_turn", {"price": str(game_instance.auction_price)})
+            try:
+                if current_user.username == game_instance.player_turn.nickname and game_instance.auction_state is False:
+                    emit("get_turn_state", {"state": game_instance.player_turn_state})
+                elif current_user.username == game_instance.auction_player_turn.nickname and game_instance.auction_state:
+                    emit("get_auction_turn", {"price": str(game_instance.auction_price)})
+            except AttributeError:
+                pass
 
 
 @socketio.on("request_messages")

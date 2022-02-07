@@ -1583,6 +1583,10 @@ window.onload = function () {
                 };
             };
 
+            msg["pledge_properties"].forEach(property => {
+                objects_list[property + "_pledge_tag"].opacity = 1;
+            });
+
             resizeBoard();
         };
     });
