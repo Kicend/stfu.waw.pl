@@ -407,6 +407,14 @@ def request_offer():
             emit("get_offer", {"offer": trade_offer})
 
 
+@socketio.on("request_buildings_num")
+def request_buildings_num_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        emit("get_buildings_num", {"houses_num": game_instance.houses, "hotels_num": game_instance.hotels})
+
+
 @socketio.on("request_roll_dice")
 def request_roll_dice_event():
     if current_user.username in players_rooms:
@@ -649,6 +657,7 @@ def request_buy_building_event(data):
                      to=board_id)
                 emit("get_buy_building", {"property": data["property"], "buildings_level":
                      game_instance.properties_buildings[data["property"]]}, to=board_id)
+                emit("get_buildings_num", {"houses_num": game_instance.houses, "hotels_num": game_instance.hotels})
 
 
 @socketio.on("request_sell_building")
@@ -665,6 +674,7 @@ def request_sell_building_event(data):
                      to=board_id)
                 emit("get_sell_building", {"property": data["property"], "buildings_level":
                      game_instance.properties_buildings[data["property"]] + 1}, to=board_id)
+                emit("get_buildings_num", {"houses_num": game_instance.houses, "hotels_num": game_instance.hotels})
 
 
 @socketio.on("request_end_turn")
