@@ -551,6 +551,7 @@ class Netopol(Session):
                             self.houses -= 1
                         else:
                             self.hotels -= 1
+                            self.houses += 4
 
                         self.update_accounts([self.player_turn])
 
@@ -576,6 +577,7 @@ class Netopol(Session):
                             self.houses += 1
                         else:
                             self.hotels += 1
+                            self.houses -= 4
 
                         self.properties_buildings[field] -= 1
 
