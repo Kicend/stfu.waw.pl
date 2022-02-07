@@ -667,7 +667,8 @@ def request_buy_building_event(data):
                      to=board_id)
                 emit("get_buy_building", {"property": data["property"], "buildings_level":
                      game_instance.properties_buildings[data["property"]]}, to=board_id)
-                emit("get_buildings_num", {"houses_num": game_instance.houses, "hotels_num": game_instance.hotels})
+                emit("get_buildings_num", {"houses_num": game_instance.houses, "hotels_num": game_instance.hotels},
+                     to=board_id)
 
 
 @socketio.on("request_sell_building")
@@ -684,7 +685,8 @@ def request_sell_building_event(data):
                      to=board_id)
                 emit("get_sell_building", {"property": data["property"], "buildings_level":
                      game_instance.properties_buildings[data["property"]] + 1}, to=board_id)
-                emit("get_buildings_num", {"houses_num": game_instance.houses, "hotels_num": game_instance.hotels})
+                emit("get_buildings_num", {"houses_num": game_instance.houses, "hotels_num": game_instance.hotels},
+                     to=board_id)
 
 
 @socketio.on("request_end_turn")
