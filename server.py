@@ -365,7 +365,8 @@ def request_turn_state():
             try:
                 if current_user.username == game_instance.player_turn.nickname and game_instance.auction_state is False:
                     emit("get_turn_state", {"state": game_instance.player_turn_state})
-                elif current_user.username == game_instance.auction_player_turn.nickname and game_instance.auction_state:
+                elif current_user.username == game_instance.auction_player_turn.nickname and \
+                        game_instance.auction_state:
                     emit("get_auction_turn", {"price": str(game_instance.auction_price)})
             except AttributeError:
                 pass
