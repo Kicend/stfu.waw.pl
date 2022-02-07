@@ -574,8 +574,6 @@ class Netopol(Session):
                         self.player_turn.account += property_info["upgrade_price"] / 2
                         self.player_turn.wealth -= property_info["upgrade_price"]
                         if field_buildings_level < 5:
-                            self.houses += 1
-                        else:
                             self.hotels += 1
                             self.houses -= 4
 
