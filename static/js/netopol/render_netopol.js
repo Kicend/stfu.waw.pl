@@ -1226,8 +1226,8 @@ window.onload = function () {
         var buildingsCounter = new fabric.Text("",
             {
                 id: "text_buildings_counter",
-                left: objects_list["#20"].left + 110,
-                top: objects_list["#20"].top + 160,
+                left: objects_list["#10"].left + 200,
+                top: objects_list["#10"].top - 180,
                 fill: "#788086",
                 fontSize: 14,
                 fontWeight: "bold",
@@ -1634,6 +1634,15 @@ window.onload = function () {
         gameStates(msg["state"]);
     });
 
+    socket.on("get_buildings_num", function(msg) {
+        objects_list["text_buildings_counter"].text = msg["houses_num"] + " | " + msg["hotels_num"];
+        resizeBoard();
+    });
+
+    socket.on("get_buildings_info", function(msg) {
+
+    });
+
     socket.on("start_game_success", function(msg) {
         disableButtons(["text_startGame"]);
         objects_list["turn_cp_background"].opacity = 0;
@@ -2035,5 +2044,7 @@ window.onload = function () {
     socket.emit("request_messages");
     socket.emit("request_offer_sent_status");
     socket.emit("request_offer");
+    socket.emit("request_buildings_num");
+    socket.emit("request_buildings_info");
     resizeBoard();
 }
