@@ -1223,6 +1223,28 @@ window.onload = function () {
         board.add(managementWindowContent);
         objects_list[managementWindowContent.id] = managementWindowContent;
 
+        var buildingsCounter = new fabric.Text("",
+            {
+                id: "text_buildings_counter",
+                left: objects_list["#20"].left + 110,
+                top: objects_list["#20"].top + 160,
+                fill: "#788086",
+                fontSize: 14,
+                fontWeight: "bold",
+                opacity: 1,
+                selectable: false,
+                evented: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                hasControls: false,
+                hasRotatingPoint: false,
+                hoverCursor: "....."
+            }
+        );
+
+        board.add(buildingsCounter);
+        objects_list[buildingsCounter.id] = buildingsCounter;
+
         createTradeUI();
         createMapOperationsUI();
         createFieldsIndicators();
