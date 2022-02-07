@@ -1640,7 +1640,19 @@ window.onload = function () {
     });
 
     socket.on("get_buildings_info", function(msg) {
+        for(const [property, buildings_level] of Object.entries(msg["buildings_info"])) {
+            if(buildings_level != 0) {
+                if(buildings_level < 5) {
+                    for(i = 1; i <= buildings_level; i++) {
+                        objects_list[property + "_building_" + i].opacity = 1;
+                    };
+                } else {
+                    objects_list[property + "_building_5"].opacity = 1;
+                };
+            };
+        };
 
+        resizeBoard();
     });
 
     socket.on("start_game_success", function(msg) {

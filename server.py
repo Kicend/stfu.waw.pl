@@ -416,6 +416,15 @@ def request_buildings_num_event():
         emit("get_buildings_num", {"houses_num": game_instance.houses, "hotels_num": game_instance.hotels})
 
 
+@socketio.on("request_buildings_info")
+def request_buildings_info_event():
+    if current_user.username in players_rooms:
+        board_id = int(players_rooms[current_user.username])
+        game_instance = sessions_list[board_id]
+        if game_instance.state == "running":
+            emit("get_buildings_info", {"buildings_info": game_instance.properties_buildings})
+
+
 @socketio.on("request_roll_dice")
 def request_roll_dice_event():
     if current_user.username in players_rooms:
