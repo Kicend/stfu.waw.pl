@@ -35,7 +35,11 @@ window.onload = function () {
                             "auction_pass": "Pas",
                             "payBail": "Zapłać kaucję",
                             "payTax_fixed": "Podatek stały",
-                            "payTax_interest": "Podatek procentowy"
+                            "payTax_interest": "Podatek procentowy",
+                            "payDebt": "Zapłać",
+                            "resign": "Rezygnuj",
+                            "resign_confirm": "Tak",
+                            "resign_reject": "Nie"
                         };
     var trade_buttons_names = {
         "trade_send_offer": "Wyślij ofertę",
