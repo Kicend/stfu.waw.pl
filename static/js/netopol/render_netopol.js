@@ -6,7 +6,7 @@ var gameState = "";
 var myTurn = false;
 var is_trade_offer_sent = false;
 
-window.onload = function () {
+window.onload = function() {
     var board = new fabric.Canvas("board_content", {width: window.innerWidth, height: window.innerHeight});
     board.selection = false;
 
